@@ -60,6 +60,30 @@ export const copilotIngest = onRequest(
   }
 );
 
+// Callable Vault save: no CORS needed, returns { data: ... } for httpsCallable
+export const vaultSave = onCall({ region: "us-east4" }, async (request) => {
+  try {
+    const { type, title, rawText, structured, tags, summarize } = request.data || {};
+
+    if (!type || !title) {
+      return { ok: false, error: "Missing 'type' or 'title'" };
+    }
+
+    // TODO: write to Firestore/Storage here.
+    // For now, return a fake id so the UI works.
+    const id = `ep_${Date.now()}`;
+
+    return {
+      ok: true,
+      id,
+      echo: { type, title, summarize: !!summarize, tags: Array.isArray(tags) ? tags : [] }
+    };
+  } catch (e) {
+    console.error("vaultSave error:", e);
+    return { ok: false, error: e?.message || "Internal error" };
+  }
+});
+
 // --- Generic tool callable (used by /newtool/)
 export const toolTemplateRun = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
