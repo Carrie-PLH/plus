@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>StrategyCoach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
+    textarea, select { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; }
+    h3 { margin: 14px 0 6px; }
+    ul { padding-left: 18px; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>StrategyCoach</h1>
+  <p>Advocacy skills training based on PatientLead Health’s Appointment Leadership framework. Educational only.</p>
+
+  <div class="card">
+    <label>Pillar</label>
+    <select id="pillar">
+      <option value="agenda">Strategic Agenda Setting</option>
+      <option value="conversation">Conversation Direction</option>
+      <option value="planning">Collaborative Action Planning</option>
+      <option value="followThrough">Strategic Follow-Through</option>
+    </select>
+
+    <label>Scenario</label>
+    <textarea id="scenario" rows="5" placeholder="Example: I have a 15-minute visit and need to prioritize migraines and sleep issues, plus a med refill."></textarea>
+
+    <label>Goals (optional JSON array)</label>
+    <textarea id="goals" rows="3" placeholder='["get migraine plan","set follow-up timeline"]'></textarea>
+
+    <label>Constraints (optional JSON array)</label>
+    <textarea id="constraints" rows="3" placeholder='["time-limited","new provider"]'></textarea>
+
+    <label>Coaching depth</label>
+    <select id="level">
+      <option value="light">light</option>
+      <option value="deep">deep</option>
+    </select>
+
+    <button id="runBtn">Coach me</button>
+  </div>
+
+  <div class="grid" style="margin-top:20px;">
+    <div class="card">
+      <h3>Quick wins</h3>
+      <ul id="wins"></ul>
+
+      <h3>Micro skills</h3>
+      <ul id="skills"></ul>
+
+      <h3>Measure progress</h3>
+      <ul id="measure"></ul>
+    </div>
+
+    <div class="card">
+      <h3>Phrases</h3>
+      <strong>Openers</strong>
+      <ul id="openers"></ul>
+      <strong>Redirects</strong>
+      <ul id="redirects"></ul>
+      <strong>Checks</strong>
+      <ul id="checks"></ul>
+
+      <h3>Practice drill</h3>
+      <pre id="drill"></pre>
+
+      <h3>Visit flow</h3>
+      <strong>Before</strong>
+      <ul id="before"></ul>
+      <strong>During</strong>
+      <ul id="during"></ul>
+      <strong>After</strong>
+      <ul id="after"></ul>
+
+      <h3>Notes</h3>
+      <div id="notes"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#strategyCoachForm",
+      type: "strategyCoach",
+      title: d => `StrategyCoach: ${d.pillar || "Agenda"} – ${d.scenario ? d.scenario.slice(0,40) : "Scenario"}`,
+      extraTags: ["coaching","framework"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

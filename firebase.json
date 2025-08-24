@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/copilot/ingest",
+        "function": {
+          "functionId": "copilotIngest",
+          "region": "us-east4"
+        }
+      }
+    ]
+  },
+  "functions": {
+    "codebase": "default",
+    "runtime": "nodejs22"
+  }
+}

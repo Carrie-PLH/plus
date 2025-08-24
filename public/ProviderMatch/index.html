@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ProviderMatch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1200px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; }
+    .match { border-bottom: 1px solid #eaeaea; padding: 10px 0; }
+    .score { font-weight: 700; }
+    ul { padding-left: 18px; }
+    pre { background: #f6f6f6; padding: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>ProviderMatch</h1>
+  <p>Compatibility analysis using crowdsourced experience signals. Educational only; not medical advice.</p>
+
+  <div class="card">
+    <h3>User profile JSON</h3>
+    <textarea id="user" rows="7" placeholder='{
+  "conditions": ["migraine","EDS"],
+  "goals": ["shared decision-making","multi-modal pain mgmt"],
+  "insurance": "Aetna PPO",
+  "location": "US-CA",
+  "languages": ["en","es"],
+  "preferences": { "virtualCare": true, "access": ["telehealth"] }
+}'></textarea>
+
+    <h3>Providers JSON array</h3>
+    <textarea id="providers" rows="12" placeholder='[
+  {
+    "id":"p101",
+    "name":"Dr. Rivera",
+    "specialties":["neurology","headache"],
+    "treats":["migraine","tension headache"],
+    "insuranceAccepted":["Aetna PPO","Medicare"],
+    "location":"US-CA",
+    "languages":["en","es"],
+    "modalities":["botox","CGRP","telehealth"],
+    "crowd":{"n":42,"scores":{"listening":4.6,"respect":4.7,"explains":4.4,"sharedDecision":4.6,"adminEase":3.9},"tags":["validates symptoms","on-time","portal responsive"]}
+  },
+  {
+    "id":"p102",
+    "name":"Dr. Chen",
+    "specialties":["rheumatology","pain"],
+    "treats":["fibromyalgia","EDS"],
+    "insuranceAccepted":["BCBS PPO","Aetna PPO"],
+    "location":"US-CA",
+    "languages":["en"],
+    "modalities":["telehealth","PT referrals"],
+    "crowd":{"n":12,"scores":{"listening":4.2,"respect":4.5,"explains":4.2,"sharedDecision":4.4,"adminEase":3.6},"tags":["thorough","sometimes delayed portal replies"]}
+  }
+]' ></textarea>
+
+    <button id="runBtn">Analyze</button>
+  </div>
+
+  <div class="grid" style="margin-top:20px;">
+    <div class="card">
+      <h3>Top matches</h3>
+      <div id="matches">(results appear here)</div>
+    </div>
+    <div class="card">
+      <h3>Notes</h3>
+      <div id="notes"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#providerMatchForm",
+      type: "providerMatch",
+      title: d => `ProviderMatch: ${d.location || "Results"}`,
+      extraTags: ["match","providers"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

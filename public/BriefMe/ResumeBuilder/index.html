@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Resume Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:10px; font-weight:600; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    input[type="text"], input[type="date"], input[type="email"], input[type="tel"], textarea, select {
+      width:100%; padding:8px; margin-top:6px;
+      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
+    }
+    textarea { resize:vertical; min-height:72px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .row-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; }
+    .inline { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+    .chip { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
+    .actions { display:flex; gap:10px; margin-top:12px; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    .danger { background:#b00020; color:#fff; }
+    .grid-list { display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+    .item-card { border:1px solid #ddd; border-radius:8px; padding:12px; background:#fff; }
+    .range-wrap { display:flex; align-items:center; gap:12px; margin-top:8px; }
+    .range-wrap input[type="range"] { flex:1; }
+    .small { font-size:12px; color:var(--muted); }
+    .footer-note { font-size:13px; color:var(--muted); margin-top:6px; }
+  </style>
+</head>
+<body>
+  <h1>Resume Builder</h1>
+  <p class="hint">Create a one-page health summary with history, diagnoses, symptoms, treatments, and care team details. This is useful for new providers or quick context at the start of a visit.</p>
+
+  <form id="resumeForm">
+    <!-- Patient Information -->
+    <section>
+      <h2>Patient Information</h2>
+      <div class="row">
+        <div>
+          <label for="fullName">Full Name *</label>
+          <input type="text" id="fullName" name="fullName" required />
+        </div>
+        <div>
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="pronouns">Pronouns <span class="hint">(e.g., she/her, he/him, they/them)</span></label>
+          <input type="text" id="pronouns" name="pronouns" placeholder="e.g., she/her" />
+        </div>
+        <div>
+          <label for="age">Age</label>
+          <input type="text" id="age" name="age" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" />
+        </div>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" />
+        </div>
+      </div>
+
+      <label for="primaryConcerns">Primary Condition(s) or Concern(s) *</label>
+      <textarea id="primaryConcerns" name="primaryConcerns" maxlength="500" placeholder="Briefly describe your main health concerns or conditions" required></textarea>
+      <div class="small" id="primaryConcernsCount">0/500</div>
+    </section>
+
+    <!-- Diagnoses -->
+    <section>
+      <h2>Diagnoses</h2>
+      <p class="hint">List each diagnosis, the year it was given, and who made it.</p>
+      <div id="diagnoses" class="grid-list"></div>
+      <div class="actions">
+        <button class="btn-secondary" type="button" id="addDiagnosis">+ Add Diagnosis</button>
+      </div>
+    </section>
+
+    <!-- Key Medical History -->
+    <section>
+      <h2>Key Medical History</h2>
+      <label for="historyTimeline">Medical History Timeline</label>
+      <textarea id="historyTimeline" name="historyTimeline" maxlength="1000" placeholder="When symptoms started, major changes, hospitalizations, surgeries, other significant events in order"></textarea>
+      <div class="small" id="historyTimelineCount">0/1000</div>
+
+      <label for="familyHistory">Relevant Family History</label>
+      <textarea id="familyHistory" name="familyHistory" maxlength="500" placeholder="Family medical history that may be relevant"></textarea>
+      <div class="small" id="familyHistoryCount">0/500</div>
+    </section>
+
+    <!-- Current Symptoms -->
+    <section>
+      <h2>Current Symptoms</h2>
+      <p class="hint">Select all that apply. You can add details below.</p>
+      <div class="chips">
+        <!-- You can edit this list at any time -->
+        <label class="chip"><input type="checkbox" name="symptoms" value="Fatigue" /> Fatigue</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Dizziness or lightheadedness" /> Dizziness or lightheadedness</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="GI symptoms" /> GI symptoms</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Cognitive issues" /> Cognitive issues</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Motor or balance issues" /> Motor or balance issues</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Sleep disruptions" /> Sleep disruptions</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Headaches" /> Headaches</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Anxiety or depression" /> Anxiety or depression</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Shortness of breath" /> Shortness of breath</label>
+        <label class="chip"><input type="checkbox" name="symptoms" value="Joint or muscle pain" /> Joint or muscle pain</label>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="painType">Pain Type (if applicable)</label>
+          <input type="text" id="painType" name="painType" placeholder="e.g., sharp, burning, aching" />
+        </div>
+        <div>
+          <label for="otherSymptoms">Other Symptoms</label>
+          <input type="text" id="otherSymptoms" name="otherSymptoms" placeholder="Anything not listed above" />
+        </div>
+      </div>
+
+      <label>Overall Symptom Severity</label>
+      <div class="range-wrap">
+        <span class="small">Mild</span>
+        <input type="range" id="severity" name="severity" min="1" max="10" step="1" value="5" />
+        <span class="small">Severe</span>
+        <span id="severityValue" class="small">5</span>
+      </div>
+    </section>
+
+    <!-- Functional Impact -->
+    <section>
+      <h2>Functional Impact</h2>
+      <p class="hint">What daily activities are affected?</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="functional" value="Standing or walking" /> Standing or walking</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Working or concentrating" /> Working or concentrating</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Driving" /> Driving</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Household tasks" /> Household tasks</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Parenting or caregiving" /> Parenting or caregiving</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Social activities" /> Social activities</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Exercise or physical activity" /> Exercise or physical activity</label>
+        <label class="chip"><input type="checkbox" name="functional" value="Sleep" /> Sleep</label>
+      </div>
+
+      <label for="functionalOther">Other Functional Impacts</label>
+      <input type="text" id="functionalOther" name="functionalOther" placeholder="Other ways daily life is affected" />
+
+      <label for="limitations">Short Explanation of Limitations</label>
+      <textarea id="limitations" name="limitations" maxlength="750" placeholder="Briefly explain how your condition limits activities and quality of life"></textarea>
+      <div class="small" id="limitationsCount">0/750</div>
+    </section>
+
+    <!-- Past Treatments & Medications -->
+    <section>
+      <h2>Past Treatments and Medications</h2>
+      <p class="hint">What you tried and the outcome.</p>
+      <div id="treatments" class="grid-list"></div>
+      <div class="actions">
+        <button class="btn-secondary" type="button" id="addTreatment">+ Add Treatment</button>
+      </div>
+    </section>
+
+    <!-- Other Providers Consulted -->
+    <section>
+      <h2>Other Providers Consulted</h2>
+      <div id="providers" class="grid-list"></div>
+      <div class="actions">
+        <button class="btn-secondary" type="button" id="addProvider">+ Add Provider</button>
+      </div>
+    </section>
+
+    <!-- Allergies or Sensitivities -->
+    <section>
+      <h2>Allergies or Sensitivities</h2>
+      <label for="allergies">Known Allergies and Reactions</label>
+      <textarea id="allergies" name="allergies" maxlength="500" placeholder="Medications, foods, environmental, medical materials, and reactions"></textarea>
+      <div class="small" id="allergiesCount">0/500</div>
+
+      <label for="medIntolerances">Medication Reactions or Intolerances</label>
+      <textarea id="medIntolerances" name="medIntolerances" placeholder="Adverse reactions even if not true allergies"></textarea>
+    </section>
+
+    <!-- Additional Information -->
+    <section>
+      <h2>Additional Information</h2>
+      <div class="row">
+        <div>
+          <label for="emergencyContact">Emergency Contact</label>
+          <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Name and phone number" />
+        </div>
+        <div>
+          <label for="insurance">Insurance Information</label>
+          <input type="text" id="insurance" name="insurance" placeholder="Provider and plan (optional)" />
+        </div>
+      </div>
+
+      <label for="notes">Additional Notes</label>
+      <textarea id="notes" name="notes" placeholder="Any other information helpful for your providers"></textarea>
+    </section>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary">Save to Vault</button>
+      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
+      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+    </div>
+    <p class="footer-note">Your summary saves privately to your Medical Memory Vault. You can export to PDF later.</p>
+  </form>
+
+  <!-- Templates for repeatable rows -->
+  <template id="tplDiagnosis">
+    <div class="item-card">
+      <div class="row-3">
+        <div>
+          <label>Diagnosis</label>
+          <input type="text" name="dx" placeholder="e.g., Fibromyalgia" />
+        </div>
+        <div>
+          <label>Year Given</label>
+          <input type="text" name="year" placeholder="e.g., 2023" />
+        </div>
+        <div>
+          <label>Provider/Specialist</label>
+          <input type="text" name="by" placeholder="e.g., Dr. Smith, Rheumatologist" />
+        </div>
+      </div>
+      <label>Additional Notes (Optional)</label>
+      <textarea name="notes" placeholder="Context, criteria, confirmation testing, etc."></textarea>
+      <div class="actions"><button type="button" class="danger btn-remove">Remove</button></div>
+    </div>
+  </template>
+
+  <template id="tplTreatment">
+    <div class="item-card">
+      <div class="row-3">
+        <div>
+          <label>Treatment or Medication</label>
+          <input type="text" name="name" placeholder="e.g., Metformin, Physical Therapy" />
+        </div>
+        <div>
+          <label>Duration or Dosage</label>
+          <input type="text" name="dose" placeholder="e.g., 6 months, 50 mg daily" />
+        </div>
+        <div>
+          <label>Outcome</label>
+          <select name="outcome">
+            <option value="">Select outcome...</option>
+            <option>Helpful</option>
+            <option>Partially helpful</option>
+            <option>No benefit</option>
+            <option>Worsened symptoms</option>
+            <option>Stopped due to side effects</option>
+          </select>
+        </div>
+      </div>
+      <label>Additional Notes</label>
+      <textarea name="notes" placeholder="Why it helped or failed, side effects, adherence, access issues"></textarea>
+      <div class="actions"><button type="button" class="danger btn-remove">Remove</button></div>
+    </div>
+  </template>
+
+  <template id="tplProvider">
+    <div class="item-card">
+      <div class="row-3">
+        <div>
+          <label>Provider Name</label>
+          <input type="text" name="name" placeholder="e.g., Dr. Johnson" />
+        </div>
+        <div>
+          <label>Specialty</label>
+          <input type="text" name="specialty" placeholder="e.g., Cardiologist" />
+        </div>
+        <div>
+          <label>Location or Practice</label>
+          <input type="text" name="location" placeholder="e.g., Boston Medical Center" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Date(s) Seen</label>
+          <input type="text" name="dates" placeholder="e.g., March 2024" />
+        </div>
+        <div>
+          <label>Outcome or Recommendations</label>
+          <input type="text" name="outcome" placeholder="e.g., Changed medication, ordered MRI" />
+        </div>
+      </div>
+      <div class="actions"><button type="button" class="danger btn-remove">Remove</button></div>
+    </div>
+  </template>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#resumeForm",
+      type: "resume",
+      title: d => `Medical Resume: ${d.patientName || "Snapshot"}`,
+      extraTags: ["resume","snapshot"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

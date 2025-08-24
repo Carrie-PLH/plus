@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BriefMe Suite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1 { margin-bottom: 6px; }
+    .hint { font-size:13px; color:var(--muted); margin:0 0 18px; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+    .card { border:1px solid var(--line); background:var(--card); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+    .card h3 { margin:0; font-size:18px; }
+    .card p { margin:0; font-size:14px; color:#333; }
+    .card a { margin-top:auto; align-self:flex-start; text-decoration:none; background:#0a66c2; color:#fff; padding:8px 12px; border-radius:8px; }
+    nav { margin-bottom:16px; }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <h1>BriefMe Suite</h1>
+  <p class="hint">Plan, communicate, and follow through. These tools save to your personal Vault.</p>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/Vault/">Vault</a>
+  </nav>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Appointment Planner</h3>
+      <p>Set top goals and outline priority issues so the visit stays focused and productive.</p>
+      <a href="/BriefMe/AppointmentPlanner/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>Resume Builder</h3>
+      <p>Create a concise medical snapshot: history, diagnoses, meds, prior care, and key context.</p>
+      <a href="/BriefMe/ResumeBuilder/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>Story Shaper</h3>
+      <p>Describe a symptom clearly with OLD CARTS and “because” links to your history.</p>
+      <a href="/BriefMe/StoryShaper/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>Agenda Designer</h3>
+      <p>Run the visit like a meeting; set objectives, capture notes, and confirm next steps.</p>
+      <a href="/BriefMe/AgendaDesigner/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>Conversation Framer</h3>
+      <p>Script phrasing for tricky moments; prepare redirects and grounding language.</p>
+      <a href="/BriefMe/ConversationFramer/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>Action Tracker</h3>
+      <p>Record decisions, tasks, deadlines, and communications after each visit.</p>
+      <a href="/BriefMe/ActionTracker/">Open</a>
+    </div>
+
+    <div class="card">
+      <h3>CareMapper</h3>
+      <p>Process dismissive encounters, ground yourself, and plan constructive next steps.</p>
+      <a href="/BriefMe/CareMapper/">Open</a>
+    </div>
+  </div>
+  <script type="module">
+    import { initAuth, saveEntryToVault } from "/lib/briefmeSave.js";
+    import { registerCopilotIngest } from "/lib/briefmeSave.js";
+  
+    // Enable telemetry for CoPilot on the Hub page
+    registerCopilotIngest({ enabled: true, defaultTool: "hub" });
+  
+    await initAuth();
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

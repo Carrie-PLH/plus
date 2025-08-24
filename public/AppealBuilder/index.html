@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AppealBuilder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>AppealBuilder</h1>
+
+  <label>Enter patient information</label>
+  <textarea id="patientInfo" rows="5">45-year-old female with multiple sclerosis experiencing increased spasticity and mobility limitations despite current therapy.</textarea>
+
+  <label>Enter denial reason</label>
+  <textarea id="denialReason" rows="4">Insurance denied coverage for ocrelizumab infusion therapy citing insufficient evidence of medical necessity.</textarea>
+
+  <button id="buildBtn">Build Appeal</button>
+
+  <h3>Result</h3>
+  <pre id="out">Click "Build Appeal" to generate.</pre>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#appealForm",
+      type: "appealBuilder",
+      title: d => `Appeal: ${d.denialReason || "Insurance appeal"}`,
+      extraTags: ["appeal","insurance"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

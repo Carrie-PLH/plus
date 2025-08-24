@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ResetPro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    pre, code { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>ResetPro</h1>
+  <p>Detects dismissive patterns in provider messages; suggests responses; produces a documentation note.</p>
+
+  <h3>Example input JSON</h3>
+  <pre id="example">{
+  "thread": [
+    { "role": "patient",  "text": "I have had severe abdominal pain for three weeks; I can’t sleep.", "ts": "2025-08-01T10:00:00Z" },
+    { "role": "provider", "text": "Everyone has stomach aches sometimes; it’s probably stress. Try not to worry.", "ts": "2025-08-01T10:05:00Z" },
+    { "role": "patient",  "text": "It’s waking me up nightly and getting worse.", "ts": "2025-08-01T10:07:00Z" },
+    { "role": "provider", "text": "You’re overthinking this. We can talk next month.", "ts": "2025-08-01T10:09:00Z" }
+  ],
+  "goal": "document"
+}</pre>
+
+  <form id="form">
+    <label>Thread JSON</label>
+    <textarea id="input" rows="12" placeholder='{"thread":[{"role":"provider","text":"..."}], "goal":"prepare"}'></textarea>
+    <button type="submit">Analyze</button>
+    <button type="button" id="load">Load Example</button>
+  </form>
+
+  <div class="grid">
+    <div>
+      <h3>Assessment</h3>
+      <pre id="assessment">Run analysis to see findings.</pre>
+
+      <h3>Response Options</h3>
+      <ul id="responses"></ul>
+    </div>
+    <div>
+      <h3>Documentation Note (copy/paste)</h3>
+      <pre id="doc"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#toolForm",
+      type: "toolTemplate",
+      title: d => `Tool: ${d.title || "Entry"}`,
+      extraTags: ["template"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Medical Memory Vault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1 { margin:0 0 6px; }
+    .hint { font-size:13px; color:var(--muted); margin:0 0 18px; }
+    nav { margin-bottom:16px; }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+    .panel { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:14px; }
+    input[type="text"], select { width:100%; padding:8px; border:1px solid #cfcfcf; border-radius:6px; font:inherit; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+    .list { display:flex; flex-direction:column; gap:10px; }
+    .card { border:1px solid var(--line); background:var(--card); border-radius:12px; padding:12px; }
+    .meta { font-size:12px; color:var(--muted); margin-top:4px; }
+    pre { white-space:pre-wrap; margin:6px 0 0; }
+  </style>
+</head>
+<body>
+  <h1>Medical Memory Vault</h1>
+  <p class="hint">Timeline of episodes saved by your tools. Private to the signed-in user.</p>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/BriefMe/">BriefMe</a>
+  </nav>
+
+  <div class="panel">
+    <div>
+      <label>Type filter</label>
+      <input id="typeFilter" type="text" placeholder="e.g., actionTracker" />
+    </div>
+    <div>
+      <label>Tag filter</label>
+      <input id="tagFilter" type="text" placeholder="e.g., briefme" />
+    </div>
+    <div>
+      <label>Limit</label>
+      <select id="limitSel">
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="refreshBtn" class="btn-primary">Refresh</button>
+    <button id="sampleBtn" class="btn-secondary">Create sample episode</button>
+    <span id="status" class="hint"></span>
+  </div>
+
+  <div id="list" class="list"></div>
+
+  <div class="row">
+    <button id="loadMoreBtn" class="btn-secondary" style="display:none">Load more</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { firebaseConfig, FUNCTIONS_REGION } from "/lib/config.js";
+    import { makeVaultHelpers } from "/lib/vault.js";
+
+    // Init Firebase and anon auth
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    await signInAnonymously(auth);
+
+    // Vault helpers from your updated lib/vault.js
+    const { saveToVault, listEpisodes } = makeVaultHelpers(app, FUNCTIONS_REGION);
+
+    // UI handles
+    const $ = (id) => document.getElementById(id);
+    const typeFilter = $("typeFilter");
+    const tagFilter  = $("tagFilter");
+    const limitSel   = $("limitSel");
+    const statusEl   = $("status");
+    const listEl     = $("list");
+    const loadMoreBtn = $("loadMoreBtn");
+
+    let nextCursor = null;
+
+    function setStatus(msg) { statusEl.textContent = msg || ""; }
+    function fmtDate(s) {
+      try { return new Date(s).toLocaleString(); } catch { return s || ""; }
+    }
+    function renderItems(items = [], append = false) {
+      if (!append) listEl.innerHTML = "";
+      for (const it of items) {
+        const div = document.createElement("div");
+        div.className = "card";
+        const tags = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+        const rawText = it.raw?.text || "";
+        div.innerHTML = `
+          <strong>${it.title || "(Untitled)"}${it.type ? " [" + it.type + "]" : ""}</strong>
+          <div class="meta">When: ${fmtDate(it.occurredAt)}${tags ? " • Tags: " + tags : ""}</div>
+          ${rawText ? `<pre>${rawText.slice(0, 600)}${rawText.length > 600 ? " …" : ""}</pre>` : ""}
+        `;
+        listEl.appendChild(div);
+      }
+    }
+
+    async function refresh(resetCursor = true) {
+      try {
+        setStatus("Loading…");
+        if (resetCursor) nextCursor = null;
+        const res = await listEpisodes({
+          type: (typeFilter.value || undefined),
+          tag:  (tagFilter.value || undefined),
+          limit: Number(limitSel.value) || 20,
+          cursor: nextCursor || undefined
+        });
+        if (!res?.ok) {
+          setStatus("Load failed");
+          return;
+        }
+        renderItems(res.items || [], !resetCursor);
+        nextCursor = res.nextCursor || null;
+        loadMoreBtn.style.display = nextCursor ? "" : "none";
+        setStatus(nextCursor ? "More available" : "All caught up");
+      } catch (err) {
+        console.error(err);
+        setStatus(err?.message || "Error");
+      }
+    }
+
+    $("refreshBtn").addEventListener("click", () => refresh(true));
+    loadMoreBtn.addEventListener("click", () => refresh(false));
+
+    $("sampleBtn").addEventListener("click", async () => {
+      try {
+        setStatus("Saving sample…");
+        const now = new Date();
+        const res = await saveToVault({
+          type: "toolOutput",
+          title: "Sample episode",
+          rawText: "Created from Vault page for smoke test.",
+          structured: { from: "VaultPage", when: now.toISOString() },
+          tags: ["sample","vault"],
+          summarize: true
+        });
+        if (!res?.ok) {
+          setStatus("Save failed");
+          return;
+        }
+        setStatus("Saved. Refreshing…");
+        await refresh(true);
+      } catch (err) {
+        console.error(err);
+        setStatus(err?.message || "Save error");
+      }
+    });
+
+    // Initial load
+    refresh(true);
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

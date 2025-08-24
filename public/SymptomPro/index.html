@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SymptomPro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>SymptomPro</h1>
+  <p>Paste patient inputs as JSON. Minimal example:</p>
+  <pre>{
+  "symptoms": {
+    "chiefComplaint": "Throbbing headache",
+    "onset": "2 days ago",
+    "location": "Head",
+    "duration": "Intermittent",
+    "character": "Throbbing",
+    "aggravating": "Bright light",
+    "alleviating": "Rest",
+    "radiation": "None",
+    "timing": "Worse at night",
+    "severity": "7/10"
+  },
+  "context": {
+    "history": "No head trauma",
+    "meds": "Ibuprofen PRN"
+  }
+}</pre>
+
+  <form id="form">
+    <label>Input JSON</label>
+    <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
+    <button type="submit">Generate OLD CARTS Summary</button>
+  </form>
+
+  <h3>Result</h3>
+  <pre id="out">Click the button to generate.</pre>
+
+ const firebaseConfig = {
+      apiKey: "YOUR_PUBLIC_WEB_API_KEY",
+      authDomain: "black-monitor-469420-h9.firebaseapp.com",
+      projectId: "black-monitor-469420-h9",
+      storageBucket: "black-monitor-469420-h9.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    <script type="module">
+      window.briefme?.configureForm?.({
+        selector: "#symptomForm",
+        type: "symptomPro",
+        title: d => `SymptomPro: ${d.primarySymptom || "Summary"}${d.onset ? " ("+d.onset+")" : ""}`,
+        extraTags: ["symptom","OLD_CARTS"]
+      });
+    </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

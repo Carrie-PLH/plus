@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PromptPro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>PromptPro</h1>
+  <p>Turns symptoms into smart, ready-to-ask questions.</p>
+
+  <h3>Example input</h3>
+  <pre>{
+  "symptoms": {
+    "chiefComplaint": "Throbbing headache",
+    "onset": "2 days ago",
+    "location": "Head",
+    "duration": "Intermittent",
+    "character": "Throbbing",
+    "aggravating": "Bright light",
+    "alleviating": "Rest",
+    "radiation": "None",
+    "timing": "Worse at night",
+    "severity": "7/10"
+  },
+  "context": {
+    "history": "Migraine in family. No head trauma.",
+    "meds": "Ibuprofen 400 mg as needed"
+  }
+}</pre>
+
+  <form id="form">
+    <label>Input JSON</label>
+    <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
+    <button type="submit">Generate Questions</button>
+  </form>
+
+  <div class="grid">
+    <div>
+      <h3>Questions</h3>
+      <ul id="questions"></ul>
+    </div>
+    <div>
+      <h3>Notes</h3>
+      <pre id="notes"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#promptProForm",
+      type: "promptPro",
+      title: d => `PromptPro: ${d.primarySymptom || d.topic || "Questions"}`,
+      extraTags: ["questions","prep"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

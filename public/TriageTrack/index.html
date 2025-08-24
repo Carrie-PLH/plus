@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>TriageTrack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
+    textarea, input { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; }
+    h3 { margin: 12px 0; }
+    ul { padding-left: 18px; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>TriageTrack</h1>
+  <p>Summarizes urgent details for rapid response. Educational only. Not medical advice.</p>
+
+  <div class="card">
+    <label>Events JSON</label>
+    <textarea id="events" rows="10" placeholder='[{"ts":"2025-08-20T22:10:00Z","symptom":"chest pain","severity":8,"vitals":{"hr":110,"bp":"160/100","spo2":92},"notes":"worse with exertion"}]'></textarea>
+
+    <label>Patient JSON (optional)</label>
+    <textarea id="patient" rows="4" placeholder='{"age": 58, "sex":"M", "conditions":["hypertension","diabetes"]}'></textarea>
+
+    <label>Context JSON (optional)</label>
+    <textarea id="context" rows="4" placeholder='{"onMeds":["metformin"],"recentInfection":false}'></textarea>
+
+    <button id="runBtn">Summarize</button>
+  </div>
+
+  <div class="grid" style="margin-top:20px;">
+    <div class="card">
+      <h3>Summary</h3>
+      <div id="summary">(result appears here)</div>
+
+      <h3>Red flags</h3>
+      <ul id="redFlags"></ul>
+
+      <h3>Vitals of concern</h3>
+      <ul id="vitals"></ul>
+
+      <h3>Risk level</h3>
+      <div id="risk">unknown</div>
+    </div>
+
+    <div class="card">
+      <h3>Immediate actions</h3>
+      <ul id="immediate"></ul>
+
+      <h3>Next 24 hours</h3>
+      <ul id="next24"></ul>
+
+      <h3>Communication points</h3>
+      <ul id="comms"></ul>
+
+      <h3>Notes</h3>
+      <div id="notes"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#triageForm",
+      type: "triageTrack",
+      title: d => `TriageTrack: ${d.currentConcern || "Summary"}`,
+      extraTags: ["triage","safety"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

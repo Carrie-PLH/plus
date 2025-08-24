@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Agenda Designer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:10px; font-weight:600; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    input[type="text"], input[type="date"], textarea, select {
+      width:100%; padding:8px; margin-top:6px;
+      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
+    }
+    textarea { resize:vertical; min-height:72px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .chips, .options { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+    .chip, .opt { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
+    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    .checklist { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; margin-top:10px; }
+    .checklist label { font-weight:400; background:#fff; border:1px solid #cfcfcf; border-radius:8px; padding:8px 10px; }
+    .note-box { min-height:120px; }
+    nav { margin-bottom:16px }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/BriefMe/">BriefMe Hub</a> |
+    <a href="/Vault/">Vault</a>
+  </nav>
+
+  <h1>Agenda Designer</h1>
+  <p class="hint">Structure your appointment like a focused meeting. Set one or two primary objectives, list priorities, prewrite key questions, and capture notes and end-of-visit checks.</p>
+
+  <form id="agendaForm">
+    <!-- Appointment Details -->
+    <section>
+      <h2>Appointment Details</h2>
+      <div class="row">
+        <div>
+          <label for="date">Date *</label>
+          <input type="date" id="date" name="date" required />
+        </div>
+        <div>
+          <label for="provider">Provider *</label>
+          <input type="text" id="provider" name="provider" placeholder="e.g., Dr. Smith" required />
+        </div>
+      </div>
+
+      <label>Purpose of visit</label>
+      <div class="options">
+        <label class="opt"><input type="radio" name="purpose" value="New Issue" /> New Issue</label>
+        <label class="opt"><input type="radio" name="purpose" value="Follow-Up" /> Follow-Up</label>
+        <label class="opt"><input type="radio" name="purpose" value="Results" /> Results</label>
+        <label class="opt"><input type="radio" name="purpose" value="Referral" /> Referral</label>
+        <label class="opt"><input type="radio" name="purpose" value="Other" /> Other</label>
+      </div>
+      <input type="text" id="purposeOther" name="purposeOther" placeholder="Specify other purpose (if applicable)" />
+    </section>
+
+    <!-- Main Objective -->
+    <section>
+      <h2>My Main Objective for This Visit</h2>
+      <p class="hint">Choose one or two primary goals.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="objectives" value="Get answers about a symptom" /> Get answers about a symptom</label>
+        <label class="chip"><input type="checkbox" name="objectives" value="Request a referral or test" /> Request a referral or test</label>
+        <label class="chip"><input type="checkbox" name="objectives" value="Discuss test results" /> Discuss test results</label>
+        <label class="chip"><input type="checkbox" name="objectives" value="Start or adjust a treatment" /> Start or adjust a treatment</label>
+        <label class="chip"><input type="checkbox" name="objectives" value="Follow up on previous visit" /> Follow up on previous visit</label>
+        <label class="chip"><input type="checkbox" name="objectives" value="Get a second opinion" /> Get a second opinion</label>
+      </div>
+      <input type="text" id="objectiveOther" name="objectiveOther" placeholder="Other objective" />
+    </section>
+
+    <!-- Top Issues -->
+    <section>
+      <h2>Top Issues I Want to Address</h2>
+      <p class="hint">List in order of priority.</p>
+      <input type="text" id="issue1" name="issue1" placeholder="1. Most important issue *" required />
+      <input type="text" id="issue2" name="issue2" placeholder="2. Second priority" />
+      <input type="text" id="issue3" name="issue3" placeholder="3. Third priority" />
+    </section>
+
+    <!-- Key Points / Questions -->
+    <section>
+      <h2>Key Points I Need to Say or Ask</h2>
+      <p class="hint">Prewrite important questions and points so you don’t forget during the visit.</p>
+      <input type="text" name="q1" placeholder="Important question or point #1" />
+      <input type="text" name="q2" placeholder="Important question or point #2" />
+      <input type="text" name="q3" placeholder="Important question or point #3" />
+    </section>
+
+    <!-- Opening Line -->
+    <section>
+      <h2>Opening Line to Start the Visit <span class="hint">(optional)</span></h2>
+      <p class="hint">Examples: "I prepared a few notes because I want to make the most of our time today." • "Here are the main things I need help with today…"</p>
+      <input type="text" id="openingLine" name="openingLine" placeholder="Write how you want to start the conversation" />
+    </section>
+
+    <!-- Notes -->
+    <section>
+      <h2>Notes from the Appointment</h2>
+      <textarea id="visitNotes" name="visitNotes" class="note-box" placeholder="Use this space during your visit to jot down answers, impressions, or action steps"></textarea>
+    </section>
+
+    <!-- End-of-Visit Checklist -->
+    <section>
+      <h2>End-of-Visit Wrap-Up Checklist</h2>
+      <div class="checklist">
+        <label><input type="checkbox" name="wrap" value="I understand the diagnosis or plan" /> I understand the diagnosis or plan</label>
+        <label><input type="checkbox" name="wrap" value="I know what to do next" /> I know what to do next</label>
+        <label><input type="checkbox" name="wrap" value="I have instructions or summary in writing" /> I have instructions or summary in writing</label>
+        <label><input type="checkbox" name="wrap" value="I know when and how to follow up" /> I know when and how to follow up</label>
+        <label><input type="checkbox" name="wrap" value="I asked all of my top questions" /> I asked all of my top questions</label>
+        <label><input type="checkbox" name="wrap" value="I clarified any concerns or confusion" /> I clarified any concerns or confusion</label>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="makeOpener" class="btn-secondary">Suggest Opening Line</button>
+      <button type="submit" class="btn-primary">Save to Vault</button>
+      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
+      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+    </div>
+  </form>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#agendaForm",
+      type: "agenda",
+      title: d => `Agenda: ${d.title || d.provider || "Visit"}`,
+      extraTags: ["agenda","visit"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

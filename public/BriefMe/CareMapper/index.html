@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CareMapper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:10px; font-weight:600; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    input[type="text"], textarea { width:100%; padding:8px; margin-top:6px; border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff; }
+    textarea { resize:vertical; min-height:72px; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+    .chip { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
+    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    .small { font-size:12px; color:var(--muted); }
+    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    nav { margin-bottom:16px }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/BriefMe/">BriefMe Hub</a> |
+    <a href="/Vault/">Vault</a>
+  </nav>
+
+  <h1>CareMapper</h1>
+  <p class="hint">If an appointment left you feeling dismissed or unheard, map what happened, ground yourself, and plan next steps. Saves to your Vault.</p>
+
+  <form id="cmForm">
+    <!-- What just happened -->
+    <section>
+      <h2>What Just Happened?</h2>
+      <label for="dismissiveWhat">What did the provider say or do that felt dismissive or invalidating? *</label>
+      <textarea id="dismissiveWhat" name="dismissiveWhat" maxlength="500" required placeholder="Describe specific words, actions, or behaviors that felt dismissive"></textarea>
+      <div class="small" id="dismissiveWhatCount">0/500</div>
+
+      <label for="feelings">Did I feel rushed, unheard, or misunderstood?</label>
+      <textarea id="feelings" name="feelings" placeholder="Describe how you felt during the appointment"></textarea>
+
+      <label for="whatITried">What did I try saying or asking? Did it help or backfire?</label>
+      <textarea id="whatITried" name="whatITried" placeholder="Describe what you tried and how the provider responded"></textarea>
+    </section>
+
+    <!-- Grounding reframes -->
+    <section>
+      <h2>Grounding Reframes to Keep You Centered</h2>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="reframes" value="This is about their behavior, not my worth." /> “This is about their behavior, not my worth.”</label>
+        <label class="chip"><input type="checkbox" name="reframes" value="They may be overworked, but I still deserve respect." /> “They may be overworked, but I still deserve respect.”</label>
+        <label class="chip"><input type="checkbox" name="reframes" value="My body doesn’t stop being real because someone else doesn’t understand it." /> “My body doesn’t stop being real because someone else doesn’t understand it.”</label>
+        <label class="chip"><input type="checkbox" name="reframes" value="I’ve handled worse. I can regroup and try again." /> “I’ve handled worse. I can regroup and try again.”</label>
+        <label class="chip"><input type="checkbox" name="reframes" value="This doesn’t define my care; it’s one stop on the path." /> “This doesn’t define my care; it’s one stop on the path.”</label>
+      </div>
+      <label for="reframeCustom">My own grounding phrase</label>
+      <input type="text" id="reframeCustom" name="reframeCustom" placeholder="Write your own reframe" />
+    </section>
+
+    <!-- Redirect phrases -->
+    <section>
+      <h2>Phrases to Use in the Moment</h2>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="redirects" value="I don’t feel like I’m being fully heard right now. Can we slow this down?" /> “I don’t feel like I’m being fully heard right now. Can we slow this down?”</label>
+        <label class="chip"><input type="checkbox" name="redirects" value="I’d like to make sure I explain this again more clearly." /> “I’d like to make sure I explain this again more clearly.”</label>
+        <label class="chip"><input type="checkbox" name="redirects" value="I understand your perspective. I still have some unresolved concerns I’d like to share." /> “I understand your perspective. I still have some unresolved concerns I’d like to share.”</label>
+        <label class="chip"><input type="checkbox" name="redirects" value="If we’re not able to address this today, who else might be the right person to follow up with?" /> “If we’re not able to address this today, who else might be the right person to follow up with?”</label>
+      </div>
+      <label for="redirectCustom">My own redirect phrase</label>
+      <input type="text" id="redirectCustom" name="redirectCustom" placeholder="Write your own phrase for redirecting difficult conversations" />
+    </section>
+
+    <!-- Follow-up options -->
+    <section>
+      <h2>Follow-Up Options</h2>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="followups" value="Request visit notes or After-Visit Summary" /> Request visit notes or After-Visit Summary</label>
+        <label class="chip"><input type="checkbox" name="followups" value="Send a portal message to clarify or restate concern" /> Send a portal message to clarify or restate concern</label>
+        <label class="chip"><input type="checkbox" name="followups" value="Request a second opinion or change providers" /> Request a second opinion or change providers</label>
+        <label class="chip"><input type="checkbox" name="followups" value="Contact patient relations if harm or dismissal occurred" /> Contact patient relations if harm or dismissal occurred</label>
+        <label class="chip"><input type="checkbox" name="followups" value="Reflect, regroup, and reframe for next appointment" /> Reflect, regroup, and reframe for next appointment</label>
+      </div>
+    </section>
+
+    <!-- Reflection -->
+    <section>
+      <h2>What I Want to Remember From This Experience</h2>
+      <label for="learned">What did I learn about how I want to advocate next time? <span class="small">(for you; not for the doctor)</span></label>
+      <textarea id="learned" name="learned" maxlength="500" placeholder="Insights about self-advocacy"></textarea>
+      <div class="small" id="learnedCount">0/500</div>
+
+      <label for="carryForward">What do I want to carry forward, and what do I want to leave behind?</label>
+      <textarea id="carryForward" name="carryForward" maxlength="500" placeholder="Skills or approaches to keep; what to release"></textarea>
+      <div class="small" id="carryForwardCount">0/500</div>
+    </section>
+
+    <!-- Next steps planning -->
+    <section>
+      <h2>Next Steps Planning</h2>
+      <div class="row">
+        <div>
+          <label for="immediate">Immediate actions I will take within 1 week</label>
+          <textarea id="immediate" name="immediate" placeholder="Concrete steps in the next week"></textarea>
+        </div>
+        <div>
+          <label for="longer">Longer-term plan for my healthcare</label>
+          <textarea id="longer" name="longer" placeholder="Broader plan to get the care I need"></textarea>
+        </div>
+      </div>
+      <label for="support">Support I need from others</label>
+      <textarea id="support" name="support" placeholder="What help I need from family, friends, or providers"></textarea>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="build" class="btn-secondary">Build Reflection Summary</button>
+      <button type="button" id="copySummary" class="btn-secondary">Copy Summary</button>
+      <button type="submit" class="btn-primary">Save to Vault</button>
+      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
+      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+    </div>
+  </form>
+
+  <!-- Output -->
+  <section>
+    <h2>Reflection Summary</h2>
+    <pre id="summaryOut">Click "Build Reflection Summary" to generate a concise write-up and plan.</pre>
+  </section>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#careMapperForm",
+      type: "careMapper",
+      title: d => `CareMapper: ${d.encounter || "Encounter"}`,
+      extraTags: ["processing","next-steps"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

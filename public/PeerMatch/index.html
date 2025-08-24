@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PeerMatch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
+    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; }
+    ul { padding-left: 18px; }
+    .match { border-bottom: 1px solid #eee; padding: 10px 0; }
+    .score { font-weight: 600; }
+    .copy { margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <h1>PeerMatch</h1>
+  <p>Connects users who share similar health conditions, experiences, or goals for mutual support. Not medical advice.</p>
+
+  <div class="card">
+    <h3>Your profile (JSON)</h3>
+    <textarea id="profile" rows="6" placeholder='{"conditions":["migraine","fibromyalgia"],"symptoms":["fatigue","brain fog"],"goals":["coping skills"],"languages":["en"],"location":"US-CA","ageBracket":"40s"}'></textarea>
+
+    <h3>Candidates (JSON array)</h3>
+    <textarea id="candidates" rows="10" placeholder='[
+  {"id":"u101","displayName":"River","conditions":["migraine"],"symptoms":["nausea","fatigue"],"goals":["coping skills"],"languages":["en"],"location":"US-CA","ageBracket":"40s"},
+  {"id":"u102","displayName":"Sky","conditions":["fibromyalgia"],"symptoms":["pain"],"goals":["new treatments"],"languages":["en"],"location":"US-NY","ageBracket":"30s"}
+]'></textarea>
+
+    <button id="runBtn">Find matches</button>
+  </div>
+
+  <div class="grid" style="margin-top:20px;">
+    <div class="card">
+      <h3>Top matches</h3>
+      <div id="matches">(results appear here)</div>
+    </div>
+    <div class="card">
+      <h3>Safety guide</h3>
+      <ul id="safety"></ul>
+      <h3>Notes</h3>
+      <div id="notes"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#peerMatchForm",
+      type: "peerMatch",
+      title: d => `PeerMatch: ${d.goal || "Support"}`,
+      extraTags: ["peers","support"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

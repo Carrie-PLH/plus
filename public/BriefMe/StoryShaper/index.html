@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Story Shaper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:10px; font-weight:600; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    input[type="text"], input[type="date"], textarea, select {
+      width:100%; padding:8px; margin-top:6px;
+      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
+    }
+    textarea { resize:vertical; min-height:72px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .chips, .options { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+    .chip, .opt { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
+    .range-wrap { display:flex; align-items:center; gap:12px; margin-top:8px; }
+    .range-wrap input[type="range"] { flex:1; }
+    .small { font-size:12px; color:var(--muted); }
+    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    .danger { background:#b00020; color:#fff; }
+    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    td:first-child { width:180px; font-weight:600; background:#f8f8f8; }
+  </style>
+</head>
+<body>
+  <h1>Story Shaper</h1>
+  <p class="hint">Practice a clear, confident symptom story and generate an OLD CARTS summary. You can save to your Vault when ready.</p>
+
+  <form id="storyForm">
+    <!-- Onset and Triggers -->
+    <section>
+      <h2>Onset and Triggers</h2>
+      <div class="row">
+        <div>
+          <label for="startDate">Approximate start date</label>
+          <input type="date" id="startDate" name="startDate" />
+        </div>
+        <div>
+          <label for="startApprox">If not exact, approximate timeframe</label>
+          <input type="text" id="startApprox" name="startApprox" placeholder="e.g., About 6 months ago; Early 2024" />
+        </div>
+      </div>
+
+      <label>Was there a known trigger or event?</label>
+      <div class="options">
+        <label class="opt"><input type="radio" name="triggerKnown" value="Yes" /> Yes</label>
+        <label class="opt"><input type="radio" name="triggerKnown" value="No" /> No</label>
+        <label class="opt"><input type="radio" name="triggerKnown" value="Not sure" /> Not sure</label>
+      </div>
+      <label for="triggerDesc">If yes, describe</label>
+      <input type="text" id="triggerDesc" name="triggerDesc" placeholder="e.g., After a car accident; during a stressful period" />
+    </section>
+
+    <!-- Location and Radiation -->
+    <section>
+      <h2>Location and Radiation</h2>
+      <label for="location">Where in your body do you feel it? <span class="small">(be specific)</span></label>
+      <textarea id="location" name="location" maxlength="300" placeholder="e.g., Right side of my head above the ear; lower back on the left, sometimes down my leg" required></textarea>
+      <div class="small" id="locationCount">0/300</div>
+
+      <label>Does it move or radiate to other areas?</label>
+      <div class="options">
+        <label class="opt"><input type="radio" name="radiates" value="Yes" /> Yes</label>
+        <label class="opt"><input type="radio" name="radiates" value="No" /> No</label>
+      </div>
+      <label for="radiationDesc">If yes, where does it move?</label>
+      <input type="text" id="radiationDesc" name="radiationDesc" placeholder="e.g., Starts in my neck and goes into my head" />
+    </section>
+
+    <!-- Character and Severity -->
+    <section>
+      <h2>Character and Severity</h2>
+      <p class="hint">Choose all that apply. You can add your own words below.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="character" value="Throbbing" /> Throbbing</label>
+        <label class="chip"><input type="checkbox" name="character" value="Burning" /> Burning</label>
+        <label class="chip"><input type="checkbox" name="character" value="Sharp" /> Sharp</label>
+        <label class="chip"><input type="checkbox" name="character" value="Tingling" /> Tingling</label>
+        <label class="chip"><input type="checkbox" name="character" value="Numbness" /> Numbness</label>
+        <label class="chip"><input type="checkbox" name="character" value="Pressure" /> Pressure</label>
+        <label class="chip"><input type="checkbox" name="character" value="Stiffness" /> Stiffness</label>
+        <label class="chip"><input type="checkbox" name="character" value="Cramping" /> Cramping</label>
+        <label class="chip"><input type="checkbox" name="character" value="Aching" /> Aching</label>
+        <label class="chip"><input type="checkbox" name="character" value="Electric/Shock-like" /> Electric/Shock-like</label>
+        <label class="chip"><input type="checkbox" name="character" value="Stabbing" /> Stabbing</label>
+        <label class="chip"><input type="checkbox" name="character" value="Heavy" /> Heavy</label>
+      </div>
+      <label for="characterOther">Other description</label>
+      <input type="text" id="characterOther" name="characterOther" placeholder="Your own words" />
+
+      <label>Average severity</label>
+      <div class="range-wrap">
+        <span class="small">Mild</span>
+        <input type="range" id="severity" name="severity" min="1" max="10" step="1" value="5" />
+        <span class="small">Severe</span>
+        <span id="severityValue" class="small">5/10</span>
+      </div>
+    </section>
+
+    <!-- Timing and Frequency -->
+    <section>
+      <h2>Timing and Frequency</h2>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="frequency" value="Constant" /> Constant</label>
+        <label class="chip"><input type="radio" name="frequency" value="Daily" /> Daily</label>
+        <label class="chip"><input type="radio" name="frequency" value="A few times a week" /> A few times a week</label>
+        <label class="chip"><input type="radio" name="frequency" value="Weekly" /> Weekly</label>
+        <label class="chip"><input type="radio" name="frequency" value="Monthly" /> Monthly</label>
+        <label class="chip"><input type="radio" name="frequency" value="Random or unpredictable" /> Random or unpredictable</label>
+        <label class="chip"><input type="radio" name="frequency" value="Only with certain triggers" /> Only with certain triggers</label>
+      </div>
+
+      <label for="frequencyDetails">Additional frequency details</label>
+      <input type="text" id="frequencyDetails" name="frequencyDetails" placeholder="e.g., Worse in the mornings; episodes last ~2 hours" />
+
+      <label for="knownTriggers">If triggered, list the triggers</label>
+      <input type="text" id="knownTriggers" name="knownTriggers" placeholder="e.g., Stress, bright lights, certain foods" />
+
+      <label for="timeOfDay">Does it vary by time of day?</label>
+      <select id="timeOfDay" name="timeOfDay">
+        <option value="">Select if applicable…</option>
+        <option>Morning</option>
+        <option>Afternoon</option>
+        <option>Evening</option>
+        <option>Night</option>
+        <option>Variable</option>
+      </select>
+    </section>
+
+    <!-- Aggravating / Alleviating -->
+    <section>
+      <h2>What makes it worse or better?</h2>
+      <label for="worse">What makes it worse?</label>
+      <textarea id="worse" name="worse" placeholder="Movement, stress, positions, weather changes, lack of sleep…"></textarea>
+
+      <label for="better">What makes it better?</label>
+      <textarea id="better" name="better" placeholder="Rest, heat, ice, medications, specific positions…"></textarea>
+    </section>
+
+    <!-- Impact -->
+    <section>
+      <h2>How does this affect your daily life?</h2>
+      <label for="impactDaily">Daily activities affected *</label>
+      <textarea id="impactDaily" name="impactDaily" maxlength="500" placeholder="Be specific about what you can no longer do or must limit" required></textarea>
+      <div class="small" id="impactDailyCount">0/500</div>
+
+      <div class="row">
+        <div>
+          <label for="impactWork">Impact on work or school</label>
+          <textarea id="impactWork" name="impactWork" placeholder="Difficulty concentrating, need for breaks, missed days…"></textarea>
+        </div>
+        <div>
+          <label for="impactSleep">Impact on sleep</label>
+          <textarea id="impactSleep" name="impactSleep" placeholder="Wakes you at night, trouble finding a position…"></textarea>
+        </div>
+      </div>
+
+      <label for="impactMood">Impact on mood or mental health</label>
+      <textarea id="impactMood" name="impactMood" placeholder="Frustration, anxiety, avoiding social activities…"></textarea>
+    </section>
+
+    <!-- Because Statement and Visit Goals -->
+    <section>
+      <h2>My “Because” Statement and Visit Goals</h2>
+      <label for="because">Complete this: “I’m concerned about [symptom] because…”</label>
+      <textarea id="because" name="because" maxlength="300" placeholder="Tie the symptom to your history or risks (max 300 chars)"></textarea>
+      <div class="small" id="becauseCount">0/300</div>
+
+      <p class="hint">What do you hope to get out of this visit?</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="visitGoals" value="A diagnosis or explanation" /> A diagnosis or explanation</label>
+        <label class="chip"><input type="checkbox" name="visitGoals" value="A treatment plan" /> A treatment plan</label>
+        <label class="chip"><input type="checkbox" name="visitGoals" value="A referral to specialist" /> A referral to specialist</label>
+        <label class="chip"><input type="checkbox" name="visitGoals" value="Testing or imaging" /> Testing or imaging</label>
+        <label class="chip"><input type="checkbox" name="visitGoals" value="Pain management" /> Pain management</label>
+        <label class="chip"><input type="checkbox" name="visitGoals" value="Rule out serious conditions" /> Rule out serious conditions</label>
+      </div>
+      <label for="visitGoalsOther">Other goals</label>
+      <input type="text" id="visitGoalsOther" name="visitGoalsOther" placeholder="Any other goals or expectations" />
+
+      <label for="prevTreatments">Previous treatments tried (if any)</label>
+      <textarea id="prevTreatments" name="prevTreatments" placeholder="e.g., Ibuprofen with minimal relief; PT helped temporarily"></textarea>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="build" class="btn-secondary">Build Story</button>
+      <button type="button" id="copyStory" class="btn-secondary">Copy Story</button>
+      <button type="submit" class="btn-primary">Save to Vault</button>
+    </div>
+  </form>
+
+  <!-- Output -->
+  <section>
+    <h2>Draft Story</h2>
+    <pre id="storyOut">Click “Build Story” to generate a concise narrative.</pre>
+
+    <h2>OLD CARTS Summary</h2>
+    <table id="oldcarts">
+      <tbody>
+        <tr><td>Onset</td><td id="o_onset"></td></tr>
+        <tr><td>Location</td><td id="o_location"></td></tr>
+        <tr><td>Duration/Frequency</td><td id="o_duration"></td></tr>
+        <tr><td>Character</td><td id="o_character"></td></tr>
+        <tr><td>Aggravating</td><td id="o_aggravating"></td></tr>
+        <tr><td>Alleviating</td><td id="o_alleviating"></td></tr>
+        <tr><td>Radiation</td><td id="o_radiation"></td></tr>
+        <tr><td>Timing</td><td id="o_timing"></td></tr>
+        <tr><td>Severity</td><td id="o_severity"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#storyForm",
+      type: "storyShaper",
+      title: d => `Story: ${d.location || "Symptom"}${d.severity ? " (sev "+d.severity+"/10)" : ""}`,
+      extraTags: ["story","OLD_CARTS"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>New Tool Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 600px; }
+      textarea { width: 100%; font: inherit; margin-bottom: 10px; }
+      button { padding: 6px 12px; font: inherit; }
+      pre { background: #f5f5f5; padding: 10px; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>New Tool Template</h1>
+    <form id="toolForm">
+      <label>Input JSON:</label>
+      <textarea id="input" rows="6" placeholder='{"field":"value"}'></textarea>
+      <button type="submit">Run</button>
+    </form>
+    <pre id="out">Results will appear here.</pre>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+
+      const firebaseConfig = {
+        apiKey: "YOUR_REAL_KEY",
+        authDomain: "black-monitor-469420-h9.firebaseapp.com",
+        projectId: "black-monitor-469420-h9",
+        storageBucket: "black-monitor-469420-h9.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const functions = getFunctions(app, "us-east4");
+
+      const form = document.getElementById("toolForm");
+      const out = document.getElementById("out");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        out.textContent = "Running...";
+        try {
+          const input = JSON.parse(document.getElementById("input").value);
+          const call = httpsCallable(functions, "toolTemplateRun");
+          const res = await call({ input });
+          out.textContent = JSON.stringify(res.data, null, 2);
+        } catch (err) {
+          out.textContent = "Error: " + (err?.message || String(err));
+          console.error(err);
+        }
+      });
+    </script>
+    <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

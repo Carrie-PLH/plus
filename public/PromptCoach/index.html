@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PromptCoach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
+    textarea, select { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+    .chat { border: 1px solid #ddd; padding: 10px; max-height: 260px; overflow: auto; background: #fafafa; }
+    .msg { margin: 6px 0; }
+    .who { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>PromptCoach</h1>
+  <p>Real-time role-play and coaching for challenging provider conversations.</p>
+
+  <div>
+    <label>Starter scenario or latest user line</label>
+    <textarea id="starter" rows="4" placeholder="I want to set an agenda for this visit and discuss ongoing pain that affects work and sleep."></textarea>
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Who speaks next</label>
+      <select id="role">
+        <option value="provider">provider</option>
+        <option value="patient">patient</option>
+      </select>
+    </div>
+    <div>
+      <label>Mode</label>
+      <select id="goal">
+        <option value="practice">practice</option>
+        <option value="prep">prep</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Coaching level</label>
+      <select id="level">
+        <option value="light">light</option>
+        <option value="deep">deep</option>
+      </select>
+    </div>
+    <div>
+      <button id="start">Start Scene</button>
+      <button id="next">Next Turn</button>
+      <button id="coach">Get Coaching</button>
+    </div>
+  </div>
+
+  <h3>Conversation</h3>
+  <div id="chat" class="chat"></div>
+
+  <div class="grid">
+    <div>
+      <h3>Response Options</h3>
+      <ul id="options"></ul>
+    </div>
+    <div>
+      <h3>Coaching</h3>
+      <pre id="coaching"></pre>
+    </div>
+  </div>
+
+  <h3>Next Turn Prompt</h3>
+  <pre id="prompt"></pre>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#promptCoachForm",
+      type: "promptCoach",
+      title: d => `PromptCoach: ${d.goal || "Practice"}`,
+      extraTags: ["coaching","practice"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

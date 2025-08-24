@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RightsBuilder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1000px; }
+    textarea, input, select { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; }
+    h3 { margin: 16px 0 8px; }
+    ul { padding-left: 18px; }
+  </style>
+</head>
+<body>
+  <h1>RightsBuilder</h1>
+  <p>Clarifies healthcare rights and suggests next steps. Educational only. Not legal advice.</p>
+
+  <div class="grid">
+    <div class="card">
+      <label>Your question</label>
+      <textarea id="question" rows="5" placeholder="Example: Can I get copies of my medical records and how long should it take?"></textarea>
+
+      <label>Jurisdiction hint (optional)</label>
+      <input id="jurisdiction" placeholder="Example: US, California, Ontario, UK" />
+
+      <label>Context (optional JSON)</label>
+      <textarea id="context" rows="5" placeholder='{"providerType":"hospital","situation":"requested records last week"}'></textarea>
+
+      <button id="runBtn">Get my rights</button>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Rights summary</h3>
+        <div id="summary">(result appears here)</div>
+      </div>
+
+      <div class="card">
+        <h3>Next steps</h3>
+        <ul id="steps"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Templates</h3>
+        <div id="templates"></div>
+      </div>
+
+      <div class="card">
+        <h3>References</h3>
+        <ul id="refs"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Notes</h3>
+        <div id="notes"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#rightsForm",
+      type: "rightsBuilder",
+      title: d => `Rights: ${d.question ? d.question.slice(0,40) : "Question"}`,
+      extraTags: ["rights","next-steps"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AccessPro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
+    textarea, input, select { width: 100%; font: inherit; margin-bottom: 10px; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .card { border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; margin-bottom: 20px; }
+    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>AccessPro</h1>
+  <p>Accessibility supports: voice-to-text simulation, translation, and cognitive simplification.</p>
+
+  <div class="card">
+    <label>Input Text</label>
+    <textarea id="inputText" rows="5" placeholder="Paste or dictate text here..."></textarea>
+
+    <label>Target Language (e.g., es, fr, en)</label>
+    <input id="targetLang" value="en" />
+
+    <label><input type="checkbox" id="simplify" checked /> Provide simplified version</label>
+
+    <button id="runBtn">Process</button>
+  </div>
+
+  <div class="card">
+    <h3>Transcript</h3>
+    <pre id="outTranscript"></pre>
+
+    <h3>Translation</h3>
+    <pre id="outTranslation"></pre>
+
+    <h3>Simplified</h3>
+    <pre id="outSimplified"></pre>
+  </div>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#accessForm",
+      type: "accessPro",
+      title: d => `AccessPro: ${d.targetLanguage || "en"}${d.simplify ? " + simplify" : ""}`,
+      extraTags: ["accessibility"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>

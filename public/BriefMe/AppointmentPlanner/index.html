@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">🗂️</text></svg>'>
+  <meta charset="utf-8" />
+  <title>Appointment Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui,sans-serif; margin:40px auto; max-width:800px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:8px; font-weight:600; }
+    input[type="text"], input[type="date"], textarea, select {
+      width:100%; padding:8px; margin-top:6px;
+      border:1px solid #ccc; border-radius:6px; font:inherit; background:#fff;
+    }
+    textarea { resize:vertical; min-height:60px; }
+    .options { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .options label { font-weight:400; background:#fff; padding:6px 10px; border:1px solid #ccc; border-radius:6px; cursor:pointer; }
+    .options input { margin-right:6px; }
+    button { padding:10px 16px; font:inherit; border:none; border-radius:6px; cursor:pointer; background:#0a66c2; color:#fff; margin-top:8px; }
+    button:hover { background:#004080; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    nav { margin-bottom:16px }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/BriefMe/">BriefMe Hub</a> |
+    <a href="/Vault/">Vault</a>
+  </nav>
+
+  <h1>Appointment Planner</h1>
+  <p class="hint">Prepare for your appointment. Set visit type, define up to two primary goals, list top issues and questions, capture what your doctor needs to know, and leave yourself a reminder.</p>
+
+  <form id="appointmentForm">
+    <!-- Appointment Details -->
+    <section>
+      <h2>Appointment Details</h2>
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" />
+
+      <label for="provider">Provider</label>
+      <input type="text" id="provider" name="provider" placeholder="e.g., Dr. Smith" />
+
+      <label>Type of Visit</label>
+      <div class="options">
+        <label><input type="radio" name="visitType" value="New Visit" /> New Visit</label>
+        <label><input type="radio" name="visitType" value="Follow-Up" /> Follow-Up</label>
+        <label><input type="radio" name="visitType" value="Results" /> Results</label>
+        <label><input type="radio" name="visitType" value="Referral Request" /> Referral Request</label>
+        <label><input type="radio" name="visitType" value="Other" /> Other</label>
+      </div>
+      <input type="text" id="visitOther" name="visitOther" placeholder="Specify other visit type (if needed)" />
+    </section>
+
+    <!-- Main Goals -->
+    <section>
+      <h2>My Main Goals for This Visit</h2>
+      <p class="hint">Choose up to two main goals.</p>
+      <div class="options">
+        <label><input type="checkbox" name="goals" value="Get a diagnosis" /> Get a diagnosis</label>
+        <label><input type="checkbox" name="goals" value="Review test results" /> Review test results</label>
+        <label><input type="checkbox" name="goals" value="Request a referral" /> Request a referral</label>
+        <label><input type="checkbox" name="goals" value="Adjust a treatment" /> Adjust a treatment</label>
+        <label><input type="checkbox" name="goals" value="Ask for a new test" /> Ask for a new test</label>
+        <label><input type="checkbox" name="goals" value="Discuss a new symptom" /> Discuss a new symptom</label>
+      </div>
+      <input type="text" id="goalOther" name="goalOther" placeholder="Other goal (optional)" />
+    </section>
+
+    <!-- Top Issues -->
+    <section>
+      <h2>Top Issues I Want to Discuss</h2>
+      <p class="hint">List in order of priority.</p>
+      <input type="text" name="issue1" placeholder="Most important issue" />
+      <input type="text" name="issue2" placeholder="Second priority" />
+      <input type="text" name="issue3" placeholder="Third priority" />
+    </section>
+
+    <!-- Questions -->
+    <section>
+      <h2>Questions I Want to Ask</h2>
+      <p class="hint">Write specific questions so you don’t forget during the visit.</p>
+      <input type="text" name="q1" placeholder="Question 1" />
+      <input type="text" name="q2" placeholder="Question 2" />
+      <input type="text" name="q3" placeholder="Question 3" />
+    </section>
+
+    <!-- Doctor Context -->
+    <section>
+      <h2>What I Need My Doctor to Know</h2>
+      <label for="changes">Changes since last visit</label>
+      <textarea id="changes" name="changes" placeholder="Symptoms, function, test results…"></textarea>
+
+      <label for="personalNote">Personal note or context</label>
+      <textarea id="personalNote" name="personalNote" placeholder="Context that helps them understand your situation"></textarea>
+    </section>
+
+    <!-- Reminder -->
+    <section>
+      <h2>Reminder to Myself</h2>
+      <input type="text" id="reminder" name="reminder" placeholder='E.g., "Stay calm," "Bring up mobility," "Ask for summary at end"' />
+    </section>
+
+    <div class="actions">
+      <button type="submit">Save to Vault</button>
+    </div>
+  </form>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#appointmentForm",
+      type: "appointmentPlan",
+      title: d => `Appointment Plan: ${d.provider || "Provider"}${d.date ? " ("+d.date+")" : ""}`,
+      extraTags: ["appointment","planning"]
+    });
+  </script>
+  
+  <script type="module" src="/lib/briefmeAuto.js"></script>

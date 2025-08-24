@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Conversation Framer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
+    h1, h2 { margin-top:1.2em; }
+    form { display:flex; flex-direction:column; gap:20px; }
+    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
+    label { display:block; margin-top:10px; font-weight:600; }
+    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
+    input[type="text"], textarea, select {
+      width:100%; padding:8px; margin-top:6px;
+      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
+    }
+    textarea { resize:vertical; min-height:72px; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+    .chip { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .small { font-size:12px; color:var(--muted); }
+    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
+    .btn-primary { background:#0a66c2; color:#fff; }
+    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
+    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
+    nav { margin-bottom:16px }
+    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/BriefMe/">BriefMe Hub</a> |
+    <a href="/Vault/">Vault</a>
+  </nav>
+
+  <h1>Conversation Framer</h1>
+  <p class="hint">Plan scripts for tough moments. Frame requests respectfully. Prepare redirect and grounding phrases you can use verbatim.</p>
+
+  <form id="framerForm">
+    <!-- Concerns with "because" statements -->
+    <section>
+      <h2>Concerns I Want to Express</h2>
+      <p class="hint">Use “because” statements to connect concerns to history or context. Template: “I’m concerned about [issue] because [reason].”</p>
+      <label for="c1">Concern #1</label>
+      <textarea id="c1" name="c1" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
+      <div class="small" id="c1Count">0/300</div>
+
+      <label for="c2">Concern #2</label>
+      <textarea id="c2" name="c2" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
+      <div class="small" id="c2Count">0/300</div>
+
+      <label for="c3">Concern #3</label>
+      <textarea id="c3" name="c3" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
+      <div class="small" id="c3Count">0/300</div>
+    </section>
+
+    <!-- Strategic phrasing -->
+    <section>
+      <h2>Strategic Phrasing Options</h2>
+      <p class="hint">Select phrases you may use to explore options and next steps.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="strategic" value="Could that be something worth exploring?" /> Could that be something worth exploring?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="What do you think about trying [X] in my case?" /> What do you think about trying [X] in my case?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="Is there a reason we wouldn’t do [X]?" /> Is there a reason we wouldn’t do [X]?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="Would that be a reasonable next step?" /> Would that be a reasonable next step?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="What might this look like if it were [X]?" /> What might this look like if it were [X]?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="Can I ask what you’re ruling out with that test?" /> Can I ask what you’re ruling out with that test?</label>
+        <label class="chip"><input type="checkbox" name="strategic" value="Do you have other patients like me who’ve responded to [X]?" /> Do you have other patients like me who’ve responded to [X]?</label>
+      </div>
+      <label for="strategicCustom">Custom phrase I want to practice</label>
+      <input type="text" id="strategicCustom" name="strategicCustom" placeholder="Write your own strategic phrase" />
+    </section>
+
+    <!-- Dismissal / disagreement -->
+    <section>
+      <h2>If I Disagree or Feel Dismissed</h2>
+      <p class="hint">Keep the conversation open and collaborative if you feel unheard.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="dismissed" value="Can I share why that approach feels off to me?" /> Can I share why that approach feels off to me?</label>
+        <label class="chip"><input type="checkbox" name="dismissed" value="That doesn’t quite capture what I’m experiencing — can I try again?" /> That doesn’t quite capture what I’m experiencing — can I try again?</label>
+        <label class="chip"><input type="checkbox" name="dismissed" value="I’m not sure that fits, but I want to understand your thinking." /> I’m not sure that fits, but I want to understand your thinking.</label>
+        <label class="chip"><input type="checkbox" name="dismissed" value="That medication hasn’t worked well for me in the past." /> That medication hasn’t worked well for me in the past.</label>
+        <label class="chip"><input type="checkbox" name="dismissed" value="I want to work with you on this, but I’m still worried about [X]." /> I want to work with you on this, but I’m still worried about [X].</label>
+      </div>
+      <label for="dismissedCustom">Custom response for feeling dismissed</label>
+      <input type="text" id="dismissedCustom" name="dismissedCustom" placeholder="Write your own response" />
+    </section>
+
+    <!-- Grounding phrases -->
+    <section>
+      <h2>If I’m Feeling Overwhelmed</h2>
+      <p class="hint">Grounding phrases to stay engaged when conversations become difficult.</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="grounding" value="This is hard to talk about, but I want to keep trying." /> This is hard to talk about, but I want to keep trying.</label>
+        <label class="chip"><input type="checkbox" name="grounding" value="Can I take a second and then tell you what I need?" /> Can I take a second and then tell you what I need?</label>
+        <label class="chip"><input type="checkbox" name="grounding" value="I’m not explaining this well — can I start over?" /> I’m not explaining this well — can I start over?</label>
+        <label class="chip"><input type="checkbox" name="grounding" value="I’m feeling a little overwhelmed. I want to stay engaged." /> I’m feeling a little overwhelmed. I want to stay engaged.</label>
+        <label class="chip"><input type="checkbox" name="grounding" value="I don’t feel like I’m being fully heard right now. Can we slow this down?" /> I don’t feel like I’m being fully heard right now. Can we slow this down?</label>
+      </div>
+      <label for="groundingCustom">Custom grounding phrase</label>
+      <input type="text" id="groundingCustom" name="groundingCustom" placeholder="Write your own grounding phrase" />
+    </section>
+
+    <!-- Personal script starters -->
+    <section>
+      <h2>Personal Script Starters</h2>
+      <input type="text" name="s1" placeholder="Script starter #1" />
+      <input type="text" name="s2" placeholder="Script starter #2" />
+      <input type="text" name="s3" placeholder="Script starter #3" />
+    </section>
+
+    <!-- Difficult conversation prep -->
+    <section>
+      <h2>Difficult Conversation Prep</h2>
+      <label for="anticipate">What challenging conversation or pushback do I anticipate? *</label>
+      <textarea id="anticipate" name="anticipate" maxlength="500" placeholder="Describe the difficult conversation or resistance you expect" required></textarea>
+      <div class="small" id="anticipateCount">0/500</div>
+
+      <div class="row">
+        <div>
+          <label for="responsePlan">How do I want to respond?</label>
+          <textarea id="responsePlan" name="responsePlan" placeholder="Write how you plan to respond, including phrases to use"></textarea>
+        </div>
+        <div>
+          <label for="backupPlan">If that doesn’t work, my backup approach is:</label>
+          <textarea id="backupPlan" name="backupPlan" placeholder="Describe an alternative approach you can pivot to"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal reminders -->
+    <section>
+      <h2>Personal Reminders</h2>
+      <label for="reminders">Reminder to myself before/during the appointment</label>
+      <input type="text" id="reminders" name="reminders" placeholder="e.g., I deserve to be heard; My concerns are valid" />
+
+      <label for="mainGoal">My main goal for this conversation is:</label>
+      <input type="text" id="mainGoal" name="mainGoal" placeholder="e.g., Get a referral; Be taken seriously about my pain" />
+    </section>
+
+    <div class="actions">
+      <button type="button" id="build" class="btn-secondary">Build Mini-Script</button>
+      <button type="button" id="copyScript" class="btn-secondary">Copy Script</button>
+      <button type="submit" class="btn-primary">Save to Vault</button>
+      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
+      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+    </div>
+  </form>
+
+  <!-- Output -->
+  <section>
+    <h2>Mini-Script</h2>
+    <pre id="scriptOut">Click “Build Mini-Script” to assemble a concise script from your selections.</pre>
+  </section>
+
+  <script type="module">
+    window.briefme?.configureForm?.({
+      selector: "#framerForm",
+      type: "conversationFramer",
+      title: d => `Conversation Plan: ${d.scenario || "Scenario"}`,
+      extraTags: ["phrasing","prep"]
+    });
+  </script>
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+</body>
+</html>
