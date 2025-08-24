@@ -5,10 +5,11 @@
     "rewrites": [
       {
         "source": "/copilot/ingest",
-        "function": {
-          "functionId": "copilotIngest",
-          "region": "us-east4"
-        }
+        "function": "copilotIngest"
+      },
+      {
+        "source": "/vault/save",
+        "function": "vaultSave"
       }
     ]
   },

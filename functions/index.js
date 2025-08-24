@@ -1,5 +1,4 @@
 // functions/index.js — minimal template with ping + toolTemplateRun + vaultWriteEpisode
-
 import { onCall, onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import { initializeApp } from "firebase-admin/app";
@@ -7,7 +6,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import Anthropic from "@anthropic-ai/sdk";
 
 initializeApp();
-const db = getFirestore(); // <-- add this line once after initializeApp()
+const db = getFirestore();
 
 // Secret set with: npx firebase-tools@latest functions:secrets:set ANTHROPIC_API_KEY
 const ANTHROPIC_API_KEY = defineSecret("ANTHROPIC_API_KEY");
