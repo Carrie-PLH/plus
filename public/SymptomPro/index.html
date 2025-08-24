@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Tiny inline favicon to avoid 404 -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">🩺</text></svg>'>
   <meta charset="utf-8" />
   <title>SymptomPro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,9 +12,15 @@
     button { padding: 8px 14px; font: inherit; cursor: pointer; }
     pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
     .muted { color: #666; font-size: 13px; }
+    nav a { color:#0a66c2; text-decoration:none; margin-right:10px; }
   </style>
 </head>
 <body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/Vault/">Vault</a>
+  </nav>
+
   <h1>SymptomPro</h1>
   <p>Paste patient inputs as JSON. Minimal example:</p>
   <pre>{
@@ -35,14 +43,14 @@
 }</pre>
 
   <form id="form">
-    <label for="input">Input JSON</label>
+    <label>Input JSON</label>
     <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
     <button type="submit">Generate OLD CARTS Summary</button>
+    <p id="status" class="muted"></p>
   </form>
 
   <h3>Result</h3>
   <pre id="out">Click the button to generate.</pre>
-  <p id="status" class="muted"></p>
 
   <script type="module">
     import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
@@ -52,49 +60,51 @@
       saveEntryToVaultWithHooks,
       registerCopilotIngest,
     } from "/lib/briefmeSave.js";
-
-    // Auth + CoPilot
+  
     await initAuth();
     const hooks = registerCopilotIngest({ enabled: true, defaultTool: "symptompro" });
-
-    // DOM helpers
+  
     const $ = (sel) => document.querySelector(sel);
     const form = $("#form");
     const input = $("#input");
     const out = $("#out");
     const status = $("#status");
-
+  
+    const log = (...a) => { console.log("[SymptomPro]", ...a); };
+  
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       status.textContent = "";
       out.textContent = "Working…";
-
+  
       let payload;
       try {
         payload = JSON.parse(input.value || "{}");
-      } catch (err) {
+      } catch {
         out.textContent = "Invalid JSON. Please fix and try again.";
+        status.textContent = "Invalid JSON";
         return;
       }
-
+  
       const symptoms = payload.symptoms || {};
-      const context = payload.context || {};
-
+      const context  = payload.context  || {};
+      const title =
+        "SymptomPro: " + (symptoms.chiefComplaint || symptoms.primarySymptom || "Summary");
+  
       try {
-        // Call your Cloud Function
-        const generateSummary = httpsCallable(functions, "generateSummary");
-        const resp = await generateSummary({ symptoms, context });
-        const summary = resp?.data?.summary || "No summary produced.";
-
+        // 1) Generate
+        status.textContent = "Generating summary…";
+        const cfGenerateSummary = httpsCallable(functions, "generateSummary");
+        const resp = await cfGenerateSummary({ symptoms, context });
+        log("generateSummary raw resp:", resp);
+  
+        const data = resp?.data || {};
+        const summary = data.summary || "No summary produced.";
         out.textContent = summary;
-        status.textContent = "Generated. Saving to your Vault…";
-
-        // Save to Vault (with telemetry hooks)
-        const title =
-          "SymptomPro: " +
-          (symptoms.chiefComplaint || symptoms.primarySymptom || "Summary");
-
-        await saveEntryToVaultWithHooks(
+  
+        // 2) Save
+        status.textContent = "Saving to Vault…";
+        const saveRes = await saveEntryToVaultWithHooks(
           {
             type: "symptomPro",
             title,
@@ -103,17 +113,18 @@
           },
           hooks
         );
-
+        log("vault save result:", saveRes);
+  
         status.textContent = "Saved to your Vault.";
       } catch (err) {
-        console.error(err);
+        console.error("SymptomPro error:", err);
         out.textContent = "Sorry—generation or save failed.";
         status.textContent = String(err?.message || err);
       }
     });
   </script>
 
-  <!-- Initializes global helpers + CoPilot auto-hooks site-wide -->
+  <!-- Auto-inits CoPilot + form helpers for other pages; harmless here -->
   <script type="module" src="/lib/briefmeAuto.js"></script>
 </body>
 </html>
