@@ -9,6 +9,7 @@
     textarea { width: 100%; font: inherit; margin-bottom: 10px; }
     button { padding: 8px 14px; font: inherit; cursor: pointer; }
     pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
+    .muted { color: #666; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -34,30 +35,85 @@
 }</pre>
 
   <form id="form">
-    <label>Input JSON</label>
+    <label for="input">Input JSON</label>
     <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
     <button type="submit">Generate OLD CARTS Summary</button>
   </form>
 
   <h3>Result</h3>
   <pre id="out">Click the button to generate.</pre>
+  <p id="status" class="muted"></p>
 
- const firebaseConfig = {
-      apiKey: "YOUR_PUBLIC_WEB_API_KEY",
-      authDomain: "black-monitor-469420-h9.firebaseapp.com",
-      projectId: "black-monitor-469420-h9",
-      storageBucket: "black-monitor-469420-h9.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    <script type="module">
-      window.briefme?.configureForm?.({
-        selector: "#symptomForm",
-        type: "symptomPro",
-        title: d => `SymptomPro: ${d.primarySymptom || "Summary"}${d.onset ? " ("+d.onset+")" : ""}`,
-        extraTags: ["symptom","OLD_CARTS"]
-      });
-    </script>
+  <script type="module">
+    import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { functions } from "/lib/appBootstrap.js";
+    import {
+      initAuth,
+      saveEntryToVaultWithHooks,
+      registerCopilotIngest,
+    } from "/lib/briefmeSave.js";
+
+    // Auth + CoPilot
+    await initAuth();
+    const hooks = registerCopilotIngest({ enabled: true, defaultTool: "symptompro" });
+
+    // DOM helpers
+    const $ = (sel) => document.querySelector(sel);
+    const form = $("#form");
+    const input = $("#input");
+    const out = $("#out");
+    const status = $("#status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "";
+      out.textContent = "Working…";
+
+      let payload;
+      try {
+        payload = JSON.parse(input.value || "{}");
+      } catch (err) {
+        out.textContent = "Invalid JSON. Please fix and try again.";
+        return;
+      }
+
+      const symptoms = payload.symptoms || {};
+      const context = payload.context || {};
+
+      try {
+        // Call your Cloud Function
+        const generateSummary = httpsCallable(functions, "generateSummary");
+        const resp = await generateSummary({ symptoms, context });
+        const summary = resp?.data?.summary || "No summary produced.";
+
+        out.textContent = summary;
+        status.textContent = "Generated. Saving to your Vault…";
+
+        // Save to Vault (with telemetry hooks)
+        const title =
+          "SymptomPro: " +
+          (symptoms.chiefComplaint || symptoms.primarySymptom || "Summary");
+
+        await saveEntryToVaultWithHooks(
+          {
+            type: "symptomPro",
+            title,
+            structured: { symptoms, context, summary },
+            extraTags: ["symptom", "OLD_CARTS"],
+          },
+          hooks
+        );
+
+        status.textContent = "Saved to your Vault.";
+      } catch (err) {
+        console.error(err);
+        out.textContent = "Sorry—generation or save failed.";
+        status.textContent = String(err?.message || err);
+      }
+    });
+  </script>
+
+  <!-- Initializes global helpers + CoPilot auto-hooks site-wide -->
   <script type="module" src="/lib/briefmeAuto.js"></script>
 </body>
 </html>
