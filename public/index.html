@@ -2,71 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>PatientLead+ Smart Start</title>
+  <title>PatientLead+ — Smart Start</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- inline emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">➕</text></svg>'>
+  <!-- Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
-    body { font:16px/1.5 system-ui, sans-serif; max-width:640px; margin:40px auto; padding:0 20px; color:#222; }
-    h1 { margin-bottom:8px; }
-    p { margin:0 0 18px; color:#444; }
-    .goals { display:flex; flex-direction:column; gap:12px; }
-    button {
-      padding:12px; border:none; border-radius:8px;
-      background:#0a66c2; color:#fff; font:inherit; cursor:pointer; text-align:left;
+    :root{
+      --brand-light:#ebf0eb;
+      --brand-dark:#3c5c5e;
+      --brand-green:#a3b9a3;
+      --brand-coral:#c97f6d;
+      --line:#dddddd;
+      --card:#ffffff;
+      --muted:#555;
     }
-    button:hover { background:#004080; }
-    small.hint { display:block; margin-top:8px; color:#666; }
+    *{box-sizing:border-box}
+    body{
+      font-family: 'Roboto', system-ui, -apple-system, Segoe UI, sans-serif;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+      margin: 40px auto;
+      max-width: 980px;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px
+    }
+    .logo{
+      display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px
+    }
+    .logo-badge{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--brand-green),var(--brand-coral));}
+    nav a{color:var(--brand-dark);text-decoration:none;margin-left:14px;font-weight:500}
+    h1{margin:8px 0 2px;font-size:28px}
+    p.muted{color:var(--muted);margin:0 0 14px}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:18px 0 26px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;transition:box-shadow .2s ease}
+    .card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .card h3{margin:4px 0 8px;font-size:18px}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;margin:2px 6px 0 0;color:var(--brand-dark)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:6px;border:1px solid var(--brand-dark);font-weight:500;text-decoration:none;cursor:pointer}
+    .btn.primary{background:var(--brand-coral);color:#fff;border-color:var(--brand-coral)}
+    .btn.primary:hover{filter:brightness(.95)}
+    .btn.secondary{background:#fff;color:var(--brand-dark)}
+    .section-title{margin:26px 0 10px;font-size:20px}
+    textarea,input,select{font:inherit}
+    textarea{width:100%;min-height:90px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .inline-field{flex:1 1 180px}
+    .hint{font-size:13px;color:var(--muted)}
+    footer{margin:26px 0 40px;color:var(--muted);font-size:13px}
   </style>
 </head>
 <body>
-  <h1>What do you want to do today?</h1>
-  <p>Select a goal and we’ll guide you.</p>
+  <header>
+    <div class="logo">
+      <div class="logo-badge" aria-hidden="true"></div>
+      PatientLead+
+    </div>
+    <nav>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+    </nav>
+  </header>
 
-  <div class="goals">
-    <button data-goal="appointment">Prepare for an appointment</button>
-    <button data-goal="symptoms">Log or explain my symptoms</button>
-    <button data-goal="notes">Review visit notes for mistakes or bias</button>
-    <button data-goal="second-opinion">Request a second opinion</button>
-    <button data-goal="tests">Understand test results</button>
-    <small class="hint">You’ll be routed to the right workflow automatically.</small>
+  <h1>What do you want to do today?</h1>
+  <p class="muted">Tell us your goal and we’ll route you to the right helper. You can always switch tasks later.</p>
+
+  <!-- Quick intents (1-click paths) -->
+  <div class="grid">
+    <div class="card">
+      <h3>Prepare for a visit</h3>
+      <p class="hint">Set goals, plan questions, shape the story.</p>
+      <div class="actions">
+        <button class="btn primary" data-goal="visit_prep">Start prep</button>
+        <span class="pill">Agenda</span>
+        <span class="pill">Questions</span>
+        <span class="pill">Summary</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Summarize symptoms (OLD CARTS)</h3>
+      <p class="hint">Turn notes into a clear, provider-ready summary.</p>
+      <div class="actions">
+        <button class="btn primary" data-goal="symptom_summary">Summarize</button>
+        <span class="pill">OLD CARTS</span>
+        <span class="pill">Shareable</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Draft an appeal</h3>
+      <p class="hint">Write an insurance appeal with deadlines and evidence.</p>
+      <div class="actions">
+        <button class="btn primary" data-goal="appeal">Start appeal</button>
+        <span class="pill">Evidence</span>
+        <span class="pill">Deadlines</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Find peers / providers</h3>
+      <p class="hint">Match with peers like you or providers that fit.</p>
+      <div class="actions">
+        <button class="btn primary" data-goal="peers">Peers</button>
+        <button class="btn secondary" data-goal="providers">Providers</button>
+      </div>
+    </div>
   </div>
 
+  <!-- Guided router (free text + a few hints) -->
+  <h2 class="section-title">Or describe what you’re trying to do</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <div class="inline-field" style="flex:2">
+        <label for="goalText" class="hint">In your words</label>
+        <textarea id="goalText" placeholder="e.g., I need to get ready for a new neurologist visit about migraines, and I want to make sure I ask about CGRP meds."></textarea>
+      </div>
+      <div class="inline-field">
+        <label class="hint">I need help with</label>
+        <select id="hintSelect">
+          <option value="">(choose one)</option>
+          <option value="visit_prep">Visit prep</option>
+          <option value="symptom_summary">Symptom summary</option>
+          <option value="appeal">Insurance appeal</option>
+          <option value="rights">Know my rights</option>
+          <option value="peers">Find peers</option>
+          <option value="providers">Find providers</option>
+          <option value="trend_track">Track symptoms</option>
+          <option value="conversation_practice">Conversation practice</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="goBtn">Continue</button>
+      <button class="btn secondary" id="vaultBtn">Open my Vault</button>
+    </div>
+  </div>
+
+  <footer>
+    <span class="hint">Brand colors &amp; voice applied. You’ll see the right tool, with fields prefilled when possible.</span>
+  </footer>
+
+  <!-- Auto-init CoPilot + global helpers -->
+  <script type="module" src="/lib/briefmeAuto.js"></script>
+
+  <!-- Smart router logic -->
   <script type="module">
-    import {
-      setGlobalHandoff,
-      registerCopilotIngest,
-      copilotIngest
-    } from "/lib/briefmeSave.js";
+    // Safety: wait until briefmeAuto has initialized global helpers
+    const bm = window.briefme || {};
 
-    // 1) CoPilot on for this page (the “hub”)
-    registerCopilotIngest({ enabled: true, defaultTool: "hub" });
+    // Lightweight intent → tool mapping (expand anytime)
+    function chooseTarget(intent) {
+      switch (intent) {
+        case "visit_prep":             return { url: "/BriefMe/AgendaDesigner/", type: "agenda" };
+        case "symptom_summary":        return { url: "/SymptomPro/",             type: "symptomPro" };
+        case "conversation_practice":  return { url: "/PromptCoach/",            type: "promptCoach" };
+        case "trend_track":            return { url: "/TrendTrack/",             type: "trendTrack" };
+        case "appeal":                 return { url: "/AppealBuilder/",          type: "appeal" };
+        case "rights":                 return { url: "/RightsBuilder/",          type: "rights" };
+        case "peers":                  return { url: "/PeerMatch/",              type: "peerMatch" };
+        case "providers":              return { url: "/ProviderMatch/",          type: "providerMatch" };
+        default:                       return { url: "/BriefMe/",                type: "briefme" };
+      }
+    }
 
-    // 2) Log that the page was opened
-    copilotIngest("page_open", "hub", { path: location.pathname });
+    // Normalize and send to destination; also emit CoPilot event
+    function go(intent, freeText="") {
+      const dest = chooseTarget(intent);
+      const handoff = {
+        intent,
+        notes: freeText,
+        // common prefill ideas; target pages can pick what they want:
+        chiefComplaint: freeText,
+        contextNotes: freeText
+      };
 
-    // 3) Map goals -> destination tools (kept behind the scenes)
-    const toolMap = {
-      appointment: "/BriefMe/AppointmentPlanner/",
-      symptoms: "/SymptomPro/",
-      notes: "/ResetPro/",              // adjust to your actual page
-      "second-opinion": "/PromptPro/",  // or a dedicated SecondOpinion page
-      tests: "/TrendTrack/"             // or a LabExplainer when you add it
-    };
+      // CoPilot telemetry
+      try {
+        window.briefme?.registerCopilotIngest?.({ enabled:true, defaultTool:"smart_start" });
+        window.briefme?.copilot?.ingest?.("route", "smart_start", { intent, hasText: !!freeText });
+      } catch {}
 
-    // 4) Wire goal clicks: log -> stash goal -> navigate
-    document.querySelectorAll(".goals button").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const goal = btn.dataset.goal;
+      // Handoff + navigate
+      try {
+        window.briefme?.setGlobalHandoff?.(handoff);
+      } catch {}
+      const url = new URL(dest.url, location.origin);
+      url.searchParams.set("from","smart_start");
+      location.href = url.toString();
+    }
 
-        // Telemetry: which goal was clicked
-        copilotIngest("goal_click", "hub", { goal });
-
-        // Save context for the next page (optional prefill/UX)
-        setGlobalHandoff({ goal });
-
-        // Navigate
-        location.href = toolMap[goal] || "/";
+    // Quick intents
+    document.querySelectorAll('[data-goal]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const intent = e.currentTarget.getAttribute('data-goal');
+        go(intent, "");
       });
     });
+
+    // Guided flow
+    document.getElementById('goBtn').addEventListener('click', ()=>{
+      const txt = (document.getElementById('goalText').value || "").trim();
+      const hint = document.getElementById('hintSelect').value || "";
+      go(hint || "briefme", txt);
+    });
+
+    // Vault shortcut
+    document.getElementById('vaultBtn').addEventListener('click', ()=>{
+      try { window.briefme?.copilot?.ingest?.("open_vault","smart_start",{}); } catch {}
+      location.href = "/Vault/";
+    });
   </script>
+  <script type="module" src="/lib/welcomeCard.js"></script>
 </body>
 </html>
