@@ -57,4 +57,5 @@ Thumbs.db
 # Environment files
 # -------------------
 .env
-*.secret
+*.secretpublic/lib/config.js
+config.js
