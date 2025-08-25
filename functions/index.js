@@ -176,33 +176,98 @@ If information is insufficient, be explicit about what is missing.
   }
 );
 
-// --- SymptomPro (callable)
+// Enhanced generateSummary function for functions/index.js
+// Replace the existing generateSummary export with this version
+
 export const generateSummary = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
   async (request) => {
     try {
-      const { symptoms, context } = request.data || {};
+      const { symptoms, context, tone = "professional" } = request.data || {};
       if (!symptoms) {
         return { ok: false, error: "Missing 'symptoms' object" };
       }
 
       const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+      
+      // Map tone to instructions
+      const toneInstructions = {
+        professional: "Use clear, professional medical language appropriate for healthcare providers",
+        friendly: "Use warm, approachable language while maintaining accuracy",
+        direct: "Be concise and straightforward, focusing on key facts",
+        detailed: "Provide comprehensive detail with thorough explanations"
+      };
+      
+      const toneGuide = toneInstructions[tone] || toneInstructions.professional;
+      
       const prompt = `
-Create a concise provider-ready symptom summary using the OLD CARTS framework.
-Return plain text with bolded section labels. If data is missing, note it briefly.
+You are a medical communication assistant helping a patient prepare clear summaries of their symptoms.
+Generate 4 different natural language summaries based on the provided symptom data. ${toneGuide}.
 
-Input:
-${JSON.stringify({ symptoms, context }).slice(0, 20000)}
+Input Data:
+Symptoms: ${JSON.stringify(symptoms)}
+Context: ${JSON.stringify(context || {})}
+
+Generate these 4 summaries:
+
+1. CLINICAL SUMMARY (using the medical framework but written naturally):
+Write a comprehensive symptom description that follows the standard clinical framework doctors use.
+Include: when it started, where it's located, how long it lasts, what it feels like, what makes it worse, 
+what helps, if it spreads anywhere, timing patterns, and severity. Write in clear paragraphs, not bullet points.
+Don't mention "OLD CARTS" or any framework names - just present the information naturally.
+
+2. PATIENT PORTAL MESSAGE:
+Draft a concise, clear message the patient could send to their provider through a patient portal.
+Start with their main concern, briefly describe key symptoms, mention impact on daily life, and end with
+what they're hoping the provider can help with. Keep it under 200 words.
+
+3. EMERGENCY/URGENT CARE SUMMARY:
+Create a brief, focused summary suitable for an emergency or urgent care setting using SOAP format.
+Subjective: Chief complaint and patient's description
+Objective: Any measurable facts (severity score, duration, etc.)
+Assessment: Key concerning symptoms or patterns
+Plan: What immediate evaluation or care might be needed
+Keep this concise but complete.
+
+4. SPECIALIST REFERRAL SUMMARY:
+Write a summary appropriate for referral to a specialist. Include:
+- Primary reason for referral
+- Symptom timeline and progression
+- Previous treatments tried (if any)
+- Current medications
+- Relevant medical history
+- Impact on function and quality of life
+Format as a professional narrative paragraph.
+
+Return the summaries in a natural, well-written format that the patient can use directly.
 `.trim();
 
       const msg = await client.messages.create({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 700,
+        max_tokens: 2000,
         messages: [{ role: "user", content: prompt }],
       });
 
       const text = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
-      return { ok: true, summary: text || "No output." };
+      
+      // Parse the response to extract each summary type
+      const sections = text.split(/\d\.\s+[A-Z\s]+(?:SUMMARY|MESSAGE):/);
+      
+      // Clean up and assign sections
+      const summaries = {
+        clinical: sections[1]?.trim() || "Unable to generate clinical summary.",
+        portal: sections[2]?.trim() || "Unable to generate portal message.",
+        emergency: sections[3]?.trim() || "Unable to generate emergency summary.",
+        referral: sections[4]?.trim() || "Unable to generate referral summary.",
+        tone: tone
+      };
+      
+      return { 
+        ok: true, 
+        summaries,
+        // Keep backward compatibility
+        summary: summaries.clinical 
+      };
     } catch (e) {
       console.error("generateSummary error:", e?.response?.data || e);
       return { ok: false, error: e?.message || String(e) };

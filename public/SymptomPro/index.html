@@ -1,57 +1,721 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Tiny inline favicon to avoid 404 -->
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">🩺</text></svg>'>
   <meta charset="utf-8" />
-  <title>SymptomPro</title>
+  <title>SymptomPro — OLD CARTS Symptom Snapshot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">🩺</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
-    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
-    button { padding: 8px 14px; font: inherit; cursor: pointer; }
-    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
-    .muted { color: #666; font-size: 13px; }
-    nav a { color:#0a66c2; text-decoration:none; margin-right:10px; }
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #fafafa;
+      --muted: #666;
+      --success: #4caf50;
+      --error: #f44336;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    nav {
+      margin-bottom: 16px;
+    }
+    
+    nav a {
+      color: var(--brand-coral);
+      text-decoration: none;
+      margin-right: 16px;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .form-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section h2 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 20px;
+      font-weight: 500;
+      border-bottom: 2px solid var(--brand-green);
+      padding-bottom: 8px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(163, 185, 163, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .character-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .chip-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 40px;
+    }
+    
+    .chip-option:hover {
+      background: var(--brand-light);
+    }
+    
+    .chip-option input {
+      margin-right: 6px;
+      cursor: pointer;
+    }
+    
+    .chip-option.selected {
+      background: var(--brand-green);
+      color: white;
+      border-color: var(--brand-green);
+    }
+    
+    .severity-slider {
+      margin-top: 12px;
+    }
+    
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--brand-green), var(--brand-coral));
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .severity-display {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--brand-dark);
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 600px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    #status.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+    }
+    
+    #status.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+      border: 1px solid var(--error);
+      display: block;
+    }
+    
+    #status.working {
+      background: rgba(163, 185, 163, 0.1);
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-green);
+      display: block;
+    }
+    
+    .result-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: none;
+    }
+    
+    .result-section.show {
+      display: block;
+    }
+    
+    .result-section h3 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 20px;
+      font-weight: 500;
+    }
+    
+    #summaryOutput {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      background: var(--brand-light);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--brand-green);
+    }
+    
+    .tab-mode {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+    }
+    
+    .tab {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    
+    .tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    #jsonInput {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      min-height: 200px;
+    }
+    
+    .tone-selector {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--brand-light);
+      border-radius: 8px;
+    }
+    
+    .tone-options {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .tone-option {
+      padding: 8px 16px;
+      border: 2px solid var(--brand-green);
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    
+    .tone-option:hover {
+      background: var(--brand-light);
+    }
+    
+    .tone-option.selected {
+      background: var(--brand-green);
+      color: white;
+    }
+    
+    .summary-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+      flex-wrap: wrap;
+    }
+    
+    .summary-tab {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-size: 14px;
+    }
+    
+    .summary-tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .summary-content {
+      display: none;
+    }
+    
+    .summary-content.active {
+      display: block;
+    }
+    
+    .summary-description {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/Vault/">Vault</a>
-  </nav>
-
-  <h1>SymptomPro</h1>
-  <p>Paste patient inputs as JSON. Minimal example:</p>
-  <pre>{
-  "symptoms": {
-    "chiefComplaint": "Throbbing headache",
-    "onset": "2 days ago",
-    "location": "Head",
-    "duration": "Intermittent",
-    "character": "Throbbing",
-    "aggravating": "Bright light",
-    "alleviating": "Rest",
-    "radiation": "None",
-    "timing": "Worse at night",
-    "severity": "7/10"
-  },
-  "context": {
-    "history": "No head trauma",
-    "meds": "Ibuprofen PRN"
-  }
-}</pre>
-
-  <form id="form">
-    <label>Input JSON</label>
-    <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
-    <button type="submit">Generate OLD CARTS Summary</button>
-    <p id="status" class="muted"></p>
-  </form>
-
-  <h3>Result</h3>
-  <pre id="out">Click the button to generate.</pre>
-
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+    </nav>
+    
+    <header>
+      <h1>SymptomPro — OLD CARTS Snapshot</h1>
+      <p class="subtitle">Create a clear, provider-ready symptom summary using the OLD CARTS framework</p>
+    </header>
+    
+    <div class="form-section">
+      <div class="tab-mode">
+        <button class="tab active" onclick="switchTab('form')">Form View</button>
+        <button class="tab" onclick="switchTab('json')">JSON View</button>
+      </div>
+      
+      <!-- Form View -->
+      <div id="formTab" class="tab-content active">
+        <form id="symptomForm">
+          <!-- Chief Complaint -->
+          <div class="form-group">
+            <label for="chiefComplaint">What's your main symptom or concern? *</label>
+            <input type="text" id="chiefComplaint" name="chiefComplaint" placeholder="e.g., Severe headache, chest pain, fatigue" required>
+            <p class="hint">Be specific about what's bothering you most</p>
+          </div>
+          
+          <!-- ONSET -->
+          <div class="form-section">
+            <h2>Onset</h2>
+            <div class="two-column">
+              <div class="form-group">
+                <label for="onset">When did this start?</label>
+                <input type="text" id="onset" name="onset" placeholder="e.g., 3 days ago, last Tuesday, gradual over 2 weeks">
+              </div>
+              <div class="form-group">
+                <label for="suddenGradual">Was it sudden or gradual?</label>
+                <select id="suddenGradual" name="suddenGradual">
+                  <option value="">Select...</option>
+                  <option value="sudden">Sudden</option>
+                  <option value="gradual">Gradual</option>
+                  <option value="intermittent">Intermittent</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- LOCATION -->
+          <div class="form-section">
+            <h2>Location</h2>
+            <div class="form-group">
+              <label for="location">Where exactly do you feel it?</label>
+              <textarea id="location" name="location" placeholder="Be as specific as possible (e.g., right side of head above the ear, center of chest, entire lower back)"></textarea>
+            </div>
+          </div>
+          
+          <!-- DURATION -->
+          <div class="form-section">
+            <h2>Duration</h2>
+            <div class="two-column">
+              <div class="form-group">
+                <label for="duration">How long does it last?</label>
+                <input type="text" id="duration" name="duration" placeholder="e.g., Constant, 30 minutes, comes and goes">
+              </div>
+              <div class="form-group">
+                <label for="frequency">How often does it occur?</label>
+                <input type="text" id="frequency" name="frequency" placeholder="e.g., Daily, several times a week, only with activity">
+              </div>
+            </div>
+          </div>
+          
+          <!-- CHARACTER -->
+          <div class="form-section">
+            <h2>Character</h2>
+            <label>What does it feel like? (select all that apply)</label>
+            <div class="character-options" id="characterOptions">
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Sharp"> Sharp
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Dull"> Dull
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Throbbing"> Throbbing
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Burning"> Burning
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Stabbing"> Stabbing
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Aching"> Aching
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Pressure"> Pressure
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Cramping"> Cramping
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Tingling"> Tingling
+              </label>
+              <label class="chip-option">
+                <input type="checkbox" name="character" value="Numbness"> Numbness
+              </label>
+            </div>
+            <div class="form-group" style="margin-top: 12px;">
+              <label for="characterOther">Other description</label>
+              <input type="text" id="characterOther" name="characterOther" placeholder="Describe in your own words">
+            </div>
+          </div>
+          
+          <!-- AGGRAVATING -->
+          <div class="form-section">
+            <h2>Aggravating Factors</h2>
+            <div class="form-group">
+              <label for="aggravating">What makes it worse?</label>
+              <textarea id="aggravating" name="aggravating" placeholder="e.g., Movement, stress, certain foods, bright lights, lying down"></textarea>
+            </div>
+          </div>
+          
+          <!-- RELIEVING/ALLEVIATING -->
+          <div class="form-section">
+            <h2>Relieving Factors</h2>
+            <div class="form-group">
+              <label for="alleviating">What makes it better?</label>
+              <textarea id="alleviating" name="alleviating" placeholder="e.g., Rest, medication, heat/ice, certain positions, sleep"></textarea>
+            </div>
+          </div>
+          
+          <!-- RADIATION -->
+          <div class="form-section">
+            <h2>Radiation</h2>
+            <div class="form-group">
+              <label for="radiation">Does the symptom spread or move to other areas?</label>
+              <input type="text" id="radiation" name="radiation" placeholder="e.g., Spreads down my left arm, radiates to my back, stays in one place">
+            </div>
+          </div>
+          
+          <!-- TIMING -->
+          <div class="form-section">
+            <h2>Timing</h2>
+            <div class="form-group">
+              <label for="timing">When is it worst? Any patterns?</label>
+              <textarea id="timing" name="timing" placeholder="e.g., Worse in the morning, after meals, at night, with weather changes"></textarea>
+            </div>
+          </div>
+          
+          <!-- SEVERITY -->
+          <div class="form-section">
+            <h2>Severity</h2>
+            <label for="severity">On a scale of 1-10, how severe is it?</label>
+            <div class="severity-slider">
+              <div class="slider-container">
+                <span>Mild</span>
+                <input type="range" id="severity" name="severity" min="1" max="10" value="5">
+                <span>Severe</span>
+                <div class="severity-display" id="severityValue">5</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- CONTEXT -->
+          <div class="form-section">
+            <h2>Additional Context</h2>
+            <div class="form-group">
+              <label for="history">Relevant medical history</label>
+              <textarea id="history" name="history" placeholder="e.g., Previous similar symptoms, chronic conditions, recent illness or injury"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="medications">Current medications</label>
+              <textarea id="medications" name="medications" placeholder="List all medications and supplements you're taking"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="impact">How is this affecting your daily life?</label>
+              <textarea id="impact" name="impact" placeholder="e.g., Missing work, can't exercise, trouble sleeping"></textarea>
+            </div>
+          </div>
+          
+          <!-- Tone Selection -->
+          <div class="tone-selector">
+            <label>Select tone for your summaries:</label>
+            <div class="tone-options">
+              <label class="tone-option selected">
+                <input type="radio" name="tone" value="professional" checked style="display:none">
+                Professional
+              </label>
+              <label class="tone-option">
+                <input type="radio" name="tone" value="friendly" style="display:none">
+                Friendly
+              </label>
+              <label class="tone-option">
+                <input type="radio" name="tone" value="direct" style="display:none">
+                Direct
+              </label>
+              <label class="tone-option">
+                <input type="radio" name="tone" value="detailed" style="display:none">
+                Detailed
+              </label>
+            </div>
+          </div>
+          
+          <div class="button-group">
+            <button type="submit" class="btn-primary">Generate Summaries</button>
+            <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- JSON View -->
+      <div id="jsonTab" class="tab-content">
+        <div class="form-group">
+          <label for="jsonInput">Paste JSON Input</label>
+          <textarea id="jsonInput" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
+          <p class="hint">Advanced users can paste a JSON structure directly</p>
+        </div>
+        <div class="button-group">
+          <button type="button" class="btn-primary" onclick="generateFromJSON()">Generate Summaries</button>
+          <button type="button" class="btn-secondary" onclick="loadExample()">Load Example</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="status" aria-live="polite"></div>
+    
+    <div id="resultSection" class="result-section">
+      <h3>Your Generated Summaries</h3>
+      
+      <div class="summary-tabs">
+        <button class="summary-tab active" onclick="switchSummary('clinical')">Clinical Summary</button>
+        <button class="summary-tab" onclick="switchSummary('portal')">Portal Message</button>
+        <button class="summary-tab" onclick="switchSummary('emergency')">Emergency Summary</button>
+        <button class="summary-tab" onclick="switchSummary('referral')">Specialist Referral</button>
+      </div>
+      
+      <div id="clinicalSummary" class="summary-content active">
+        <p class="summary-description">Comprehensive symptom description for your healthcare provider</p>
+        <pre id="clinicalOutput"></pre>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="copySummary('clinical')">Copy</button>
+          <button type="button" class="btn-secondary" onclick="downloadSummary('clinical')">Download</button>
+        </div>
+      </div>
+      
+      <div id="portalSummary" class="summary-content">
+        <p class="summary-description">Ready-to-send message for your patient portal</p>
+        <pre id="portalOutput"></pre>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="copySummary('portal')">Copy</button>
+          <button type="button" class="btn-secondary" onclick="downloadSummary('portal')">Download</button>
+        </div>
+      </div>
+      
+      <div id="emergencySummary" class="summary-content">
+        <p class="summary-description">Brief, focused summary for urgent or emergency care</p>
+        <pre id="emergencyOutput"></pre>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="copySummary('emergency')">Copy</button>
+          <button type="button" class="btn-secondary" onclick="downloadSummary('emergency')">Download</button>
+        </div>
+      </div>
+      
+      <div id="referralSummary" class="summary-content">
+        <p class="summary-description">Professional summary for specialist referrals</p>
+        <pre id="referralOutput"></pre>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="copySummary('referral')">Copy</button>
+          <button type="button" class="btn-secondary" onclick="downloadSummary('referral')">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script type="module">
     import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
     import { functions } from "/lib/appBootstrap.js";
@@ -60,71 +724,239 @@
       saveEntryToVaultWithHooks,
       registerCopilotIngest,
     } from "/lib/briefmeSave.js";
-  
+    
+    // Initialize auth and CoPilot
     await initAuth();
     const hooks = registerCopilotIngest({ enabled: true, defaultTool: "symptompro" });
-  
-    const $ = (sel) => document.querySelector(sel);
-    const form = $("#form");
-    const input = $("#input");
-    const out = $("#out");
-    const status = $("#status");
-  
-    const log = (...a) => { console.log("[SymptomPro]", ...a); };
-  
+    
+    // DOM elements
+    const form = document.getElementById("symptomForm");
+    const statusEl = document.getElementById("status");
+    const resultSection = document.getElementById("resultSection");
+    const severitySlider = document.getElementById("severity");
+    const severityValue = document.getElementById("severityValue");
+    const jsonInput = document.getElementById("jsonInput");
+    
+    // Store current summaries for copy/download
+    let currentSummaries = {};
+    
+    // Update severity display
+    severitySlider.addEventListener("input", (e) => {
+      severityValue.textContent = e.target.value;
+    });
+    
+    // Update character chip styles
+    document.querySelectorAll('.chip-option input').forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          e.target.parentElement.classList.add('selected');
+        } else {
+          e.target.parentElement.classList.remove('selected');
+        }
+      });
+    });
+    
+    // Tone selection
+    document.querySelectorAll('.tone-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        document.querySelectorAll('.tone-option').forEach(o => o.classList.remove('selected'));
+        e.currentTarget.classList.add('selected');
+        e.currentTarget.querySelector('input').checked = true;
+      });
+    });
+    
+    // Tab switching
+    window.switchTab = function(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      if (tab === 'form') {
+        document.querySelector('.tab:first-child').classList.add('active');
+        document.getElementById('formTab').classList.add('active');
+      } else {
+        document.querySelector('.tab:last-child').classList.add('active');
+        document.getElementById('jsonTab').classList.add('active');
+      }
+    };
+    
+    // Summary tab switching
+    window.switchSummary = function(type) {
+      document.querySelectorAll('.summary-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.summary-content').forEach(c => c.classList.remove('active'));
+      
+      document.querySelector(`.summary-tab:nth-child(${
+        type === 'clinical' ? 1 : 
+        type === 'portal' ? 2 : 
+        type === 'emergency' ? 3 : 4
+      })`).classList.add('active');
+      document.getElementById(`${type}Summary`).classList.add('active');
+    };
+    
+    // Form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      status.textContent = "";
-      out.textContent = "Working…";
-  
-      let payload;
+      
+      // Build symptoms object from form
+      const formData = new FormData(form);
+      const characterValues = formData.getAll('character');
+      
+      const symptoms = {
+        chiefComplaint: formData.get('chiefComplaint') || '',
+        onset: formData.get('onset') || formData.get('suddenGradual') || '',
+        location: formData.get('location') || '',
+        duration: formData.get('duration') || '',
+        character: characterValues.length > 0 ? characterValues.join(', ') : (formData.get('characterOther') || ''),
+        aggravating: formData.get('aggravating') || '',
+        alleviating: formData.get('alleviating') || '',
+        radiation: formData.get('radiation') || '',
+        timing: formData.get('timing') || '',
+        severity: formData.get('severity') + '/10',
+        frequency: formData.get('frequency') || ''
+      };
+      
+      const context = {
+        history: formData.get('history') || '',
+        meds: formData.get('medications') || '',
+        impact: formData.get('impact') || ''
+      };
+      
+      const tone = formData.get('tone') || 'professional';
+      
+      await generateSummary(symptoms, context, tone);
+    });
+    
+    // Generate from JSON
+    window.generateFromJSON = async function() {
       try {
-        payload = JSON.parse(input.value || "{}");
-      } catch {
-        out.textContent = "Invalid JSON. Please fix and try again.";
-        status.textContent = "Invalid JSON";
-        return;
+        const payload = JSON.parse(jsonInput.value || '{}');
+        const symptoms = payload.symptoms || {};
+        const context = payload.context || {};
+        const tone = document.querySelector('input[name="tone"]:checked')?.value || 'professional';
+        await generateSummary(symptoms, context, tone);
+      } catch (err) {
+        showStatus('Invalid JSON format. Please check and try again.', 'error');
       }
-  
-      const symptoms = payload.symptoms || {};
-      const context  = payload.context  || {};
-      const title =
-        "SymptomPro: " + (symptoms.chiefComplaint || symptoms.primarySymptom || "Summary");
-  
+    };
+    
+    // Main generation function
+    async function generateSummary(symptoms, context, tone) {
+      showStatus('Generating your summaries with Claude AI...', 'working');
+      
+      const title = `SymptomPro: ${symptoms.chiefComplaint || symptoms.primarySymptom || "Summary"}`;
+      
       try {
-        // 1) Generate
-        status.textContent = "Generating summary…";
+        // Call Firebase function with tone parameter
         const cfGenerateSummary = httpsCallable(functions, "generateSummary");
-        const resp = await cfGenerateSummary({ symptoms, context });
-        log("generateSummary raw resp:", resp);
-  
+        const resp = await cfGenerateSummary({ symptoms, context, tone });
+        
         const data = resp?.data || {};
-        const summary = data.summary || "No summary produced.";
-        out.textContent = summary;
-  
-        // 2) Save
-        status.textContent = "Saving to Vault…";
+        
+        if (data.summaries) {
+          // Store summaries for copy/download
+          currentSummaries = data.summaries;
+          
+          // Display each summary type
+          document.getElementById('clinicalOutput').textContent = data.summaries.clinical || "Unable to generate clinical summary.";
+          document.getElementById('portalOutput').textContent = data.summaries.portal || "Unable to generate portal message.";
+          document.getElementById('emergencyOutput').textContent = data.summaries.emergency || "Unable to generate emergency summary.";
+          document.getElementById('referralOutput').textContent = data.summaries.referral || "Unable to generate referral summary.";
+          
+          resultSection.classList.add('show');
+          
+          // Reset to first tab
+          switchSummary('clinical');
+        } else {
+          // Fallback for backward compatibility
+          const summary = data.summary || "No summary produced.";
+          document.getElementById('clinicalOutput').textContent = summary;
+          currentSummaries = { clinical: summary };
+          resultSection.classList.add('show');
+        }
+        
+        // Save to Vault
+        showStatus('Saving to your Vault...', 'working');
         const saveRes = await saveEntryToVaultWithHooks(
           {
             type: "symptomPro",
             title,
-            structured: { symptoms, context, summary },
-            extraTags: ["symptom", "OLD_CARTS"],
+            structured: { symptoms, context, summaries: currentSummaries, tone },
+            extraTags: ["symptom", "OLD_CARTS", tone],
           },
           hooks
         );
-        log("vault save result:", saveRes);
-  
-        status.textContent = "Saved to your Vault.";
+        
+        showStatus('✓ Summaries generated and saved to your Vault', 'success');
+        
+        // Scroll to results
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+        
       } catch (err) {
         console.error("SymptomPro error:", err);
-        out.textContent = "Sorry—generation or save failed.";
-        status.textContent = String(err?.message || err);
+        showStatus(`Error: ${err?.message || 'Generation or save failed'}`, 'error');
       }
-    });
+    }
+    
+    // Helper functions
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = type || '';
+    }
+    
+    window.clearForm = function() {
+      form.reset();
+      severityValue.textContent = '5';
+      document.querySelectorAll('.chip-option').forEach(chip => {
+        chip.classList.remove('selected');
+      });
+      resultSection.classList.remove('show');
+      statusEl.className = '';
+      statusEl.textContent = '';
+      currentSummaries = {};
+    };
+    
+    window.copySummary = function(type) {
+      const text = currentSummaries[type] || document.getElementById(`${type}Output`).textContent;
+      navigator.clipboard.writeText(text)
+        .then(() => showStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} summary copied to clipboard!`, 'success'))
+        .catch(() => showStatus('Failed to copy', 'error'));
+    };
+    
+    window.downloadSummary = function(type) {
+      const text = currentSummaries[type] || document.getElementById(`${type}Output`).textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `symptom-${type}-summary.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+    
+    window.loadExample = function() {
+      const example = {
+        symptoms: {
+          chiefComplaint: "Severe migraine headache",
+          onset: "2 days ago",
+          location: "Right side of head, behind eye",
+          duration: "Constant for 48 hours",
+          character: "Throbbing, pulsating",
+          aggravating: "Bright lights, loud sounds, movement",
+          alleviating: "Dark quiet room, sleep",
+          radiation: "Sometimes spreads to neck",
+          timing: "Started in morning, worse in afternoon",
+          severity: "8/10"
+        },
+        context: {
+          history: "Family history of migraines, previous episodes monthly",
+          meds: "Ibuprofen 400mg as needed, currently taking sumatriptan",
+          impact: "Unable to work, nausea preventing eating"
+        }
+      };
+      jsonInput.value = JSON.stringify(example, null, 2);
+    };
   </script>
-
-  <!-- Auto-inits CoPilot + form helpers for other pages; harmless here -->
+  
+  <!-- Auto-init helpers -->
   <script type="module" src="/lib/briefmeAuto.js"></script>
   <script type="module" src="/lib/welcomeCard.js"></script>
 </body>
