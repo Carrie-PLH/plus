@@ -2,61 +2,1273 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>ResetPro</title>
+  <title>Medical Record Correction Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">✍️</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
-    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
-    button { padding: 8px 14px; font: inherit; cursor: pointer; }
-    pre, code { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #fafafa;
+      --muted: #666;
+      --success: #4caf50;
+      --error: #f44336;
+      --warning: #ff9800;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    nav {
+      margin-bottom: 16px;
+    }
+    
+    nav a {
+      color: var(--brand-coral);
+      text-decoration: none;
+      margin-right: 16px;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .phase-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .phase-section h2 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 20px;
+      font-weight: 500;
+      border-bottom: 2px solid var(--brand-green);
+      padding-bottom: 8px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(163, 185, 163, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 640px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+      min-height: 32px;
+    }
+    
+    /* Analysis Phase Styles */
+    .flags-container {
+      margin: 20px 0;
+    }
+    
+    .flag-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .flag-tab {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-size: 14px;
+    }
+    
+    .flag-tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .flag-content {
+      display: none;
+    }
+    
+    .flag-content.active {
+      display: block;
+    }
+    
+    .flag-item {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-green);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .flag-quote {
+      font-style: italic;
+      color: var(--brand-dark);
+      margin-bottom: 8px;
+    }
+    
+    .flag-reason {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    
+    .flag-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .flag-remove:hover {
+      background: var(--error);
+      color: white;
+    }
+    
+    .assessment-box {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+    
+    .gaslighting-score {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+    
+    .score-low {
+      background: var(--success);
+      color: white;
+    }
+    
+    .score-moderate {
+      background: var(--warning);
+      color: white;
+    }
+    
+    .score-high {
+      background: var(--error);
+      color: white;
+    }
+    
+    /* Response Phase - Three Tracks */
+    .track-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 20px;
+    }
+    
+    .track-tab {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    
+    .track-tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .track-content {
+      display: none;
+    }
+    
+    .track-content.active {
+      display: block;
+    }
+    
+    .response-editor {
+      min-height: 200px;
+    }
+    
+    .power-phrases {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .power-phrases h4 {
+      margin: 0 0 12px;
+      color: var(--brand-dark);
+      font-size: 16px;
+    }
+    
+    .phrase-category {
+      margin-bottom: 16px;
+    }
+    
+    .phrase-category h5 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .phrase-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .phrase-btn:hover {
+      background: var(--brand-green);
+      color: white;
+      border-color: var(--brand-green);
+    }
+    
+    /* Evidence Assembly */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid var(--line);
+    }
+    
+    .comparison-table th {
+      background: var(--brand-light);
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .comparison-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    
+    .timeline-date {
+      font-weight: 500;
+      color: var(--brand-coral);
+      min-width: 100px;
+    }
+    
+    .timeline-event {
+      flex: 1;
+    }
+    
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    
+    /* Status messages */
+    #status {
+      margin: 16px 0;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    #status.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+    }
+    
+    #status.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+      border: 1px solid var(--error);
+      display: block;
+    }
+    
+    #status.working {
+      background: rgba(163, 185, 163, 0.1);
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-green);
+      display: block;
+    }
+    
+    /* Print styles */
+    @media print {
+      nav, .action-buttons, button, .flag-remove {
+        display: none !important;
+      }
+      
+      body {
+        background: white;
+      }
+      
+      .phase-section {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+      }
+    }
+    
+    /* Disclaimers */
+    .disclaimer {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    
+    .disclaimer strong {
+      color: #856404;
+    }
+    
+    /* Hidden by default */
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
-  <h1>ResetPro</h1>
-  <p>Detects dismissive patterns in provider messages; suggests responses; produces a documentation note.</p>
-
-  <h3>Example input JSON</h3>
-  <pre id="example">{
-  "thread": [
-    { "role": "patient",  "text": "I have had severe abdominal pain for three weeks; I can’t sleep.", "ts": "2025-08-01T10:00:00Z" },
-    { "role": "provider", "text": "Everyone has stomach aches sometimes; it’s probably stress. Try not to worry.", "ts": "2025-08-01T10:05:00Z" },
-    { "role": "patient",  "text": "It’s waking me up nightly and getting worse.", "ts": "2025-08-01T10:07:00Z" },
-    { "role": "provider", "text": "You’re overthinking this. We can talk next month.", "ts": "2025-08-01T10:09:00Z" }
-  ],
-  "goal": "document"
-}</pre>
-
-  <form id="form">
-    <label>Thread JSON</label>
-    <textarea id="input" rows="12" placeholder='{"thread":[{"role":"provider","text":"..."}], "goal":"prepare"}'></textarea>
-    <button type="submit">Analyze</button>
-    <button type="button" id="load">Load Example</button>
-  </form>
-
-  <div class="grid">
-    <div>
-      <h3>Assessment</h3>
-      <pre id="assessment">Run analysis to see findings.</pre>
-
-      <h3>Response Options</h3>
-      <ul id="responses"></ul>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+    </nav>
+    
+    <header>
+      <h1>Correct Inaccurate Medical Records & Respond to Dismissive Notes</h1>
+      <p class="subtitle">Address gaslighting, identify inaccuracies, and request corrections professionally and effectively so your care stays on track.</p>
+    </header>
+    
+    <!-- Phase 1: INPUT -->
+    <div id="inputPhase" class="phase-section">
+      <h2>Step 1: Document What Happened</h2>
+      
+      <div class="form-group">
+        <label for="providerText">Provider's Notes or Messages</label>
+        <textarea id="providerText" placeholder="Paste the provider's documentation, portal message, or visit summary here..."></textarea>
+        <p class="hint">Include any written communication from your provider that contains inaccuracies or dismissive language</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="patientAnnotation">What Actually Happened</label>
+        <textarea id="patientAnnotation" placeholder="Describe what you actually said, your symptoms, and what was discussed..."></textarea>
+        <p class="hint">Be specific about symptoms described, questions asked, and concerns raised</p>
+      </div>
+      
+      <div class="two-column">
+        <div class="form-group">
+          <label for="providerName">Provider Name (Optional)</label>
+          <input type="text" id="providerName" placeholder="Dr. Smith">
+        </div>
+        <div class="form-group">
+          <label for="visitDate">Visit Date (Optional)</label>
+          <input type="date" id="visitDate">
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" onclick="analyzeText()">
+          Analyze for Inaccuracies & Dismissive Patterns
+        </button>
+      </div>
+      
+      <div id="status" aria-live="polite"></div>
     </div>
-    <div>
-      <h3>Documentation Note (copy/paste)</h3>
-      <pre id="doc"></pre>
+    
+    <!-- Phase 2: ANALYSIS (hidden initially) -->
+    <div id="analysisPhase" class="phase-section hidden">
+      <h2>Step 2: Review Analysis Results</h2>
+      
+      <div class="flags-container">
+        <h3>Identified Patterns</h3>
+        <div class="flag-tabs">
+          <button class="flag-tab active" onclick="switchFlagTab('dismissive')">Dismissive Language</button>
+          <button class="flag-tab" onclick="switchFlagTab('minimization')">Minimization</button>
+          <button class="flag-tab" onclick="switchFlagTab('credibility')">Credibility Undermining</button>
+          <button class="flag-tab" onclick="switchFlagTab('boundary')">Boundary Crossing</button>
+        </div>
+        
+        <div id="dismissiveFlags" class="flag-content active"></div>
+        <div id="minimizationFlags" class="flag-content"></div>
+        <div id="credibilityFlags" class="flag-content"></div>
+        <div id="boundaryFlags" class="flag-content"></div>
+      </div>
+      
+      <div class="assessment-box">
+        <h3>Overall Assessment</h3>
+        <p id="overallAssessment"></p>
+        <p>
+          <strong>Gaslighting Signals:</strong>
+          <span id="gaslightingScore" class="gaslighting-score score-low">Low</span>
+        </p>
+        <p class="hint">This is an educational assessment based on identified patterns, not a medical or legal determination.</p>
+      </div>
+      
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" onclick="showResponsePhase()">
+          Generate Response Options
+        </button>
+      </div>
+    </div>
+    
+    <!-- Phase 3: RESPONSE (hidden initially) -->
+    <div id="responsePhase" class="phase-section hidden">
+      <h2>Step 3: Choose Your Response Strategy</h2>
+      
+      <div class="track-tabs">
+        <button class="track-tab active" onclick="switchTrack('A')">Track A: Immediate Correction</button>
+        <button class="track-tab" onclick="switchTrack('B')">Track B: Formal Challenge</button>
+        <button class="track-tab" onclick="switchTrack('C')">Track C: Escalation</button>
+      </div>
+      
+      <!-- Track A: Immediate Correction -->
+      <div id="trackA" class="track-content active">
+        <h3>Portal Message for Immediate Correction</h3>
+        <p class="hint">Professional, concise message requesting corrections to your medical record</p>
+        
+        <div class="power-phrases">
+          <h4>Quick Insert Phrases</h4>
+          <div class="phrase-category">
+            <h5>Accuracy</h5>
+            <button class="phrase-btn" onclick="insertPhrase('accuracy', 0)">
+              "I need to correct several inaccuracies in my medical record from [date]."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('accuracy', 1)">
+              "The documentation does not reflect our actual conversation."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('accuracy', 2)">
+              "Critical symptoms were omitted from the visit summary."
+            </button>
+          </div>
+          
+          <div class="phrase-category">
+            <h5>Accountability</h5>
+            <button class="phrase-btn" onclick="insertPhrase('accountability', 0)">
+              "I am formally requesting an amendment under HIPAA guidelines."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('accountability', 1)">
+              "Please document this correction request in my file."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('accountability', 2)">
+              "I will be following up with patient relations if not addressed."
+            </button>
+          </div>
+          
+          <div class="phrase-category">
+            <h5>Validation</h5>
+            <button class="phrase-btn" onclick="insertPhrase('validation', 0)">
+              "My symptoms are real, measurable, and deserve investigation."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('validation', 1)">
+              "I am the expert on my own body's experiences."
+            </button>
+            <button class="phrase-btn" onclick="insertPhrase('validation', 2)">
+              "Dismissing symptoms as psychological without testing is inappropriate."
+            </button>
+          </div>
+        </div>
+        
+        <textarea id="trackAText" class="response-editor"></textarea>
+        
+        <div class="action-buttons">
+          <button class="btn-secondary" onclick="copyText('trackAText')">Copy Message</button>
+          <button class="btn-secondary" onclick="downloadText('trackA')">Download</button>
+        </div>
+      </div>
+      
+      <!-- Track B: Formal Challenge -->
+      <div id="trackB" class="track-content">
+        <h3>Formal HIPAA Amendment Request</h3>
+        <p class="hint">Official letter requesting amendment to your medical record under HIPAA § 164.526</p>
+        
+        <div class="form-group">
+          <label for="recipientName">Recipient</label>
+          <input type="text" id="recipientName" placeholder="Medical Records Department">
+        </div>
+        
+        <div class="form-group">
+          <label for="ccList">CC (Optional)</label>
+          <input type="text" id="ccList" placeholder="Patient Relations, Dr. Smith">
+        </div>
+        
+        <textarea id="trackBText" class="response-editor"></textarea>
+        
+        <div class="action-buttons">
+          <button class="btn-secondary" onclick="copyText('trackBText')">Copy Letter</button>
+          <button class="btn-secondary" onclick="printLetter()">Print/PDF</button>
+        </div>
+      </div>
+      
+      <!-- Track C: Escalation -->
+      <div id="trackC" class="track-content">
+        <h3>Escalation Templates</h3>
+        <p class="hint">Templates for patient relations complaints, board reports, and second opinion preparation</p>
+        
+        <div class="form-group">
+          <label for="escalationType">Select Template Type</label>
+          <select id="escalationType" onchange="updateEscalationTemplate()">
+            <option value="relations">Patient Relations Complaint</option>
+            <option value="board">Medical Board Report</option>
+            <option value="second">Second Opinion Prep Packet</option>
+          </select>
+        </div>
+        
+        <textarea id="trackCText" class="response-editor"></textarea>
+        
+        <div class="action-buttons">
+          <button class="btn-secondary" onclick="copyText('trackCText')">Copy Template</button>
+          <button class="btn-secondary" onclick="downloadText('trackC')">Download</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Phase 4: TRACKING (hidden initially) -->
+    <div id="trackingPhase" class="phase-section hidden">
+      <h2>Step 4: Build Your Case</h2>
+      
+      <h3>Evidence Assembly</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>What Was Documented</th>
+            <th>What Actually Happened</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+      
+      <h3>Timeline of Incidents</h3>
+      <div id="timeline">
+        <!-- Dynamically populated -->
+      </div>
+      
+      <div class="form-group">
+        <label for="followupNotes">Follow-Up Notes</label>
+        <textarea id="followupNotes" placeholder="Log whether you sent the message, provider response, next steps..."></textarea>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn-primary" onclick="saveToVault()">Save Everything to Vault</button>
+        <button class="btn-secondary" onclick="window.print()">Print Report</button>
+      </div>
+    </div>
+    
+    <!-- Disclaimers -->
+    <div class="disclaimer">
+      <strong>Important:</strong> This tool provides educational information only, not medical or legal advice. Do not record audio without checking your local laws. Use respectful, professional language and keep your goal focused on accuracy.
+    </div>
+    
+    <!-- Cross-tool links -->
+    <div class="phase-section">
+      <h2>Related Tools</h2>
+      <div class="action-buttons">
+        <a href="/BriefMe/AgendaDesigner/" class="btn-secondary">Prepare for Next Visit</a>
+        <a href="/AppealBuilder/" class="btn-secondary">Appeal Coverage Denial</a>
+        <a href="/RightsBuilder/" class="btn-secondary">Understand Your Rights</a>
+      </div>
     </div>
   </div>
-
+  
   <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#toolForm",
-      type: "toolTemplate",
-      title: d => `Tool: ${d.title || "Entry"}`,
-      extraTags: ["template"]
-    });
+    import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { functions } from "/lib/appBootstrap.js";
+    import {
+      initAuth,
+      saveEntryToVaultWithHooks,
+      registerCopilotIngest,
+    } from "/lib/briefmeSave.js";
+    
+    // Initialize auth and telemetry
+    await initAuth();
+    const hooks = registerCopilotIngest({ enabled: true, defaultTool: "resetpro" });
+    
+    // Fire page open event
+    try {
+      window.briefme?.copilot?.ingest?.("page_open", "resetpro", {});
+    } catch {}
+    
+    // Global state
+    let currentAnalysis = null;
+    let acceptedFlags = {
+      dismissive: [],
+      minimization: [],
+      credibility: [],
+      boundary: []
+    };
+    
+    // Power phrases library
+    const POWER_PHRASES = {
+      accuracy: [
+        "I need to correct several inaccuracies in my medical record from [date].",
+        "The documentation does not reflect our actual conversation.",
+        "Critical symptoms were omitted from the visit summary."
+      ],
+      accountability: [
+        "I am formally requesting an amendment under HIPAA guidelines.",
+        "Please document this correction request in my file.",
+        "I will be following up with patient relations if not addressed."
+      ],
+      validation: [
+        "My symptoms are real, measurable, and deserve investigation.",
+        "I am the expert on my own body's experiences.",
+        "Dismissing symptoms as psychological without testing is inappropriate."
+      ]
+    };
+    
+    // Expose functions globally
+    window.analyzeText = analyzeText;
+    window.switchFlagTab = switchFlagTab;
+    window.removeFlag = removeFlag;
+    window.showResponsePhase = showResponsePhase;
+    window.switchTrack = switchTrack;
+    window.insertPhrase = insertPhrase;
+    window.copyText = copyText;
+    window.downloadText = downloadText;
+    window.printLetter = printLetter;
+    window.updateEscalationTemplate = updateEscalationTemplate;
+    window.saveToVault = saveToVault;
+    
+    async function analyzeText() {
+      const providerText = document.getElementById('providerText').value.trim();
+      const patientAnnotation = document.getElementById('patientAnnotation').value.trim();
+      
+      if (!providerText || !patientAnnotation) {
+        showStatus('Please provide both provider notes and your annotation', 'error');
+        return;
+      }
+      
+      showStatus('Analyzing for patterns and inaccuracies...', 'working');
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("analyze_click", "resetpro", {});
+      } catch {}
+      
+      try {
+        // Build thread for API
+        const thread = [
+          { role: "provider", text: providerText, ts: new Date().toISOString() },
+          { role: "patient", text: patientAnnotation, ts: new Date().toISOString() }
+        ];
+        
+        // Call Firebase function
+        const resetProRun = httpsCallable(functions, "resetProRun");
+        const response = await resetProRun({ thread, goal: "document" });
+        
+        currentAnalysis = response.data;
+        
+        // Display analysis results
+        displayFlags(currentAnalysis.flags);
+        displayAssessment(currentAnalysis.overallAssessment);
+        calculateGaslightingScore(currentAnalysis.flags);
+        
+        // Show analysis phase
+        document.getElementById('analysisPhase').classList.remove('hidden');
+        document.getElementById('analysisPhase').scrollIntoView({ behavior: 'smooth' });
+        
+        showStatus('Analysis complete. Review the identified patterns below.', 'success');
+        
+        // Fire telemetry
+        try {
+          window.briefme?.copilot?.ingest?.("analysis_ok", "resetpro", {
+            flagCount: Object.values(currentAnalysis.flags).flat().length
+          });
+        } catch {}
+        
+      } catch (error) {
+        console.error('Analysis error:', error);
+        showStatus('Unable to analyze text. Please try again.', 'error');
+      }
+    }
+    
+    function displayFlags(flags) {
+      // Clear previous flags
+      acceptedFlags = {
+        dismissive: [],
+        minimization: [],
+        credibility: [],
+        boundary: []
+      };
+      
+      // Display dismissive language flags
+      const dismissiveContainer = document.getElementById('dismissiveFlags');
+      dismissiveContainer.innerHTML = '';
+      if (flags.dismissiveLanguage && flags.dismissiveLanguage.length > 0) {
+        flags.dismissiveLanguage.forEach((flag, index) => {
+          const flagEl = createFlagElement(flag, 'dismissive', index);
+          dismissiveContainer.appendChild(flagEl);
+          acceptedFlags.dismissive.push(flag);
+        });
+      } else {
+        dismissiveContainer.innerHTML = '<p class="hint">No dismissive language patterns detected.</p>';
+      }
+      
+      // Display minimization flags
+      const minimizationContainer = document.getElementById('minimizationFlags');
+      minimizationContainer.innerHTML = '';
+      if (flags.minimization && flags.minimization.length > 0) {
+        flags.minimization.forEach((flag, index) => {
+          const flagEl = createFlagElement(flag, 'minimization', index);
+          minimizationContainer.appendChild(flagEl);
+          acceptedFlags.minimization.push(flag);
+        });
+      } else {
+        minimizationContainer.innerHTML = '<p class="hint">No minimization patterns detected.</p>';
+      }
+      
+      // Display credibility undermining flags
+      const credibilityContainer = document.getElementById('credibilityFlags');
+      credibilityContainer.innerHTML = '';
+      if (flags.credibilityUndermining && flags.credibilityUndermining.length > 0) {
+        flags.credibilityUndermining.forEach((flag, index) => {
+          const flagEl = createFlagElement(flag, 'credibility', index);
+          credibilityContainer.appendChild(flagEl);
+          acceptedFlags.credibility.push(flag);
+        });
+      } else {
+        credibilityContainer.innerHTML = '<p class="hint">No credibility undermining detected.</p>';
+      }
+      
+      // Display boundary crossing flags
+      const boundaryContainer = document.getElementById('boundaryFlags');
+      boundaryContainer.innerHTML = '';
+      if (flags.boundaryCrossing && flags.boundaryCrossing.length > 0) {
+        flags.boundaryCrossing.forEach((flag, index) => {
+          const flagEl = createFlagElement(flag, 'boundary', index);
+          boundaryContainer.appendChild(flagEl);
+          acceptedFlags.boundary.push(flag);
+        });
+      } else {
+        boundaryContainer.innerHTML = '<p class="hint">No boundary crossing detected.</p>';
+      }
+    }
+    
+    function createFlagElement(flag, type, index) {
+      const div = document.createElement('div');
+      div.className = 'flag-item';
+      div.id = `flag-${type}-${index}`;
+      div.innerHTML = `
+        <div class="flag-quote">"${flag.quote}"</div>
+        <div class="flag-reason">${flag.why}</div>
+        <button class="flag-remove" onclick="removeFlag('${type}', ${index})">Remove</button>
+      `;
+      return div;
+    }
+    
+    function removeFlag(type, index) {
+      // Remove from accepted flags
+      acceptedFlags[type].splice(index, 1);
+      
+      // Remove from UI
+      document.getElementById(`flag-${type}-${index}`).remove();
+      
+      // Recalculate gaslighting score
+      calculateGaslightingScore(acceptedFlags);
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("flag_remove", "resetpro", { type });
+      } catch {}
+    }
+    
+    function displayAssessment(assessment) {
+      document.getElementById('overallAssessment').textContent = assessment || 'No overall assessment provided.';
+    }
+    
+    function calculateGaslightingScore(flags) {
+      // Simple heuristic: count total flags
+      const totalFlags = Object.values(acceptedFlags).flat().length;
+      
+      const scoreEl = document.getElementById('gaslightingScore');
+      scoreEl.classList.remove('score-low', 'score-moderate', 'score-high');
+      
+      if (totalFlags <= 2) {
+        scoreEl.textContent = 'Low';
+        scoreEl.classList.add('score-low');
+      } else if (totalFlags <= 5) {
+        scoreEl.textContent = 'Moderate';
+        scoreEl.classList.add('score-moderate');
+      } else {
+        scoreEl.textContent = 'High';
+        scoreEl.classList.add('score-high');
+      }
+    }
+    
+    function switchFlagTab(tab) {
+      // Update tabs
+      document.querySelectorAll('.flag-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.flag-content').forEach(c => c.classList.remove('active'));
+      
+      // Activate selected tab
+      const tabs = ['dismissive', 'minimization', 'credibility', 'boundary'];
+      const index = tabs.indexOf(tab);
+      document.querySelectorAll('.flag-tab')[index].classList.add('active');
+      document.getElementById(`${tab}Flags`).classList.add('active');
+    }
+    
+    function showResponsePhase() {
+      if (!currentAnalysis) return;
+      
+      // Generate response options based on analysis
+      generateResponses();
+      
+      // Show response phase
+      document.getElementById('responsePhase').classList.remove('hidden');
+      document.getElementById('trackingPhase').classList.remove('hidden');
+      document.getElementById('responsePhase').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function generateResponses() {
+      const providerName = document.getElementById('providerName').value || 'Provider';
+      const visitDate = document.getElementById('visitDate').value || '[date]';
+      const patientAnnotation = document.getElementById('patientAnnotation').value;
+      
+      // Track A: Immediate Correction
+      const trackAText = generateImmediateCorrection(providerName, visitDate, patientAnnotation);
+      document.getElementById('trackAText').value = trackAText;
+      
+      // Track B: Formal Challenge
+      const trackBText = generateFormalChallenge(providerName, visitDate, patientAnnotation);
+      document.getElementById('trackBText').value = trackBText;
+      
+      // Track C: Escalation
+      updateEscalationTemplate();
+      
+      // Build comparison table
+      buildComparisonTable();
+      
+      // Build timeline
+      buildTimeline();
+    }
+    
+    function generateImmediateCorrection(provider, date, annotation) {
+      const responses = currentAnalysis?.responseOptions || [];
+      const neutralResponse = responses.find(r => r.tone === 'neutral');
+      
+      return neutralResponse?.text || `Dear ${provider},
+
+I am writing to request corrections to my medical record from our visit on ${date}. Several critical details were either omitted or inaccurately documented.
+
+${annotation}
+
+Please update my medical record to accurately reflect our discussion and my reported symptoms.
+
+Thank you for your attention to this matter.`;
+    }
+    
+    function generateFormalChallenge(provider, date, annotation) {
+      const responses = currentAnalysis?.responseOptions || [];
+      const firmResponse = responses.find(r => r.tone === 'firm');
+      
+      return firmResponse?.text || `To: Medical Records Department
+CC: Patient Relations, ${provider}
+
+Subject: Formal Request for Amendment to Medical Record - HIPAA § 164.526
+
+I am formally requesting an amendment to my medical record from my visit with ${provider} on ${date}.
+
+The following inaccuracies must be corrected:
+
+${annotation}
+
+Under HIPAA § 164.526, I have the right to request amendments to my medical record when information is incorrect or incomplete. Please process this request within 30 days as required by law.
+
+Please confirm receipt of this request and provide the amended records for my review.
+
+Sincerely,
+[Your Name]
+[Date]`;
+    }
+    
+    function updateEscalationTemplate() {
+      const type = document.getElementById('escalationType').value;
+      const provider = document.getElementById('providerName').value || '[Provider]';
+      const date = document.getElementById('visitDate').value || '[date]';
+      
+      let template = '';
+      
+      if (type === 'relations') {
+        template = `To: Patient Relations Department
+
+Subject: Formal Complaint Regarding Medical Documentation
+
+I am filing a formal complaint regarding inaccurate documentation and dismissive treatment during my visit with ${provider} on ${date}.
+
+[Describe specific concerns and impact on care]
+
+I request a formal review of this matter and appropriate corrective action.
+
+Sincerely,
+[Your Name]`;
+      } else if (type === 'board') {
+        template = `To: State Medical Board
+
+Subject: Report of Professional Conduct Concern
+
+I am reporting concerns about medical documentation and patient treatment by ${provider} on ${date}.
+
+[Include specific incidents and documentation]
+
+I believe this warrants review for potential violations of professional standards.
+
+Respectfully,
+[Your Name]`;
+      } else if (type === 'second') {
+        template = `Medical History Summary for Second Opinion
+
+Previous Provider: ${provider}
+Visit Date: ${date}
+
+Reason for Second Opinion:
+[Describe concerns about previous care and documentation]
+
+Key Medical Information:
+[List symptoms, conditions, medications]
+
+Questions for New Provider:
+[List specific questions]`;
+      }
+      
+      document.getElementById('trackCText').value = template;
+    }
+    
+    function switchTrack(track) {
+      // Update tabs
+      document.querySelectorAll('.track-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.track-content').forEach(c => c.classList.remove('active'));
+      
+      // Activate selected track
+      const tracks = ['A', 'B', 'C'];
+      const index = tracks.indexOf(track);
+      document.querySelectorAll('.track-tab')[index].classList.add('active');
+      document.getElementById(`track${track}`).classList.add('active');
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("track_view", "resetpro", { track });
+      } catch {}
+    }
+    
+    function insertPhrase(category, index) {
+      const phrase = POWER_PHRASES[category][index];
+      const activeTrack = document.querySelector('.track-content.active');
+      const textarea = activeTrack.querySelector('textarea');
+      
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      
+      textarea.value = text.substring(0, start) + phrase + text.substring(end);
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + phrase.length;
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("phrase_insert", "resetpro", { category });
+      } catch {}
+    }
+    
+    function buildComparisonTable() {
+      const tbody = document.getElementById('comparisonBody');
+      tbody.innerHTML = '';
+      
+      // Add sample row (in real implementation, would parse from analysis)
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>Patient reports mild discomfort</td>
+        <td>I described severe, debilitating pain rated 8/10</td>
+      `;
+      tbody.appendChild(row);
+    }
+    
+    function buildTimeline() {
+      const timeline = document.getElementById('timeline');
+      const date = document.getElementById('visitDate').value || new Date().toISOString().split('T')[0];
+      
+      timeline.innerHTML = `
+        <div class="timeline-item">
+          <div class="timeline-date">${date}</div>
+          <div class="timeline-event">
+            <strong>Visit with provider</strong><br>
+            Symptoms dismissed, inaccurate documentation
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">${new Date().toISOString().split('T')[0]}</div>
+          <div class="timeline-event">
+            <strong>Correction requested</strong><br>
+            Formal amendment request submitted
+          </div>
+        </div>
+      `;
+    }
+    
+    function copyText(elementId) {
+      const text = document.getElementById(elementId).value;
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showStatus('Copied to clipboard!', 'success');
+          // Fire telemetry
+          try {
+            window.briefme?.copilot?.ingest?.("copy_click", "resetpro", {});
+          } catch {}
+        })
+        .catch(() => showStatus('Failed to copy', 'error'));
+    }
+    
+    function downloadText(track) {
+      const text = document.getElementById(`${track}Text`).value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `medical-record-correction-${track}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    function printLetter() {
+      window.print();
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("print_click", "resetpro", {});
+      } catch {}
+    }
+    
+    async function saveToVault() {
+      showStatus('Saving to your Medical Memory Vault...', 'working');
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("save_click", "resetpro", {});
+      } catch {}
+      
+      const provider = document.getElementById('providerName').value || 'Provider';
+      const visitDate = document.getElementById('visitDate').value || new Date().toISOString().split('T')[0];
+      const title = `Record Correction: ${provider} – ${visitDate}`;
+      
+      // Build data structure
+      const vaultData = {
+        meta: {
+          provider: provider,
+          visitDate: visitDate,
+          createdAt: Date.now()
+        },
+        inputs: {
+          providerText: document.getElementById('providerText').value,
+          patientAnnotation: document.getElementById('patientAnnotation').value,
+          highlights: [] // Future feature
+        },
+        analysis: {
+          flags: acceptedFlags,
+          overallAssessment: document.getElementById('overallAssessment').textContent,
+          gaslightingScore: document.getElementById('gaslightingScore').textContent.toLowerCase()
+        },
+        tracks: {
+          immediateCorrection: { text: document.getElementById('trackAText').value },
+          formalChallenge: { letter: document.getElementById('trackBText').value },
+          escalation: { drafts: { template: document.getElementById('trackCText').value } }
+        },
+        evidence: {
+          contradictions: [], // Would be populated from comparison table
+          timeline: [], // Would be populated from timeline
+          attachments: []
+        }
+      };
+      
+      try {
+        const saveRes = await saveEntryToVaultWithHooks(
+          {
+            type: "resetPro",
+            title: title,
+            structured: vaultData,
+            extraTags: ["record-correction", "gaslighting-defense"]
+          },
+          hooks
+        );
+        
+        showStatus('✓ Saved to your Medical Memory Vault', 'success');
+        
+      } catch (error) {
+        console.error('Save error:', error);
+        showStatus('Unable to save. Please try again.', 'error');
+      }
+    }
+    
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      statusEl.className = type || '';
+    }
   </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
 </body>
 </html>

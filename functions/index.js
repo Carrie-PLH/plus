@@ -176,101 +176,190 @@ If information is insufficient, be explicit about what is missing.
   }
 );
 
-// Enhanced generateSummary function for functions/index.js
-// Replace the existing generateSummary export with this version
-
+// --- SymptomPro Enhanced (callable)
 export const generateSummary = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
   async (request) => {
     try {
       const { symptoms, context, tone = "professional" } = request.data || {};
-      if (!symptoms) {
+      if (!symptoms || typeof symptoms !== "object") {
         return { ok: false, error: "Missing 'symptoms' object" };
       }
 
       const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
       
-      // Map tone to instructions
-      const toneInstructions = {
-        professional: "Use clear, professional medical language appropriate for healthcare providers",
-        friendly: "Use warm, approachable language while maintaining accuracy",
-        direct: "Be concise and straightforward, focusing on key facts",
-        detailed: "Provide comprehensive detail with thorough explanations"
-      };
-      
-      const toneGuide = toneInstructions[tone] || toneInstructions.professional;
-      
+      // Build comprehensive prompt for multiple summary types
+      const system = `
+You are a medical communication specialist helping patients articulate their symptoms clearly.
+Generate natural, professional symptom summaries that patients can share with healthcare providers.
+NEVER mention "OLD CARTS" or any acronyms in the output - use the framework invisibly.
+Write in natural paragraphs, not bullet points or lists.
+Adjust language tone based on the specified parameter: ${tone}.
+`.trim();
+
       const prompt = `
-You are a medical communication assistant helping a patient prepare clear summaries of their symptoms.
-Generate 4 different natural language summaries based on the provided symptom data. ${toneGuide}.
+Generate 4 different symptom summaries based on this patient data.
+Each summary should be a complete, natural narrative ready to copy and paste.
 
-Input Data:
-Symptoms: ${JSON.stringify(symptoms)}
-Context: ${JSON.stringify(context || {})}
+SYMPTOMS:
+- Chief Complaint: ${symptoms.chiefComplaint || symptoms.primarySymptom || "Not specified"}
+- Onset: ${symptoms.onset || "Not specified"}
+- Location: ${symptoms.location || "Not specified"}
+- Duration: ${symptoms.duration || "Not specified"}
+- Frequency: ${symptoms.frequency || "Not specified"}
+- Character: ${symptoms.character || "Not specified"}
+- Aggravating factors: ${symptoms.aggravating || symptoms.worsens || "Not specified"}
+- Alleviating factors: ${symptoms.alleviating || symptoms.improves || "Not specified"}
+- Radiation: ${symptoms.radiation || "Not specified"}
+- Timing: ${symptoms.timing || "Not specified"}
+- Severity: ${symptoms.severity || "Not specified"}
 
-Generate these 4 summaries:
+CONTEXT:
+- Medical History: ${context?.history || "Not provided"}
+- Current Medications: ${context?.meds || context?.medications || "None listed"}
+- Impact on Daily Life: ${context?.impact || "Not specified"}
 
-1. CLINICAL SUMMARY (using the medical framework but written naturally):
-Write a comprehensive symptom description that follows the standard clinical framework doctors use.
-Include: when it started, where it's located, how long it lasts, what it feels like, what makes it worse, 
-what helps, if it spreads anywhere, timing patterns, and severity. Write in clear paragraphs, not bullet points.
-Don't mention "OLD CARTS" or any framework names - just present the information naturally.
+TONE: ${tone} (professional/friendly/direct/detailed)
 
-2. PATIENT PORTAL MESSAGE:
-Draft a concise, clear message the patient could send to their provider through a patient portal.
-Start with their main concern, briefly describe key symptoms, mention impact on daily life, and end with
-what they're hoping the provider can help with. Keep it under 200 words.
+Generate exactly this JSON structure:
+{
+  "summaries": {
+    "clinical": "[Full comprehensive narrative for provider appointments, 250-350 words. Include all relevant details in a flowing narrative that covers onset, location, character, severity, timing patterns, aggravating and relieving factors, radiation if any, and impact on function. Write as if the patient is explaining to their doctor.]",
+    "portal": "[Concise 150-200 word message for patient portal. Focus on key symptoms, duration, severity, and why seeking care. Write as a brief but complete message the patient would send through MyChart or similar portal.]",
+    "emergency": "[Brief 100-150 word focused summary for urgent/ER visits. Lead with chief complaint and severity. Include onset, vital symptoms, and any concerning features. Write in present tense focusing on immediate concerns.]",
+    "referral": "[Professional 200-250 word narrative for specialist referrals. Include relevant history, current symptoms with specific details, previous treatments tried, and impact on quality of life. Write formally as if for a referral letter.]"
+  },
+  "tone": "${tone}"
+}
 
-3. EMERGENCY/URGENT CARE SUMMARY:
-Create a brief, focused summary suitable for an emergency or urgent care setting using SOAP format.
-Subjective: Chief complaint and patient's description
-Objective: Any measurable facts (severity score, duration, etc.)
-Assessment: Key concerning symptoms or patterns
-Plan: What immediate evaluation or care might be needed
-Keep this concise but complete.
+Rules:
+- Write from the patient's first-person perspective
+- Use natural, flowing sentences without medical jargon
+- ${tone === 'professional' ? 'Use formal, clear language' : ''}
+- ${tone === 'friendly' ? 'Use warm, conversational language while remaining clear' : ''}
+- ${tone === 'direct' ? 'Be concise and straightforward, avoid extra words' : ''}
+- ${tone === 'detailed' ? 'Include all available information with thorough descriptions' : ''}
+- Make each summary immediately usable without editing
+- If information is missing, work with what's provided without mentioning gaps
+- Do not use bullet points, lists, or structured formats
+- Do not mention assessment frameworks or medical acronyms
 
-4. SPECIALIST REFERRAL SUMMARY:
-Write a summary appropriate for referral to a specialist. Include:
-- Primary reason for referral
-- Symptom timeline and progression
-- Previous treatments tried (if any)
-- Current medications
-- Relevant medical history
-- Impact on function and quality of life
-Format as a professional narrative paragraph.
-
-Return the summaries in a natural, well-written format that the patient can use directly.
+RETURN ONLY THE JSON OBJECT WITH NO ADDITIONAL TEXT OR MARKDOWN FORMATTING.
 `.trim();
 
       const msg = await client.messages.create({
         model: "claude-sonnet-4-20250514",
         max_tokens: 2000,
+        system,
         messages: [{ role: "user", content: prompt }],
       });
 
-      const text = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
+      // Extract and clean response
+      const raw = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
       
-      // Parse the response to extract each summary type
-      const sections = text.split(/\d\.\s+[A-Z\s]+(?:SUMMARY|MESSAGE):/);
+      // Remove any markdown code blocks if present
+      const cleaned = raw
+        .replace(/```(?:json)?\s*/gi, "")
+        .replace(/```\s*$/gi, "")
+        .trim();
+
+      let data;
+      try {
+        data = JSON.parse(cleaned);
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        console.error("Raw response:", raw);
+        
+        // Fallback: try to extract any text as a single summary
+        const fallbackSummary = cleaned || raw || "Unable to generate summary. Please try again.";
+        
+        return {
+          ok: true,
+          summaries: {
+            clinical: fallbackSummary,
+            portal: fallbackSummary.slice(0, 200) + (fallbackSummary.length > 200 ? "..." : ""),
+            emergency: fallbackSummary.slice(0, 150) + (fallbackSummary.length > 150 ? "..." : ""),
+            referral: fallbackSummary.slice(0, 250) + (fallbackSummary.length > 250 ? "..." : "")
+          },
+          tone: tone,
+          summary: fallbackSummary // Backward compatibility
+        };
+      }
+
+      // Validate and normalize the response structure
+      if (!data.summaries || typeof data.summaries !== "object") {
+        // If we got a different structure, try to work with it
+        const singleSummary = data.summary || data.text || cleaned;
+        data = {
+          summaries: {
+            clinical: singleSummary,
+            portal: singleSummary,
+            emergency: singleSummary,
+            referral: singleSummary
+          },
+          tone: tone
+        };
+      }
+
+      // Ensure all summary types exist
+      const summaries = data.summaries || {};
+      const defaultSummary = summaries.clinical || summaries.portal || "No summary generated.";
       
-      // Clean up and assign sections
-      const summaries = {
-        clinical: sections[1]?.trim() || "Unable to generate clinical summary.",
-        portal: sections[2]?.trim() || "Unable to generate portal message.",
-        emergency: sections[3]?.trim() || "Unable to generate emergency summary.",
-        referral: sections[4]?.trim() || "Unable to generate referral summary.",
-        tone: tone
+      const normalizedSummaries = {
+        clinical: summaries.clinical || defaultSummary,
+        portal: summaries.portal || summaries.clinical || defaultSummary,
+        emergency: summaries.emergency || summaries.portal || defaultSummary,
+        referral: summaries.referral || summaries.clinical || defaultSummary
       };
-      
-      return { 
-        ok: true, 
-        summaries,
-        // Keep backward compatibility
-        summary: summaries.clinical 
+
+      // Clean up any remaining formatting issues
+      Object.keys(normalizedSummaries).forEach(key => {
+        if (typeof normalizedSummaries[key] === "string") {
+          // Remove any accidental bullet points or list markers
+          normalizedSummaries[key] = normalizedSummaries[key]
+            .replace(/^[-•*]\s+/gm, "")
+            .replace(/^\d+\.\s+/gm, "")
+            .trim();
+        }
+      });
+
+      return {
+        ok: true,
+        summaries: normalizedSummaries,
+        tone: data.tone || tone,
+        // Include a default summary for backward compatibility
+        summary: normalizedSummaries.clinical
       };
-    } catch (e) {
-      console.error("generateSummary error:", e?.response?.data || e);
-      return { ok: false, error: e?.message || String(e) };
+
+    } catch (err) {
+      console.error("generateSummary error:", err?.response?.data || err);
+      
+      // Generate a basic fallback summary from the input
+      const symptoms = request.data?.symptoms || {};
+      const context = request.data?.context || {};
+      
+      const fallbackText = `I have been experiencing ${symptoms.chiefComplaint || "symptoms"} ${
+        symptoms.onset ? `that started ${symptoms.onset}` : ""
+      }. ${symptoms.location ? `The issue is located in my ${symptoms.location}.` : ""} ${
+        symptoms.severity ? `The severity is ${symptoms.severity}.` : ""
+      } ${symptoms.character ? `It feels ${symptoms.character}.` : ""} ${
+        symptoms.aggravating ? `It gets worse with ${symptoms.aggravating}.` : ""
+      } ${symptoms.alleviating ? `It improves with ${symptoms.alleviating}.` : ""} ${
+        context.impact ? `This is affecting my daily life by ${context.impact}.` : ""
+      }`.replace(/\s+/g, " ").trim();
+
+      return {
+        ok: true,
+        summaries: {
+          clinical: fallbackText || "Unable to generate summary. Please describe your symptoms.",
+          portal: (fallbackText || "Unable to generate summary.").slice(0, 200),
+          emergency: (fallbackText || "Unable to generate summary.").slice(0, 150),
+          referral: fallbackText || "Unable to generate summary for referral."
+        },
+        tone: request.data?.tone || "professional",
+        summary: fallbackText || "Unable to generate summary.",
+        error: "Generation failed, using fallback summary"
+      };
     }
   }
 );
@@ -322,55 +411,240 @@ ${JSON.stringify({ symptoms, context }).slice(0, 20000)}
   }
 );
 
-// --- ResetPro (callable)
+// Add this enhanced implementation to functions/index.js
+// Replace the existing minimal resetProRun function
+
 export const resetProRun = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
   async (request) => {
     try {
-      const { thread, goal } = request.data || {};
+      const { thread, goal = "document" } = request.data || {};
+      
       if (!Array.isArray(thread) || thread.length === 0) {
-        return { ok: false, error: "Provide 'thread' as a non-empty array of {role,text,ts?}." };
+        return { 
+          ok: false, 
+          error: "Provide 'thread' as a non-empty array of {role,text,ts?}." 
+        };
       }
 
-      const clean = thread
-        .filter(m => m && typeof m.text === "string" && (m.role === "provider" || m.role === "patient"))
-        .slice(0, 50);
+      // Sanitize thread entries
+      const cleanThread = thread
+        .filter(m => m && typeof m.text === "string" && 
+                (m.role === "provider" || m.role === "patient"))
+        .slice(0, 50); // Limit to prevent abuse
 
       const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const system = `
-You help patients recognize dismissive or gaslighting patterns in clinical communications, 
-suggest assertive, respectful responses, and generate a neutral documentation note.
-Safety: do not give medical advice; recommend contacting a licensed clinician for care decisions.
-`.trim();
 
-      const input = JSON.stringify({ thread: clean, goal }, null, 2).slice(0, 18000);
+      // Build comprehensive prompt for ResetPro
+      const prompt = `
+You are a medical communication assistant helping patients identify dismissive patterns in provider communications and generate professional correction requests.
 
-      const user = `
-Analyze this message thread.
-Return strict JSON with the specified structure.
-Thread:
-${input}
+IMPORTANT: Be specific and quote exact phrases when identifying patterns. Provide actionable, professional responses.
+
+Analyze this patient-provider communication thread:
+${JSON.stringify(cleanThread, null, 2)}
+
+Goal: ${goal}
+
+Identify and categorize problematic patterns:
+
+1. DISMISSIVE LANGUAGE: Phrases that minimize or invalidate patient experiences
+2. MINIMIZATION: Downplaying severity or impact of symptoms  
+3. CREDIBILITY UNDERMINING: Questioning patient's reliability or suggesting symptoms are imagined
+4. BOUNDARY CROSSING: Inappropriate personal comments or unprofessional behavior
+
+For each pattern found, provide:
+- Exact quote from the provider
+- Clear explanation of why it's problematic
+
+Then generate three response options:
+1. NEUTRAL: Professional, fact-focused correction request
+2. FIRM: Assertive but respectful, citing patient rights
+3. ESCALATION: For patient relations or formal complaints
+
+Finally, create a documentation note summarizing the concern objectively.
+
+Return a JSON object with EXACTLY this structure:
+{
+  "flags": {
+    "dismissiveLanguage": [
+      {"quote": "exact quote from provider", "why": "explanation of why this is dismissive"}
+    ],
+    "minimization": [
+      {"quote": "exact quote", "why": "explanation"}
+    ],
+    "credibilityUndermining": [
+      {"quote": "exact quote", "why": "explanation"}
+    ],
+    "boundaryCrossing": [
+      {"quote": "exact quote", "why": "explanation"}
+    ]
+  },
+  "overallAssessment": "One paragraph summary of the communication patterns and their potential impact on patient care",
+  "responseOptions": [
+    {
+      "tone": "neutral",
+      "text": "Complete message text for portal or email, professionally requesting corrections"
+    },
+    {
+      "tone": "firm", 
+      "text": "Formal amendment request citing HIPAA § 164.526 and specific inaccuracies"
+    },
+    {
+      "tone": "escalation",
+      "text": "Template for patient relations or board complaint if patterns persist"
+    }
+  ],
+  "docNote": {
+    "title": "Communication Concern - [Date]",
+    "date": "YYYY-MM-DD",
+    "context": "Brief factual summary of the visit/interaction",
+    "observedLanguage": ["quote1", "quote2"],
+    "patientImpact": "How the communication affected patient care or trust",
+    "followUpRequested": ["Specific correction to record", "Action requested"]
+  }
+}
+
+Guidelines:
+- Focus on factual discrepancies and professional communication standards
+- Avoid inflammatory language or personal attacks
+- Include specific dates, quotes, and requested corrections
+- Reference relevant patient rights (HIPAA, informed consent, etc.)
+- Maintain therapeutic relationship while advocating for accuracy
+- If no problematic patterns found, return empty arrays but acknowledge the patient's concerns
+
+IMPORTANT: Output ONLY valid JSON, no additional text or markdown.
 `.trim();
 
       const msg = await client.messages.create({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system,
-        messages: [{ role: "user", content: user }],
+        max_tokens: 2000,
+        messages: [{ role: "user", content: prompt }],
       });
 
-      const text = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
+      const rawResponse = Array.isArray(msg?.content) ? 
+        (msg.content[0]?.text || "") : "";
+      
+      // Clean up response (remove markdown if present)
+      const cleaned = rawResponse
+        .replace(/```(?:json)?\s*/gi, '')
+        .replace(/```\s*$/gi, '')
+        .trim();
+
       let data;
-      try { data = JSON.parse(text); }
-      catch { data = { overallAssessment: text, responseOptions: [], flags: {}, docNote: {} }; }
+      try {
+        data = JSON.parse(cleaned);
+      } catch (parseError) {
+        console.error("Failed to parse Claude response:", cleaned);
+        
+        // Fallback structure if parsing fails
+        data = {
+          flags: {
+            dismissiveLanguage: [],
+            minimization: [],
+            credibilityUndermining: [],
+            boundaryCrossing: []
+          },
+          overallAssessment: "Analysis could not be completed. Please try again.",
+          responseOptions: [
+            {
+              tone: "neutral",
+              text: generateFallbackResponse(thread, "neutral")
+            },
+            {
+              tone: "firm",
+              text: generateFallbackResponse(thread, "firm")
+            },
+            {
+              tone: "escalation",
+              text: generateFallbackResponse(thread, "escalation")
+            }
+          ],
+          docNote: {
+            title: "Communication Concern",
+            date: new Date().toISOString().split('T')[0],
+            context: "Unable to analyze communication",
+            observedLanguage: [],
+            patientImpact: "",
+            followUpRequested: []
+          }
+        };
+      }
+
+      // Validate and sanitize the response structure
+      data.flags = data.flags || {};
+      data.flags.dismissiveLanguage = Array.isArray(data.flags.dismissiveLanguage) ? 
+        data.flags.dismissiveLanguage : [];
+      data.flags.minimization = Array.isArray(data.flags.minimization) ? 
+        data.flags.minimization : [];
+      data.flags.credibilityUndermining = Array.isArray(data.flags.credibilityUndermining) ? 
+        data.flags.credibilityUndermining : [];
+      data.flags.boundaryCrossing = Array.isArray(data.flags.boundaryCrossing) ? 
+        data.flags.boundaryCrossing : [];
+      
+      data.overallAssessment = String(data.overallAssessment || "");
+      data.responseOptions = Array.isArray(data.responseOptions) ? 
+        data.responseOptions.slice(0, 3) : [];
+      
+      data.docNote = data.docNote || {};
+      data.docNote.observedLanguage = Array.isArray(data.docNote.observedLanguage) ? 
+        data.docNote.observedLanguage : [];
+      data.docNote.followUpRequested = Array.isArray(data.docNote.followUpRequested) ? 
+        data.docNote.followUpRequested : [];
 
       return { ok: true, data };
-    } catch (err) {
-      console.error("resetProRun error:", err?.response?.data || err);
-      return { ok: false, error: err?.message || String(err) };
+
+    } catch (error) {
+      console.error("resetProRun error:", error?.response?.data || error);
+      return { 
+        ok: false, 
+        error: error?.message || "Unable to analyze communication. Please try again." 
+      };
     }
   }
 );
+
+// Helper function for fallback responses
+function generateFallbackResponse(thread, tone) {
+  const patientText = thread.find(m => m.role === "patient")?.text || "";
+  const date = new Date().toISOString().split('T')[0];
+  
+  if (tone === "neutral") {
+    return `Dear Provider,
+
+I am writing to request corrections to my medical record from our recent interaction. I believe there are some inaccuracies that need to be addressed.
+
+${patientText.substring(0, 200)}...
+
+Please update my medical record to accurately reflect our discussion.
+
+Thank you for your attention to this matter.`;
+  } else if (tone === "firm") {
+    return `To: Medical Records Department
+
+Subject: Formal Request for Amendment to Medical Record - HIPAA § 164.526
+
+I am formally requesting an amendment to my medical record dated ${date}.
+
+Under HIPAA § 164.526, I have the right to request amendments when information is incorrect or incomplete. Please process this request within 30 days as required by law.
+
+Please confirm receipt of this request.
+
+Sincerely,
+[Patient Name]`;
+  } else {
+    return `To: Patient Relations Department
+
+Subject: Formal Complaint Regarding Medical Documentation
+
+I am filing a formal complaint regarding communication and documentation concerns from ${date}.
+
+I request a formal review of this matter.
+
+Sincerely,
+[Patient Name]`;
+  }
+}
 
 // --- PromptCoach (callable)
 export const promptCoachRun = onCall(
