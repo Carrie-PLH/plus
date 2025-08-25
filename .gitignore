@@ -23,6 +23,7 @@ firebase-debug.*.log
 dist/
 build/
 lib/
+!public/lib/   # Exception: DO track public/lib
 pids
 *.pid
 *.seed
