@@ -953,3 +953,119 @@ export const vaultWriteEpisode = onRequest(
     }
   }
 );
+// functions/index.js - Add this new function
+export const checkToolAccess = onCall(
+  { region: "us-east4" },
+  async (request) => {
+    try {
+      const { toolId } = request.data;
+      const uid = request.auth?.uid || null;
+      
+      // Get user subscription data
+      let subscription = { tier: 'free', limits: { daily: 3, monthly: 20 } };
+      
+      if (uid) {
+        const userDoc = await db.collection('users').doc(uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          subscription = userData.subscription || subscription;
+        }
+      }
+      
+      // Check if tool is accessible based on tier
+      const toolTiers = {
+        'symptomPro': ['core_patient', 'advanced_patient', 'clinic_lite', 'clinic_pro'],
+        'resetPro': ['advanced_patient', 'clinic_pro'],
+        'appealBuilder': ['advanced_patient', 'clinic_pro'],
+        // ... add all tools
+      };
+      
+      const allowedTiers = toolTiers[toolId] || ['clinic_pro'];
+      const hasAccess = allowedTiers.includes(subscription.tier) || subscription.tier === 'clinic_pro';
+      
+      if (!hasAccess) {
+        return {
+          allowed: false,
+          reason: 'tier_required',
+          currentTier: subscription.tier,
+          requiredTiers: allowedTiers
+        };
+      }
+      
+      // Check usage limits
+      const today = new Date().toISOString().substring(0, 10);
+      const usageDoc = await db.collection('usage').doc(`${uid}_${today}`).get();
+      const usage = usageDoc.exists ? usageDoc.data() : { count: 0 };
+      
+      if (usage.count >= subscription.limits.daily) {
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setDate(midnight.getDate() + 1);
+        midnight.setHours(0, 0, 0, 0);
+        const hoursLeft = Math.floor((midnight - now) / (1000 * 60 * 60));
+        const minutesLeft = Math.floor(((midnight - now) % (1000 * 60 * 60)) / (1000 * 60));
+        
+        return {
+          allowed: false,
+          reason: 'limit_reached',
+          dailyLimit: subscription.limits.daily,
+          currentUsage: usage.count,
+          resetTime: `${hoursLeft}h ${minutesLeft}m`,
+          currentTier: subscription.tier
+        };
+      }
+      
+      // Update usage count
+      await db.collection('usage').doc(`${uid}_${today}`).set({
+        count: usage.count + 1,
+        lastUsed: Date.now()
+      }, { merge: true });
+      
+      return {
+        allowed: true,
+        currentTier: subscription.tier,
+        remainingToday: subscription.limits.daily - usage.count - 1
+      };
+      
+    } catch (error) {
+      console.error('checkToolAccess error:', error);
+      return { 
+        allowed: true, // Fail open
+        error: error.message 
+      };
+    }
+  }
+);
+// Add these to functions/index.js
+
+export const getUserDashboardData = onCall(
+  { region: "us-east4" },
+  async (request) => {
+    const { uid } = request.data;
+    // Return user subscription, tier, limits, trial status
+  }
+);
+
+export const getUserUsage = onCall(
+  { region: "us-east4" },
+  async (request) => {
+    const { uid } = request.data;
+    // Return daily/monthly usage stats
+  }
+);
+
+export const getUserUsageHistory = onCall(
+  { region: "us-east4" },
+  async (request) => {
+    const { uid, limit = 10 } = request.data;
+    // Return recent tool usage history
+  }
+);
+
+export const getUsageChartData = onCall(
+  { region: "us-east4" },
+  async (request) => {
+    const { period } = request.data;
+    // Return chart data for week/month/year
+  }
+);
