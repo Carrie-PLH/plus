@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Usage Dashboard - PatientLead+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">📊</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #ffffff;
+      --muted: #666;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    h1 {
+      margin: 0;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .tier-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--brand-coral);
+      color: white;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .tier-badge.trial {
+      background: var(--warning);
+    }
+    
+    .tier-badge.grandfathered {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: var(--brand-dark);
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--brand-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .usage-circle {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+    }
+    
+    .usage-circle svg {
+      transform: rotate(-90deg);
+    }
+    
+    .usage-circle-bg {
+      fill: none;
+      stroke: #f0f0f0;
+      stroke-width: 20;
+    }
+    
+    .usage-circle-progress {
+      fill: none;
+      stroke: var(--brand-green);
+      stroke-width: 20;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    
+    .usage-circle-progress.warning {
+      stroke: var(--warning);
+    }
+    
+    .usage-circle-progress.danger {
+      stroke: var(--error);
+    }
+    
+    .usage-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
+    .usage-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--brand-dark);
+    }
+    
+    .usage-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+    
+    .stat-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: var(--brand-dark);
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--brand-green);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-fill.warning {
+      background: var(--warning);
+    }
+    
+    .progress-fill.danger {
+      background: var(--error);
+    }
+    
+    .usage-history {
+      margin-top: 20px;
+    }
+    
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .history-tool {
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .history-time {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .history-cost {
+      font-size: 12px;
+      color: var(--brand-coral);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    
+    button, .button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    .alert {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .alert-warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+    }
+    
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .trial-countdown {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .trial-days {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--brand-dark);
+    }
+    
+    .trial-label {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    
+    /* Chart container */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-top: 20px;
+    }
+    
+    /* Billing section */
+    .billing-info {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+    
+    .billing-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .billing-label {
+      color: var(--muted);
+    }
+    
+    .billing-value {
+      font-weight: 600;
+    }
+    
+    .savings-badge {
+      display: inline-block;
+      background: var(--success);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div>
+          <h1>Usage Dashboard</h1>
+          <div style="margin-top: 8px;">
+            <span class="tier-badge" id="tierBadge">Professional</span>
+            <span class="tier-badge trial" id="trialBadge" style="display:none;">TRIAL</span>
+            <span class="tier-badge grandfathered" id="grandfatherBadge" style="display:none;">⭐ EARLY ADOPTER</span>
+          </div>
+        </div>
+        <div class="button-group">
+          <a href="/account" class="button btn-secondary">Account Settings</a>
+          <button class="btn-primary" onclick="openBillingPortal()">Manage Billing</button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Trial countdown (if applicable) -->
+    <div id="trialCountdown" class="trial-countdown" style="display:none;">
+      <div class="trial-label">Free Trial Ends In</div>
+      <div class="trial-days" id="trialDays">5</div>
+      <div class="trial-label">days</div>
+      <button class="btn-primary" onclick="completeTrial()">Unlock Full Access Now</button>
+    </div>
+    
+    <!-- Usage alerts -->
+    <div id="alerts"></div>
+    
+    <!-- Main dashboard grid -->
+    <div class="dashboard-grid">
+      <!-- Today's Usage -->
+      <div class="card">
+        <h2>📊 Today's Usage</h2>
+        <div class="usage-circle">
+          <svg width="200" height="200">
+            <circle class="usage-circle-bg" cx="100" cy="100" r="80"></circle>
+            <circle class="usage-circle-progress" id="dailyProgress" cx="100" cy="100" r="80"
+                    stroke-dasharray="502" stroke-dashoffset="502"></circle>
+          </svg>
+          <div class="usage-text">
+            <div class="usage-number" id="dailyUsed">0</div>
+            <div class="usage-label">of <span id="dailyLimit">40</span></div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Resets in</span>
+          <span class="stat-value" id="resetTime">10h 23m</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Hourly remaining</span>
+          <span class="stat-value" id="hourlyRemaining">12 of 15</span>
+        </div>
+      </div>
+      
+      <!-- Monthly Usage -->
+      <div class="card">
+        <h2>📅 Monthly Usage</h2>
+        <div class="stat-row">
+          <span class="stat-label">Total analyses</span>
+          <span class="stat-value" id="monthlyTotal">245</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="monthlyProgress" style="width: 20%"></div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Monthly limit</span>
+          <span class="stat-value" id="monthlyLimit">1,200</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Complex tools used</span>
+          <span class="stat-value" id="complexUsed">12 of 50</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Most used tool</span>
+          <span class="stat-value" id="topTool">SymptomPro</span>
+        </div>
+      </div>
+      
+      <!-- Cost Tracking -->
+      <div class="card">
+        <h2>💰 Cost Savings</h2>
+        <div class="stat-row">
+          <span class="stat-label">Your plan cost</span>
+          <span class="stat-value">$49/month</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">AI costs covered</span>
+          <span class="stat-value" id="costsCovered">~$28.50</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">If pay-per-use</span>
+          <span class="stat-value" id="payPerUse">~$85.75</span>
+        </div>
+        <div class="billing-info">
+          <div class="billing-row">
+            <span class="billing-label">You're saving</span>
+            <span class="billing-value" style="color: var(--success);">$36.75/month</span>
+          </div>
+          <div id="annualSavings" style="display:none;">
+            <div class="billing-row">
+              <span class="billing-label">Annual billing saves</span>
+              <span class="billing-value">$118/year<span class="savings-badge">20% OFF</span></span>
+            </div>
+          </div>
+          <div id="grandfatherSavings" style="display:none;">
+            <div class="billing-row">
+              <span class="billing-label">Early adopter discount</span>
+              <span class="billing-value">25% lifetime<span class="savings-badge">FOREVER</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Usage History -->
+    <div class="card">
+      <h2>🕐 Recent Activity</h2>
+      <div class="usage-history" id="historyList">
+        <!-- Dynamically populated -->
+      </div>
+      <button class="btn-secondary" onclick="loadMoreHistory()">Load More</button>
+    </div>
+    
+    <!-- Usage Chart -->
+    <div class="card">
+      <h2>📈 Usage Trends</h2>
+      <div class="chart-container">
+        <canvas id="usageChart"></canvas>
+      </div>
+      <div class="button-group">
+        <button class="btn-secondary" onclick="changeChartView('week')">Week</button>
+        <button class="btn-secondary" onclick="changeChartView('month')">Month</button>
+        <button class="btn-secondary" onclick="changeChartView('year')">Year</button>
+      </div>
+    </div>
+    
+    <!-- Upgrade prompt (if applicable) -->
+    <div id="upgradePrompt" class="card" style="display:none;">
+      <h2>🚀 Need More Analyses?</h2>
+      <p>You're consistently using over 80% of your daily limit. Consider upgrading for more capacity:</p>
+      <div class="dashboard-grid" style="margin-top: 20px;">
+        <div class="billing-info">
+          <h3>Power User</h3>
+          <ul>
+            <li>100 analyses/day</li>
+            <li>Unlimited complex tools</li>
+            <li>Priority processing</li>
+          </ul>
+          <button class="btn-primary" onclick="upgradePlan('poweruser')">Upgrade to Power User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Chart.js for usage trends -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    
+    const auth = getAuth();
+    const functions = getFunctions();
+    const db = getFirestore();
+    
+    let userData = null;
+    let usageChart = null;
+    
+    // Initialize dashboard
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = '/login';
+        return;
+      }
+      
+      // Load user data and subscription
+      loadUserData(user.uid);
+      loadUsageData(user.uid);
+      setupRealtimeUpdates(user.uid);
+      loadUsageHistory(user.uid);
+      initializeChart();
+    });
+    
+    async function loadUserData(uid) {
+      const getUserData = httpsCallable(functions, 'getUserDashboardData');
+      const result = await getUserData({ uid });
+      userData = result.data;
+      
+      // Update UI with user data
+      updateSubscriptionDisplay();
+      updateTrialStatus();
+      updateBillingInfo();
+    }
+    
+    async function loadUsageData(uid) {
+      const getUsage = httpsCallable(functions, 'getUserUsage');
+      const result = await getUsage({ uid });
+      const usage = result.data;
+      
+      // Update daily usage circle
+      updateUsageCircle(usage.daily);
+      
+      // Update monthly stats
+      updateMonthlyStats(usage.monthly);
+      
+      // Update cost tracking
+      updateCostTracking(usage);
+      
+      // Show upgrade prompt if needed
+      checkUpgradePrompt(usage);
+    }
+    
+    function updateUsageCircle(dailyUsage) {
+      const used = dailyUsage.used || 0;
+      const limit = dailyUsage.limit || 40;
+      const percentage = (used / limit) * 100;
+      
+      // Update numbers
+      document.getElementById('dailyUsed').textContent = used;
+      document.getElementById('dailyLimit').textContent = limit;
+      
+      // Update circle progress
+      const circle = document.getElementById('dailyProgress');
+      const circumference = 2 * Math.PI * 80;
+      const offset = circumference - (percentage / 100) * circumference;
+      
+      circle.style.strokeDashoffset = offset;
+      
+      // Update color based on usage
+      circle.classList.remove('warning', 'danger');
+      if (percentage >= 100) {
+        circle.classList.add('danger');
+        showAlert('You\'ve reached today\'s limit. Analyses will reset at midnight.', 'warning');
+      } else if (percentage >= 80) {
+        circle.classList.add('warning');
+        showAlert(`Only ${limit - used} analyses remaining today.`, 'info');
+      }
+      
+      // Update reset time
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setDate(midnight.getDate() + 1);
+      midnight.setHours(0, 0, 0, 0);
+      const hoursLeft = Math.floor((midnight - now) / (1000 * 60 * 60));
+      const minutesLeft = Math.floor(((midnight - now) % (1000 * 60 * 60)) / (1000 * 60));
+      document.getElementById('resetTime').textContent = `${hoursLeft}h ${minutesLeft}m`;
+      
+      // Update hourly remaining
+      document.getElementById('hourlyRemaining').textContent = 
+        `${dailyUsage.hourlyRemaining || 0} of ${dailyUsage.hourlyLimit || 15}`;
+    }
+    
+    function updateMonthlyStats(monthlyUsage) {
+      const total = monthlyUsage.total || 0;
+      const limit = monthlyUsage.limit || 1200;
+      const percentage = (total / limit) * 100;
+      
+      document.getElementById('monthlyTotal').textContent = total;
+      document.getElementById('monthlyLimit').textContent = limit.toLocaleString();
+      document.getElementById('monthlyProgress').style.width = `${Math.min(percentage, 100)}%`;
+      
+      // Update complex tools
+      document.getElementById('complexUsed').textContent = 
+        `${monthlyUsage.complexUsed || 0} of ${monthlyUsage.complexLimit || 50}`;
+      
+      // Update top tool
+      document.getElementById('topTool').textContent = monthlyUsage.topTool || 'N/A';
+    }
+    
+    function updateCostTracking(usage) {
+      const estimatedCost = usage.estimatedCost || 0;
+      const payPerUseCost = estimatedCost * 3; // Markup for pay-per-use
+      
+      document.getElementById('costsCovered').textContent = `~$${estimatedCost.toFixed(2)}`;
+      document.getElementById('payPerUse').textContent = `~$${payPerUseCost.toFixed(2)}`;
+    }
+    
+    function updateSubscriptionDisplay() {
+      if (!userData) return;
+      
+      const tier = userData.subscription?.tier || 'essential';
+      const tierName = tier.charAt(0).toUpperCase() + tier.slice(1);
+      document.getElementById('tierBadge').textContent = tierName;
+      
+      // Show trial badge if applicable
+      if (userData.subscription?.status === 'trialing') {
+        document.getElementById('trialBadge').style.display = 'inline-block';
+      }
+      
+      // Show grandfathered badge if applicable
+      if (userData.subscription?.isGrandfathered) {
+        document.getElementById('grandfatherBadge').style.display = 'inline-block';
+        document.getElementById('grandfatherSavings').style.display = 'block';
+      }
+      
+      // Show annual savings if applicable
+      if (userData.subscription?.interval === 'annual') {
+        document.getElementById('annualSavings').style.display = 'block';
+      }
+    }
+    
+    function updateTrialStatus() {
+      if (!userData?.subscription?.trialEnd) return;
+      
+      const trialEnd = new Date(userData.subscription.trialEnd);
+      const now = new Date();
+      const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+      
+      if (daysLeft > 0 && daysLeft <= 7) {
+        document.getElementById('trialCountdown').style.display = 'block';
+        document.getElementById('trialDays').textContent = daysLeft;
+      }
+    }
+    
+    async function loadUsageHistory(uid) {
+      const getHistory = httpsCallable(functions, 'getUserUsageHistory');
+      const result = await getHistory({ uid, limit: 10 });
+      const history = result.data.history || [];
+      
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = '';
+      
+      history.forEach(item => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+          <div>
+            <div class="history-tool">${item.tool}</div>
+            <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+          </div>
+          <div>
+            <div class="history-cost">~$${item.cost.toFixed(3)}</div>
+          </div>
+        `;
+        historyList.appendChild(historyItem);
+      });
+    }
+    
+    function initializeChart() {
+      const ctx = document.getElementById('usageChart').getContext('2d');
+      usageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [], // Will be populated
+          datasets: [{
+            label: 'Daily Usage',
+            data: [],
+            borderColor: '#a3b9a3',
+            backgroundColor: 'rgba(163, 185, 163, 0.1)',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      
+      // Load initial chart data
+      loadChartData('week');
+    }
+    
+    async function loadChartData(period) {
+      const getChartData = httpsCallable(functions, 'getUsageChartData');
+      const result = await getChartData({ period });
+      
+      usageChart.data.labels = result.data.labels;
+      usageChart.data.datasets[0].data = result.data.values;
+      usageChart.update();
+    }
+    
+    function setupRealtimeUpdates(uid) {
+      // Listen to usage changes
+      const today = new Date().toISOString().substring(0, 10);
+      const usageRef = doc(db, 'usage', `${uid}_${today}`);
+      
+      onSnapshot(usageRef, (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          // Update UI in real-time
+          updateUsageCircle({
+            used: data.dailyTotal || 0,
+            limit: userData?.subscription?.limits?.daily || 40
+          });
+        }
+      });
+    }
+    
+    function showAlert(message, type = 'info') {
+      const alertsContainer = document.getElementById('alerts');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;">✕</button>
+      `;
+      alertsContainer.appendChild(alert);
+      
+      // Auto-remove after 10 seconds
+      setTimeout(() => alert.remove(), 10000);
+    }
+    
+    function checkUpgradePrompt(usage) {
+      const dailyPercentage = (usage.daily.used / usage.daily.limit) * 100;
+      const averageUsage = usage.monthly.averageDailyUsage || 0;
+      const currentLimit = usage.daily.limit;
+      
+      // Show upgrade prompt if consistently hitting limits
+      if (averageUsage > currentLimit * 0.8) {
+        document.getElementById('upgradePrompt').style.display = 'block';
+      }
+    }
+    
+    // Global functions
+    window.openBillingPortal = async function() {
+      const createPortal = httpsCallable(functions, 'createPortalSession');
+      const result = await createPortal({ origin: window.location.origin });
+      window.location.href = result.data.url;
+    };
+    
+    window.changeChartView = function(period) {
+      loadChartData(period);
+    };
+    
+    window.loadMoreHistory = function() {
+      loadUsageHistory(auth.currentUser.uid);
+    };
+    
+    window.completeTrial = function() {
+      window.location.href = '/subscribe?completeTrial=true';
+    };
+    
+    window.upgradePlan = function(tier) {
+      window.location.href = `/subscribe?upgrade=${tier}`;
+    };
+  </script>
+</body>
+</html>
