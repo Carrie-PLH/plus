@@ -1,9 +1,8 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>SymptomPro — OLD CARTS Symptom Snapshot</title>
+  <title>Symptom Summary Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   <!-- Emoji favicon -->
@@ -449,33 +448,33 @@
     </nav>
     
     <header>
-      <h1>SymptomPro — OLD CARTS Snapshot</h1>
-      <p class="subtitle">Create a clear, provider-ready symptom summary using the OLD CARTS framework</p>
+      <h1>Create a Clear Symptom Summary for Your Doctor</h1>
+      <p class="subtitle">Well-organized symptoms help your provider ask the right questions, leading to faster diagnosis and better treatment plans</p>
     </header>
     
     <div class="form-section">
       <div class="tab-mode">
-        <button class="tab active" onclick="switchTab('form')">Form View</button>
-        <button class="tab" onclick="switchTab('json')">JSON View</button>
+        <button class="tab active" onclick="switchTab('form')">Guided Form</button>
+        <button class="tab" onclick="switchTab('json')">Advanced (JSON)</button>
       </div>
       
       <!-- Form View -->
       <div id="formTab" class="tab-content active">
         <form id="symptomForm">
-          <!-- Chief Complaint -->
+          <!-- Primary Symptom -->
           <div class="form-group">
-            <label for="chiefComplaint">What's your main symptom or concern? *</label>
-            <input type="text" id="chiefComplaint" name="chiefComplaint" placeholder="e.g., Severe headache, chest pain, fatigue" required>
-            <p class="hint">Be specific about what's bothering you most</p>
+            <label for="chiefComplaint">What symptom is bothering you most? *</label>
+            <input type="text" id="chiefComplaint" name="chiefComplaint" placeholder="e.g., Severe headache, chest pain, extreme fatigue" required>
+            <p class="hint">Be specific about what brought you to seek care</p>
           </div>
           
           <!-- ONSET -->
           <div class="form-section">
-            <h2>Onset</h2>
+            <h2>When It Started</h2>
             <div class="two-column">
               <div class="form-group">
                 <label for="onset">When did this start?</label>
-                <input type="text" id="onset" name="onset" placeholder="e.g., 3 days ago, last Tuesday, gradual over 2 weeks">
+                <input type="text" id="onset" name="onset" placeholder="e.g., 3 days ago, Tuesday morning, gradually over the past 2 weeks">
               </div>
               <div class="form-group">
                 <label for="suddenGradual">Was it sudden or gradual?</label>
@@ -491,32 +490,32 @@
           
           <!-- LOCATION -->
           <div class="form-section">
-            <h2>Location</h2>
+            <h2>Where You Feel It</h2>
             <div class="form-group">
               <label for="location">Where exactly do you feel it?</label>
-              <textarea id="location" name="location" placeholder="Be as specific as possible (e.g., right side of head above the ear, center of chest, entire lower back)"></textarea>
+              <textarea id="location" name="location" placeholder="Point to where it hurts and describe it (e.g., right side of head above the ear, center of chest behind the breastbone, entire lower back from waist to tailbone)"></textarea>
             </div>
           </div>
           
           <!-- DURATION -->
           <div class="form-section">
-            <h2>Duration</h2>
+            <h2>How Long It Lasts</h2>
             <div class="two-column">
               <div class="form-group">
-                <label for="duration">How long does it last?</label>
-                <input type="text" id="duration" name="duration" placeholder="e.g., Constant, 30 minutes, comes and goes">
+                <label for="duration">How long does each episode last?</label>
+                <input type="text" id="duration" name="duration" placeholder="e.g., Constant, a few minutes, 30 minutes to 2 hours, all day">
               </div>
               <div class="form-group">
-                <label for="frequency">How often does it occur?</label>
-                <input type="text" id="frequency" name="frequency" placeholder="e.g., Daily, several times a week, only with activity">
+                <label for="frequency">How often does it happen?</label>
+                <input type="text" id="frequency" name="frequency" placeholder="e.g., Daily, 3-4 times per week, only with certain activities, randomly">
               </div>
             </div>
           </div>
           
           <!-- CHARACTER -->
           <div class="form-section">
-            <h2>Character</h2>
-            <label>What does it feel like? (select all that apply)</label>
+            <h2>What It Feels Like</h2>
+            <label>Choose words that describe your symptom (select all that apply):</label>
             <div class="character-options" id="characterOptions">
               <label class="chip-option">
                 <input type="checkbox" name="character" value="Sharp"> Sharp
@@ -550,51 +549,51 @@
               </label>
             </div>
             <div class="form-group" style="margin-top: 12px;">
-              <label for="characterOther">Other description</label>
-              <input type="text" id="characterOther" name="characterOther" placeholder="Describe in your own words">
+              <label for="characterOther">Can't find the right word? Describe it here:</label>
+              <input type="text" id="characterOther" name="characterOther" placeholder="Use your own words to describe how it feels">
             </div>
           </div>
           
           <!-- AGGRAVATING -->
           <div class="form-section">
-            <h2>Aggravating Factors</h2>
+            <h2>What Makes It Worse</h2>
             <div class="form-group">
               <label for="aggravating">What makes it worse?</label>
-              <textarea id="aggravating" name="aggravating" placeholder="e.g., Movement, stress, certain foods, bright lights, lying down"></textarea>
+              <textarea id="aggravating" name="aggravating" placeholder="Activities, positions, foods, stress, weather, time of day, medications, or anything else that worsens symptoms"></textarea>
             </div>
           </div>
           
           <!-- RELIEVING/ALLEVIATING -->
           <div class="form-section">
-            <h2>Relieving Factors</h2>
+            <h2>What Helps</h2>
             <div class="form-group">
               <label for="alleviating">What makes it better?</label>
-              <textarea id="alleviating" name="alleviating" placeholder="e.g., Rest, medication, heat/ice, certain positions, sleep"></textarea>
+              <textarea id="alleviating" name="alleviating" placeholder="Rest, medications (which ones?), heat/ice, specific positions, sleep, massage, or anything that provides relief"></textarea>
             </div>
           </div>
           
           <!-- RADIATION -->
           <div class="form-section">
-            <h2>Radiation</h2>
+            <h2>Does It Spread?</h2>
             <div class="form-group">
-              <label for="radiation">Does the symptom spread or move to other areas?</label>
-              <input type="text" id="radiation" name="radiation" placeholder="e.g., Spreads down my left arm, radiates to my back, stays in one place">
+              <label for="radiation">Does the symptom spread or travel to other areas?</label>
+              <input type="text" id="radiation" name="radiation" placeholder="e.g., Pain spreads down my left arm, stays in one place, moves from my back to my leg">
             </div>
           </div>
           
           <!-- TIMING -->
           <div class="form-section">
-            <h2>Timing</h2>
+            <h2>Patterns & Timing</h2>
             <div class="form-group">
               <label for="timing">When is it worst? Any patterns?</label>
-              <textarea id="timing" name="timing" placeholder="e.g., Worse in the morning, after meals, at night, with weather changes"></textarea>
+              <textarea id="timing" name="timing" placeholder="Time of day patterns, relationship to meals/activities, weather changes, stress, menstrual cycle, etc."></textarea>
             </div>
           </div>
           
           <!-- SEVERITY -->
           <div class="form-section">
-            <h2>Severity</h2>
-            <label for="severity">On a scale of 1-10, how severe is it?</label>
+            <h2>How Severe Is It?</h2>
+            <label for="severity">Rate your pain/discomfort from 1 (mild) to 10 (worst imaginable)</label>
             <div class="severity-slider">
               <div class="slider-container">
                 <span>Mild</span>
@@ -607,24 +606,24 @@
           
           <!-- CONTEXT -->
           <div class="form-section">
-            <h2>Additional Context</h2>
+            <h2>Your Health Background</h2>
             <div class="form-group">
               <label for="history">Relevant medical history</label>
-              <textarea id="history" name="history" placeholder="e.g., Previous similar symptoms, chronic conditions, recent illness or injury"></textarea>
+              <textarea id="history" name="history" placeholder="Include: similar past symptoms, chronic conditions, recent illnesses/injuries, surgeries, family history of similar issues"></textarea>
             </div>
             <div class="form-group">
               <label for="medications">Current medications</label>
-              <textarea id="medications" name="medications" placeholder="List all medications and supplements you're taking"></textarea>
+              <textarea id="medications" name="medications" placeholder="List all prescription medications, over-the-counter drugs, and supplements you're taking (include doses if known)"></textarea>
             </div>
             <div class="form-group">
               <label for="impact">How is this affecting your daily life?</label>
-              <textarea id="impact" name="impact" placeholder="e.g., Missing work, can't exercise, trouble sleeping"></textarea>
+              <textarea id="impact" name="impact" placeholder="e.g., Missing work/school, can't drive, avoiding social activities, trouble sleeping, unable to care for family"></textarea>
             </div>
           </div>
           
           <!-- Tone Selection -->
           <div class="tone-selector">
-            <label>Select tone for your summaries:</label>
+            <label>Choose a writing style for all your summaries:</label>
             <div class="tone-options">
               <label class="tone-option selected">
                 <input type="radio" name="tone" value="professional" checked style="display:none">
@@ -632,22 +631,22 @@
               </label>
               <label class="tone-option">
                 <input type="radio" name="tone" value="friendly" style="display:none">
-                Friendly
+                Conversational
               </label>
               <label class="tone-option">
                 <input type="radio" name="tone" value="direct" style="display:none">
-                Direct
+                Brief & Direct
               </label>
               <label class="tone-option">
                 <input type="radio" name="tone" value="detailed" style="display:none">
-                Detailed
+                Very Detailed
               </label>
             </div>
           </div>
           
           <div class="button-group">
-            <button type="submit" class="btn-primary">Generate Summaries</button>
-            <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+            <button type="submit" class="btn-primary">Create My Summaries</button>
+            <button type="button" class="btn-secondary" onclick="clearForm()">Start Over</button>
           </div>
         </form>
       </div>
@@ -669,17 +668,17 @@
     <div id="status" aria-live="polite"></div>
     
     <div id="resultSection" class="result-section">
-      <h3>Your Generated Summaries</h3>
+      <h3>Your Symptom Summaries — Ready to Share</h3>
       
       <div class="summary-tabs">
-        <button class="summary-tab active" onclick="switchSummary('clinical')">Clinical Summary</button>
+        <button class="summary-tab active" onclick="switchSummary('clinical')">Full Summary</button>
         <button class="summary-tab" onclick="switchSummary('portal')">Portal Message</button>
-        <button class="summary-tab" onclick="switchSummary('emergency')">Emergency Summary</button>
-        <button class="summary-tab" onclick="switchSummary('referral')">Specialist Referral</button>
+        <button class="summary-tab" onclick="switchSummary('emergency')">Quick Version</button>
+        <button class="summary-tab" onclick="switchSummary('referral')">For Specialists</button>
       </div>
       
       <div id="clinicalSummary" class="summary-content active">
-        <p class="summary-description">Comprehensive symptom description for your healthcare provider</p>
+        <p class="summary-description">Complete description for your next appointment</p>
         <pre id="clinicalOutput"></pre>
         <div class="button-group">
           <button type="button" class="btn-secondary" onclick="copySummary('clinical')">Copy</button>
@@ -688,7 +687,7 @@
       </div>
       
       <div id="portalSummary" class="summary-content">
-        <p class="summary-description">Ready-to-send message for your patient portal</p>
+        <p class="summary-description">Ready to paste into your patient portal message</p>
         <pre id="portalOutput"></pre>
         <div class="button-group">
           <button type="button" class="btn-secondary" onclick="copySummary('portal')">Copy</button>
@@ -697,7 +696,7 @@
       </div>
       
       <div id="emergencySummary" class="summary-content">
-        <p class="summary-description">Brief, focused summary for urgent or emergency care</p>
+        <p class="summary-description">Quick version for urgent care or ER visits</p>
         <pre id="emergencyOutput"></pre>
         <div class="button-group">
           <button type="button" class="btn-secondary" onclick="copySummary('emergency')">Copy</button>
@@ -706,7 +705,7 @@
       </div>
       
       <div id="referralSummary" class="summary-content">
-        <p class="summary-description">Professional summary for specialist referrals</p>
+        <p class="summary-description">Professional format for specialist appointments</p>
         <pre id="referralOutput"></pre>
         <div class="button-group">
           <button type="button" class="btn-secondary" onclick="copySummary('referral')">Copy</button>
@@ -725,7 +724,7 @@
       registerCopilotIngest,
     } from "/lib/briefmeSave.js";
     
-    // Initialize auth and CoPilot
+    // Initialize auth and telemetry
     await initAuth();
     const hooks = registerCopilotIngest({ enabled: true, defaultTool: "symptompro" });
     
@@ -840,9 +839,9 @@
     
     // Main generation function
     async function generateSummary(symptoms, context, tone) {
-      showStatus('Generating your summaries with Claude AI...', 'working');
+      showStatus('Organizing your symptoms into clear summaries...', 'working');
       
-      const title = `SymptomPro: ${symptoms.chiefComplaint || symptoms.primarySymptom || "Summary"}`;
+      const title = `Symptom Summary: ${symptoms.chiefComplaint || symptoms.primarySymptom || "Report"}`;
       
       try {
         // Call Firebase function with tone parameter
@@ -885,14 +884,14 @@
           hooks
         );
         
-        showStatus('✓ Summaries generated and saved to your Vault', 'success');
+        showStatus('✓ Your symptom summaries are ready and saved', 'success');
         
         // Scroll to results
         resultSection.scrollIntoView({ behavior: 'smooth' });
         
       } catch (err) {
-        console.error("SymptomPro error:", err);
-        showStatus(`Error: ${err?.message || 'Generation or save failed'}`, 'error');
+        console.error("Summary generation error:", err);
+        showStatus(`Error: ${err?.message || 'Unable to generate summaries. Please try again.'}`, 'error');
       }
     }
     
@@ -917,7 +916,7 @@
     window.copySummary = function(type) {
       const text = currentSummaries[type] || document.getElementById(`${type}Output`).textContent;
       navigator.clipboard.writeText(text)
-        .then(() => showStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} summary copied to clipboard!`, 'success'))
+        .then(() => showStatus('✓ Copied to clipboard!', 'success'))
         .catch(() => showStatus('Failed to copy', 'error'));
     };
     
@@ -935,21 +934,22 @@
     window.loadExample = function() {
       const example = {
         symptoms: {
-          chiefComplaint: "Severe migraine headache",
-          onset: "2 days ago",
-          location: "Right side of head, behind eye",
-          duration: "Constant for 48 hours",
-          character: "Throbbing, pulsating",
-          aggravating: "Bright lights, loud sounds, movement",
-          alleviating: "Dark quiet room, sleep",
-          radiation: "Sometimes spreads to neck",
-          timing: "Started in morning, worse in afternoon",
-          severity: "8/10"
+          chiefComplaint: "Severe throbbing headache",
+          onset: "Started 2 days ago after a stressful work week",
+          location: "Right side of head, behind and above my right eye",
+          duration: "Constant for the past 48 hours",
+          character: "Throbbing, pulsating, like a hammer",
+          aggravating: "Bright lights, loud sounds, any movement, bending over",
+          alleviating: "Dark quiet room, sleep, ice pack on head",
+          radiation: "Sometimes spreads down to my neck and shoulder",
+          timing: "Started in the morning, gets worse in the afternoon",
+          severity: "8/10",
+          frequency: "This severe headache happens about once a month"
         },
         context: {
-          history: "Family history of migraines, previous episodes monthly",
-          meds: "Ibuprofen 400mg as needed, currently taking sumatriptan",
-          impact: "Unable to work, nausea preventing eating"
+          history: "Family history of migraines (mother and sister). I've had similar episodes monthly for the past 3 years.",
+          meds: "Currently taking ibuprofen 400mg every 6 hours with minimal relief. Tried sumatriptan yesterday.",
+          impact: "Had to call out of work for 2 days. Can't take care of my kids. Nausea is preventing me from eating regular meals."
         }
       };
       jsonInput.value = JSON.stringify(example, null, 2);
