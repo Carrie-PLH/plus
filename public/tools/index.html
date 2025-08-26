@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Tools - PatientLead+</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    h1 {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      color: #666;
+    }
+    
+    .tier-section {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .tier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .tier-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .tier-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .tier-core { background: #4CAF50; color: white; }
+    .tier-prime { background: #2196F3; color: white; }
+    .tier-ultra { background: #673AB7; color: white; }
+    
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    
+    .tool-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      transition: all 0.3s;
+    }
+    
+    .tool-card:hover {
+      border-color: #d47b6a;
+      box-shadow: 0 4px 12px rgba(212, 123, 106, 0.15);
+    }
+    
+    .tool-name {
+      font-weight: 600;
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .tool-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+    }
+    
+    .cta-section {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      margin-top: 40px;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: #d47b6a;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+    
+    .cta-button:hover {
+      background: #b86f5d;
+    }
+    
+    .nav-links {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .nav-links a {
+      color: #d47b6a;
+      text-decoration: none;
+      margin: 0 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/subscribe">Pricing</a>
+    </div>
+    
+    <header>
+      <h1>PatientLead+ Tools</h1>
+      <p class="subtitle">AI-powered healthcare advocacy tools for every situation</p>
+    </header>
+    
+    <!-- Core Tier -->
+    <div class="tier-section">
+      <div class="tier-header">
+        <h2 class="tier-title">Core Tools</h2>
+        <span class="tier-badge tier-core">$29/month</span>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-name">SymptomPro</div>
+          <div class="tool-description">Transform your symptoms into clear, medical-professional narratives for appointments, portals, and records.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">ResetPro</div>
+          <div class="tool-description">Identify and professionally address dismissive language in medical communications.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">PromptPro</div>
+          <div class="tool-description">Generate targeted questions for your healthcare visits to ensure nothing gets missed.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">TrendTrack</div>
+          <div class="tool-description">Track symptom patterns over time to identify triggers and treatment effectiveness.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">AccessPro</div>
+          <div class="tool-description">Simplify complex medical information and translate it into accessible language.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">BriefMe</div>
+          <div class="tool-description">Create organized agendas and summaries for appointments and follow-ups.</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Prime Tier -->
+    <div class="tier-section">
+      <div class="tier-header">
+        <h2 class="tier-title">Prime Tools</h2>
+        <span class="tier-badge tier-prime">$49/month - Includes Core + These</span>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-name">PromptCoach</div>
+          <div class="tool-description">Practice difficult medical conversations with AI-powered role-play scenarios.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">AppealBuilder</div>
+          <div class="tool-description">Create professional insurance appeals and prior authorization letters.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">RightsBuilder</div>
+          <div class="tool-description">Understand your patient rights and generate formal requests for records or corrections.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">PeerMatch</div>
+          <div class="tool-description">Connect with relevant patient communities and support groups based on your conditions.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">ProviderMatch</div>
+          <div class="tool-description">Find healthcare providers who specialize in your specific needs.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">StrategyCoach</div>
+          <div class="tool-description">Develop personalized advocacy strategies for complex healthcare situations.</div>
+        </div>
+      </div>
+    </div>
+    
+   <!-- Ultra Tier -->
+<div class="tier-section">
+    <div class="tier-header">
+      <h2 class="tier-title">Ultra Tools</h2>
+      <span class="tier-badge tier-ultra">$79/month - Includes Everything + These</span>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-name">TriageTrack</div>
+        <div class="tool-description">Advanced symptom assessment with risk stratification and care recommendations.</div>
+      </div>
+      <!-- Add more Ultra-exclusive tools as you build them -->
+    </div>
+  </div>
+    
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>Ready to take control of your healthcare?</h2>
+      <p style="margin: 20px 0; color: #666;">Join thousands of empowered patients using PatientLead+</p>
+      <a href="/subscribe" class="cta-button">Start Your Free Trial</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - PatientLead+</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    h1 {
+      font-size: 28px;
+      color: #fff;
+    }
+    
+    .admin-badge {
+      background: #ff3333;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #333;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #999;
+      margin-top: 4px;
+    }
+    
+    .search-bar {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    input {
+      flex: 1;
+      padding: 12px;
+      background: #1a1a1a;
+      border: 1px solid #444;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #45a049;
+    }
+    
+    .btn-secondary {
+      background: #444;
+      color: white;
+    }
+    
+    .users-table {
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      background: #333;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    td {
+      padding: 12px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+    }
+    
+    tr:hover {
+      background: #333;
+    }
+    
+    .tier-select {
+      background: #1a1a1a;
+      border: 1px solid #444;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .save-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    
+    .customer-id {
+      font-family: monospace;
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    
+    .error {
+      background: #ff3333;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .export-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2196F3;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    .auth-check {
+      background: #ff3333;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="authCheck" class="auth-check" style="display: none;">
+      Unauthorized Access - Admin Only
+    </div>
+    
+    <div id="adminPanel" style="display: none;">
+      <header>
+        <div>
+          <h1>Admin Dashboard</h1>
+          <span id="adminEmail"></span>
+        </div>
+        <span class="admin-badge">ADMIN ACCESS</span>
+      </header>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalUsers">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="paidUsers">0</div>
+          <div class="stat-label">Paid Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="revenue">$0</div>
+          <div class="stat-label">Monthly Revenue</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="todaySignups">0</div>
+          <div class="stat-label">Today's Signups</div>
+        </div>
+      </div>
+      
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by email or customer ID...">
+        <button class="btn btn-primary" onclick="searchUsers()">Search</button>
+        <button class="btn btn-secondary" onclick="resetSearch()">Clear</button>
+      </div>
+      
+      <div class="users-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Tier</th>
+              <th>Status</th>
+              <th>Stripe Customer</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr><td colspan="6" class="loading">Loading users...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Errors section -->
+      <div style="margin-top: 40px;" id="errorsSection">
+        <h2 style="color: #ff3333; margin-bottom: 20px;">Recent Errors</h2>
+        <div class="users-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>User</th>
+                <th>Tool</th>
+                <th>Error</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="errorsTableBody">
+              <tr><td colspan="5" class="loading">Loading errors...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <button class="export-btn" onclick="exportCSV()" style="display: none;">Export to CSV</button>
+  </div>
+  
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy, where, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    import { firebaseConfig } from '/lib/config.js';
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    // Admin emails - ADD YOUR ADMIN EMAILS HERE
+    const ADMIN_EMAILS = [
+      'carrie@patientlead.health',
+      'carrie@schluters.com'
+      // Add more admin emails as needed
+    ];
+    
+    const TIER_PRICING = {
+      free: 0,
+      core: 29,
+      prime: 49,
+      ultra: 79,
+      clinic_core: 199,
+      clinic_prime: 399,
+      enterprise: 799
+    };
+    
+    let allUsers = [];
+    let allErrors = [];
+    
+    onAuthStateChanged(auth, async (user) => {
+      if (!user || !ADMIN_EMAILS.includes(user.email)) {
+        document.getElementById('authCheck').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
+        return;
+      }
+      
+      document.getElementById('authCheck').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      document.querySelector('.export-btn').style.display = 'block';
+      document.getElementById('adminEmail').textContent = user.email;
+      
+      await loadUsers();
+      await loadErrors();
+    });
+    
+    async function loadUsers() {
+      try {
+        const usersSnapshot = await getDocs(collection(db, 'users'));
+        allUsers = [];
+        
+        usersSnapshot.forEach((doc) => {
+          allUsers.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        
+        updateStats();
+        displayUsers(allUsers);
+      } catch (error) {
+        console.error('Error loading users:', error);
+      }
+    }
+    
+    async function loadErrors() {
+      try {
+        const errorsQuery = query(
+          collection(db, 'errors'),
+          orderBy('timestamp', 'desc'),
+          limit(50)
+        );
+        const errorsSnapshot = await getDocs(errorsQuery);
+        
+        allErrors = [];
+        errorsSnapshot.forEach((doc) => {
+          allErrors.push({ id: doc.id, ...doc.data() });
+        });
+        
+        displayErrors(allErrors);
+      } catch (error) {
+        console.error('Error loading errors:', error);
+        // If collection doesn't exist, show no errors
+        displayErrors([]);
+      }
+    }
+    
+    function updateStats() {
+      const totalUsers = allUsers.length;
+      const paidUsers = allUsers.filter(u => u.subscription?.tier && u.subscription.tier !== 'free').length;
+      const monthlyRevenue = allUsers.reduce((sum, u) => {
+        const tier = u.subscription?.tier || 'free';
+        return sum + (TIER_PRICING[tier] || 0);
+      }, 0);
+      
+      const today = new Date().toISOString().substring(0, 10);
+      const todaySignups = allUsers.filter(u => {
+        if (!u.createdAt) return false;
+        const userDate = u.createdAt.toDate ? u.createdAt.toDate().toISOString().substring(0, 10) : 
+                         new Date(u.createdAt).toISOString().substring(0, 10);
+        return userDate === today;
+      }).length;
+      
+      document.getElementById('totalUsers').textContent = totalUsers;
+      document.getElementById('paidUsers').textContent = paidUsers;
+      document.getElementById('revenue').textContent = `$${monthlyRevenue}`;
+      document.getElementById('todaySignups').textContent = todaySignups;
+    }
+    
+    function displayUsers(users) {
+      const tbody = document.getElementById('usersTableBody');
+      
+      if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No users found</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = users.map(user => `
+        <tr>
+          <td>${user.email || 'No email'}</td>
+          <td>
+            <select class="tier-select" id="tier-${user.id}">
+              <option value="free" ${user.subscription?.tier === 'free' ? 'selected' : ''}>Free</option>
+              <option value="core" ${user.subscription?.tier === 'core' ? 'selected' : ''}>Core ($29)</option>
+              <option value="prime" ${user.subscription?.tier === 'prime' ? 'selected' : ''}>Prime ($49)</option>
+              <option value="ultra" ${user.subscription?.tier === 'ultra' ? 'selected' : ''}>Ultra ($79)</option>
+              <option value="clinic_core" ${user.subscription?.tier === 'clinic_core' ? 'selected' : ''}>Clinic Core ($199)</option>
+              <option value="clinic_prime" ${user.subscription?.tier === 'clinic_prime' ? 'selected' : ''}>Clinic Prime ($399)</option>
+              <option value="enterprise" ${user.subscription?.tier === 'enterprise' ? 'selected' : ''}>Enterprise ($799)</option>
+            </select>
+            <button class="save-btn" onclick="updateTier('${user.id}')">Save</button>
+          </td>
+          <td>${user.subscription?.status || 'inactive'}</td>
+          <td><span class="customer-id">${user.subscription?.stripeCustomerId || 'None'}</span></td>
+          <td>${formatDate(user.createdAt)}</td>
+          <td>
+            <button class="btn btn-secondary" onclick="viewUser('${user.id}')">View</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function displayErrors(errors) {
+      const tbody = document.getElementById('errorsTableBody');
+      
+      if (errors.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">No errors logged</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = errors.map(error => `
+        <tr>
+          <td>${formatTime(error.timestamp)}</td>
+          <td>${error.userEmail || 'anonymous'}</td>
+          <td>${error.context?.tool || 'unknown'}</td>
+          <td>${error.errorMessage || 'Unknown error'}</td>
+          <td>
+            <button class="btn btn-secondary" onclick="viewError('${error.id}')">Details</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function formatDate(date) {
+      if (!date) return 'Unknown';
+      const d = date.toDate ? date.toDate() : new Date(date);
+      return d.toLocaleDateString();
+    }
+    
+    function formatTime(timestamp) {
+      if (!timestamp) return 'Unknown';
+      const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return d.toLocaleString();
+    }
+    
+    window.searchUsers = function() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allUsers.filter(user => 
+        (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+        (user.subscription?.stripeCustomerId && user.subscription.stripeCustomerId.toLowerCase().includes(searchTerm))
+      );
+      displayUsers(filtered);
+    }
+    
+    window.resetSearch = function() {
+      document.getElementById('searchInput').value = '';
+      displayUsers(allUsers);
+    }
+    
+    window.updateTier = async function(userId) {
+      const newTier = document.getElementById(`tier-${userId}`).value;
+      try {
+        await updateDoc(doc(db, 'users', userId), {
+          'subscription.tier': newTier,
+          'subscription.status': newTier === 'free' ? 'inactive' : 'active'
+        });
+        alert('Tier updated successfully');
+        await loadUsers();
+      } catch (error) {
+        alert('Error updating tier: ' + error.message);
+      }
+    }
+    
+    window.viewUser = function(userId) {
+      const user = allUsers.find(u => u.id === userId);
+      alert(JSON.stringify(user, null, 2));
+    }
+    
+    window.viewError = function(errorId) {
+      const error = allErrors.find(e => e.id === errorId);
+      const details = `
+Error Details:
+--------------
+Time: ${formatTime(error.timestamp)}
+User: ${error.userEmail || 'anonymous'}
+Tool: ${error.context?.tool || 'unknown'}
+Action: ${error.context?.action || 'unknown'}
+Error Type: ${error.errorType || 'Unknown'}
+Message: ${error.errorMessage}
+URL: ${error.context?.url || 'unknown'}
+User Agent: ${error.context?.userAgent || 'unknown'}
+
+Stack Trace:
+${error.errorStack || 'No stack trace available'}
+      `;
+      alert(details);
+    }
+    
+    window.exportCSV = function() {
+      const csv = [
+        ['Email', 'Tier', 'Status', 'Stripe Customer ID', 'Created'],
+        ...allUsers.map(user => [
+          user.email || '',
+          user.subscription?.tier || 'free',
+          user.subscription?.status || 'inactive',
+          user.subscription?.stripeCustomerId || '',
+          formatDate(user.createdAt)
+        ])
+      ].map(row => row.join(',')).join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `users-${new Date().toISOString().substring(0, 10)}.csv`;
+      a.click();
+    }
+  </script>
+</body>
+</html>

@@ -1069,3 +1069,28 @@ export const getUsageChartData = onCall(
     // Return chart data for week/month/year
   }
 );
+// Import stripe functions and wrap them
+import * as stripeFunctions from './stripe.js';
+
+const STRIPE_SECRET_KEY = defineSecret("STRIPE_SECRET_KEY");
+const STRIPE_WEBHOOK_SECRET = defineSecret("STRIPE_WEBHOOK_SECRET");
+
+export const createCheckoutSession = onCall(
+  { region: "us-east4", secrets: [STRIPE_SECRET_KEY] },
+  stripeFunctions.createCheckoutSession
+);
+
+export const createPortalSession = onCall(
+  { region: "us-east4", secrets: [STRIPE_SECRET_KEY] },
+  stripeFunctions.createPortalSession
+);
+
+export const stripeWebhook = onRequest(
+  { region: "us-east4", secrets: [STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET] },
+  stripeFunctions.stripeWebhook
+);
+
+export const checkSubscription = onCall(
+  { region: "us-east4" },
+  stripeFunctions.checkSubscription
+);

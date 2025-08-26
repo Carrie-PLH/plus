@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to PatientLead+ - Success</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .success-container {
+      background: white;
+      border-radius: 20px;
+      padding: 48px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 16px;
+      font-size: 32px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 18px;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    
+    .next-steps {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 32px 0;
+      text-align: left;
+    }
+    
+    .next-steps h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+    
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    
+    .step-number {
+      background: #d47b6a;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    
+    .step-text {
+      color: #555;
+      line-height: 1.5;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    
+    .btn {
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    
+    .btn-primary {
+      background: #d47b6a;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #333;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+    
+    .loading {
+      display: none;
+      color: #666;
+      margin-top: 20px;
+    }
+    
+    .error {
+      display: none;
+      background: #fee;
+      color: #c00;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="success-container">
+    <div class="checkmark">✓</div>
+    
+    <h1>Welcome to PatientLead+!</h1>
+    <p class="subtitle">Your subscription is being activated. Here's what happens next:</p>
+    
+    <div class="next-steps">
+      <h2>Getting Started</h2>
+      
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-text">
+          <strong>Check your email</strong><br>
+          We've sent your receipt and login details to your email address.
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-text">
+          <strong>Your account is being upgraded</strong><br>
+          Your tools will be available within 5 minutes. We'll email you when ready.
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-text">
+          <strong>Start with SymptomPro</strong><br>
+          Most users begin here - it's the foundation for organizing your health information.
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-text">
+          <strong>Join our community</strong><br>
+          Connect with other PatientLead+ users for tips, support, and success stories.
+        </div>
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+      <a href="/SymptomPro/" class="btn btn-secondary">Start SymptomPro</a>
+    </div>
+    
+    <div id="loading" class="loading">Verifying subscription...</div>
+    <div id="error" class="error"></div>
+  </div>
+  
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { firebaseConfig } from '/lib/config.js';
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    // Get session ID from URL if present (from Stripe)
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    
+    if (sessionId) {
+      // Store for reference (you could log this to Firestore)
+      console.log('Stripe session:', sessionId);
+    }
+    
+    // Check authentication
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // If not logged in after purchase, redirect to login
+        window.location.href = '/login?redirect=dashboard';
+      } else {
+        // User is logged in, they can proceed
+        console.log('Subscription activated for:', user.email);
+      }
+    });
+  </script>
+</body>
+</html>

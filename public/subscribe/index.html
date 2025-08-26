@@ -6,457 +6,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   <style>
-    /* Your existing styles plus: */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin: 40px 0;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
     }
     
-    .price-card {
-      background: white;
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      position: relative;
-      transition: transform 0.3s;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
     }
     
-    .price-card.featured {
-      border: 3px solid var(--brand-coral);
-      transform: scale(1.05);
+    header {
+      text-align: center;
+      margin-bottom: 40px;
     }
     
-    .price-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    h1 {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 10px;
     }
     
-    .price-tier {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--brand-dark);
-      margin-bottom: 8px;
-    }
-    
-    .price-amount {
-      font-size: 48px;
-      font-weight: 700;
-      color: var(--brand-coral);
-    }
-    
-    .price-period {
+    .subtitle {
       font-size: 18px;
-      color: var(--muted);
+      color: #666;
     }
     
-    .price-features {
-      margin: 24px 0;
-      padding: 24px 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-    
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    
-    .feature-icon {
-      color: var(--brand-green);
-      font-size: 20px;
-    }
-    
-    .subscribe-btn {
-      width: 100%;
-      padding: 16px;
-      background: var(--brand-coral);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .subscribe-btn:hover {
-      background: #b86f5d;
-      transform: translateY(-2px);
-    }
-    
-    .subscribe-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    
-    .billing-toggle {
+    .audience-toggle {
       display: flex;
       justify-content: center;
       gap: 16px;
-      margin: 32px 0;
+      margin: 40px 0;
     }
     
-    .toggle-option {
-      padding: 12px 24px;
-      border: 2px solid var(--line);
+    .toggle-btn {
+      padding: 14px 32px;
+      border: 2px solid #ddd;
       border-radius: 8px;
       background: white;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .toggle-option.active {
-      background: var(--brand-green);
-      color: white;
-      border-color: var(--brand-green);
-    }
-    
-    .savings-badge {
-      position: absolute;
-      top: -12px;
-      right: 20px;
-      background: var(--brand-coral);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 12px;
+      font-size: 16px;
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #666;
+    }
+    
+    .toggle-btn:hover {
+      border-color: #d47b6a;
+    }
+    
+    .toggle-btn.active {
+      background: #d47b6a;
+      color: white;
+      border-color: #d47b6a;
+    }
+    
+    .plan-section {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      margin-bottom: 20px;
+    }
+    
+    .section-description {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .section-description h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .section-description p {
+      color: #666;
+      font-size: 16px;
+    }
+    
+    #clinic-plans {
+      display: none;
     }
   </style>
-  
-  <!-- Stripe.js -->
-  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <div class="container">
     <header>
       <h1>Choose Your PatientLead+ Plan</h1>
-      <p class="subtitle">Start with a free trial. Cancel anytime.</p>
+      <p class="subtitle">Empowering patients and providers with intelligent healthcare tools</p>
     </header>
     
-    <!-- Billing toggle -->
-    <div class="billing-toggle">
-      <button class="toggle-option active" data-interval="monthly">
-        Monthly Billing
+    <!-- Toggle Buttons -->
+    <div class="audience-toggle">
+      <button class="toggle-btn active" onclick="showPlans('patient')">
+        For Patients & Advocates
       </button>
-      <button class="toggle-option" data-interval="annual">
-        Annual Billing
-        <span style="color: var(--brand-coral); margin-left: 8px;">Save 20%</span>
+      <button class="toggle-btn" onclick="showPlans('clinic')">
+        For Healthcare Providers
       </button>
     </div>
     
-    <!-- Consumer Plans -->
-    <h2>For Patients</h2>
-    <div class="pricing-grid">
-      <!-- Essential Plan -->
-      <div class="price-card">
-        <div class="price-tier">Essential</div>
-        <div>
-          <span class="price-amount" data-monthly="29" data-annual="23">$29</span>
-          <span class="price-period">/month</span>
-        </div>
-        
-        <div class="price-features">
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>6 Core Tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>40 Analyses per day</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>SymptomPro & AgendaDesigner</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Medical Memory Vault</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>7-day free trial</span>
-          </div>
-        </div>
-        
-        <button class="subscribe-btn" data-tier="essential">
-          Start Free Trial
-        </button>
+    <!-- Patient Plans -->
+    <div id="patient-plans" class="plan-section">
+      <div class="section-description">
+        <h2>Personal Healthcare Tools</h2>
+        <p>Manage your healthcare journey with confidence and clarity</p>
       </div>
       
-      <!-- Professional Plan -->
-      <div class="price-card featured">
-        <div class="savings-badge">MOST POPULAR</div>
-        <div class="price-tier">Professional</div>
-        <div>
-          <span class="price-amount" data-monthly="49" data-annual="39">$49</span>
-          <span class="price-period">/month</span>
-        </div>
-        
-        <div class="price-features">
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>12 Advanced Tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>100 Analyses per day</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>ResetPro & AppealBuilder</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>RightsBuilder & CareMapper</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Priority support</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>14-day free trial</span>
-          </div>
-        </div>
-        
-        <button class="subscribe-btn" data-tier="professional">
-          Start Free Trial
-        </button>
-      </div>
-      
-      <!-- Power User Plan -->
-      <div class="price-card">
-        <div class="price-tier">Power User</div>
-        <div>
-          <span class="price-amount" data-monthly="79" data-annual="63">$79</span>
-          <span class="price-period">/month</span>
-        </div>
-        
-        <div class="price-features">
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>All 20+ Tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>250 Analyses per day</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Early access to new tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Advanced analytics</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Direct support line</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>14-day free trial</span>
-          </div>
-        </div>
-        
-        <button class="subscribe-btn" data-tier="powerUser">
-          Start Free Trial
-        </button>
-      </div>
+      <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+      <stripe-pricing-table 
+        pricing-table-id="prctbl_1S0PjhJJVgi6pYxbwKMrkC6C"
+        publishable-key="pk_live_51Rc2lrJJVgi6pYxbVbqdbDd2OTRPMqXETiwb6DHIos6QAUjoVgAdcEMhnDdpUrQBZgBLmPis86iQUepcvWECELBx00n6X6qNtd">
+      </stripe-pricing-table>
     </div>
     
-    <!-- Business Plans -->
-    <h2>For Healthcare Providers</h2>
-    <div class="pricing-grid">
-      <!-- Clinic Starter -->
-      <div class="price-card">
-        <div class="price-tier">Clinic Starter</div>
-        <div>
-          <span class="price-amount">$199</span>
-          <span class="price-period">/month</span>
-        </div>
-        
-        <div class="price-features">
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>6 Provider Tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>5 Team Seats</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Patient analytics</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Triage & risk assessment</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>30-day free trial</span>
-          </div>
-        </div>
-        
-        <button class="subscribe-btn" data-tier="clinicStarter">
-          Start Free Trial
-        </button>
+    <!-- Clinic Plans -->
+    <div id="clinic-plans" class="plan-section">
+      <div class="section-description">
+        <h2>Professional Healthcare Solutions</h2>
+        <p>Enhance patient engagement and streamline clinical workflows</p>
       </div>
       
-      <!-- Clinic Pro -->
-      <div class="price-card">
-        <div class="price-tier">Clinic Pro</div>
-        <div>
-          <span class="price-amount">$399</span>
-          <span class="price-period">/month</span>
-        </div>
-        
-        <div class="price-features">
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>12 Provider Tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>15 Team Seats</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Population health insights</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Care gap analysis</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>HIPAA compliance tools</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">✓</span>
-            <span>Priority onboarding</span>
-          </div>
-        </div>
-        
-        <button class="subscribe-btn" data-tier="clinicPro">
-          Contact Sales
-        </button>
-      </div>
+      <stripe-pricing-table 
+        pricing-table-id="prctbl_1S0Q7nJJVgi6pYxbyzt6oeTd"
+        publishable-key="pk_live_51Rc2lrJJVgi6pYxbVbqdbDd2OTRPMqXETiwb6DHIos6QAUjoVgAdcEMhnDdpUrQBZgBLmPis86iQUepcvWECELBx00n6X6qNtd">
+      </stripe-pricing-table>
     </div>
   </div>
   
-  <script type="module">
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { firebaseConfig } from "/lib/config.js";
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const functions = getFunctions(app, 'us-east4');
-    
-    // Initialize Stripe
-    const stripe = Stripe('pk_live_YOUR_PUBLISHABLE_KEY'); // Replace with your key
-    
-    let currentInterval = 'monthly';
-    
-    // Billing toggle
-    document.querySelectorAll('.toggle-option').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentInterval = e.target.dataset.interval;
-        updatePrices();
-      });
-    });
-    
-    // Update prices based on billing interval
-    function updatePrices() {
-      document.querySelectorAll('[data-monthly]').forEach(el => {
-        const monthly = el.dataset.monthly;
-        const annual = el.dataset.annual;
-        el.textContent = `$${currentInterval === 'monthly' ? monthly : annual}`;
-      });
-    }
-    
-    // Subscribe button handlers
-    document.querySelectorAll('.subscribe-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const tier = e.target.dataset.tier;
-        await startCheckout(tier, currentInterval);
-      });
-    });
-    
-    async function startCheckout(tier, interval) {
-      // Check auth
-      if (!auth.currentUser) {
-        // Save intent and redirect to login
-        localStorage.setItem('subscriptionIntent', JSON.stringify({ tier, interval }));
-        window.location.href = '/login?redirect=subscribe';
-        return;
-      }
+  <script>
+    function showPlans(type) {
+      // Hide both sections
+      document.getElementById('patient-plans').style.display = 'none';
+      document.getElementById('clinic-plans').style.display = 'none';
       
-      // Create checkout session
-      const createCheckout = httpsCallable(functions, 'createCheckoutSession');
+      // Show selected section
+      document.getElementById(type + '-plans').style.display = 'block';
       
-      try {
-        const priceId = getPriceId(tier, interval);
-        const result = await createCheckout({
-          priceId: priceId,
-          tier: tier,
-          interval: interval,
-          successUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: window.location.href
-        });
-        
-        // Redirect to Stripe Checkout
-        if (result.data.sessionId) {
-          await stripe.redirectToCheckout({
-            sessionId: result.data.sessionId
-          });
-        } else if (result.data.url) {
-          window.location.href = result.data.url;
-        }
-        
-      } catch (error) {
-        console.error('Checkout error:', error);
-        alert('Unable to start checkout. Please try again.');
-      }
+      // Update button states
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
     }
-    
-    function getPriceId(tier, interval) {
-      // Map to your actual Stripe price IDs
-      const priceMap = {
-        'essential_monthly': 'price_xxx',
-        'essential_annual': 'price_xxx',
-        'professional_monthly': 'price_xxx',
-        'professional_annual': 'price_xxx',
-        'powerUser_monthly': 'price_xxx',
-        'powerUser_annual': 'price_xxx',
-        'clinicStarter_monthly': 'price_xxx',
-        'clinicPro_monthly': 'price_xxx'
-      };
-      
-      return priceMap[`${tier}_${interval}`] || '';
-    }
-    
-    // Check for subscription intent after login
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const intent = localStorage.getItem('subscriptionIntent');
-        if (intent) {
-          const { tier, interval } = JSON.parse(intent);
-          localStorage.removeItem('subscriptionIntent');
-          startCheckout(tier, interval);
-        }
-      }
-    });
   </script>
 </body>
 </html>
