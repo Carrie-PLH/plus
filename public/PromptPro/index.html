@@ -2,68 +2,1589 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>PromptPro</title>
+  <title>PromptPro - Smart Questions for Better Care</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">💡</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js for time visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
-    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
-    button { padding: 8px 14px; font: inherit; cursor: pointer; }
-    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #fafafa;
+      --muted: #666;
+      --success: #4caf50;
+      --error: #f44336;
+      --warning: #ff9800;
+      --info: #2196f3;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    nav {
+      margin-bottom: 16px;
+    }
+    
+    nav a {
+      color: var(--brand-coral);
+      text-decoration: none;
+      margin-right: 16px;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .safety-banner {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #856404;
+    }
+    
+    .safety-banner strong {
+      color: #856404;
+    }
+    
+    .phase-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .phase-section h2 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 22px;
+      font-weight: 600;
+      border-bottom: 2px solid var(--brand-green);
+      padding-bottom: 8px;
+    }
+    
+    /* Input Phase */
+    .quick-input {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(163, 185, 163, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    .specialty-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .pack-selector {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .pack-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .pack-chip {
+      padding: 6px 12px;
+      border: 1px solid var(--brand-green);
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .pack-chip:hover {
+      background: var(--brand-light);
+    }
+    
+    .pack-chip.selected {
+      background: var(--brand-green);
+      color: white;
+    }
+    
+    /* Priority Planner */
+    .view-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+    }
+    
+    .view-tab {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    
+    .view-tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .planner-view,
+    .all-questions-view {
+      display: none;
+    }
+    
+    .planner-view.active,
+    .all-questions-view.active {
+      display: block;
+    }
+    
+    .time-block {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .time-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .time-block-title {
+      font-weight: 600;
+      color: var(--brand-dark);
+      font-size: 16px;
+    }
+    
+    .time-estimate {
+      background: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .question-item {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .question-text {
+      flex: 1;
+      color: var(--brand-dark);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .info-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--info);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    
+    .question-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .category-tag {
+      background: var(--brand-light);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+    
+    .time-tag {
+      color: var(--brand-coral);
+      font-weight: 500;
+    }
+    
+    .bias-safe-badge {
+      background: var(--success);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    
+    /* Live Companion Mode */
+    .live-mode {
+      display: none;
+      background: #f0f8ff;
+      border: 2px solid var(--info);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .live-mode.active {
+      display: block;
+    }
+    
+    .live-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .live-timer {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brand-dark);
+    }
+    
+    .live-queue {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .queue-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--brand-dark);
+    }
+    
+    .live-question {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .live-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .live-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .live-btn:hover {
+      background: var(--brand-light);
+    }
+    
+    .live-btn.asked {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+    
+    .live-btn.answered {
+      background: var(--brand-green);
+      color: white;
+      border-color: var(--brand-green);
+    }
+    
+    .live-btn.deferred {
+      background: var(--warning);
+      color: white;
+      border-color: var(--warning);
+    }
+    
+    /* Category Filters */
+    .category-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    
+    .category-chip {
+      padding: 8px 16px;
+      border: 1px solid var(--brand-green);
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .category-chip:hover {
+      background: var(--brand-light);
+    }
+    
+    .category-chip.active {
+      background: var(--brand-green);
+      color: white;
+    }
+    
+    /* Evidence Bottom Sheet */
+    .evidence-sheet {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      padding: 24px;
+      transition: bottom 0.3s ease;
+      z-index: 1000;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .evidence-sheet.active {
+      bottom: 0;
+    }
+    
+    .evidence-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .evidence-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--brand-light);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .citation-list {
+      margin-top: 12px;
+    }
+    
+    .citation-chip {
+      display: inline-block;
+      background: var(--brand-light);
+      padding: 6px 12px;
+      border-radius: 16px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .strength-high {
+      border-left: 3px solid var(--success);
+    }
+    
+    .strength-moderate {
+      border-left: 3px solid var(--warning);
+    }
+    
+    .strength-emerging {
+      border-left: 3px solid var(--info);
+    }
+    
+    /* Timeline Ruler */
+    .timeline-ruler {
+      width: 4px;
+      background: var(--line);
+      border-radius: 2px;
+      position: relative;
+      margin-left: 20px;
+      height: 400px;
+    }
+    
+    .timeline-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--brand-green);
+      border-radius: 2px;
+      transition: height 0.3s ease;
+    }
+    
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+    
+    /* Status Messages */
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    #status.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+    }
+    
+    #status.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+      border: 1px solid var(--error);
+      display: block;
+    }
+    
+    #status.working {
+      background: rgba(163, 185, 163, 0.1);
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-green);
+      display: block;
+    }
+    
+    /* Preferences */
+    .preferences-bar {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .pref-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--line);
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: var(--brand-green);
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .context-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .specialty-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .preferences-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+    
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
   </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+  <link rel="stylesheet" href="/css/upgrade-overlay.css">
 </head>
 <body>
-  <h1>PromptPro</h1>
-  <p>Turns symptoms into smart, ready-to-ask questions.</p>
-
-  <h3>Example input</h3>
-  <pre>{
-  "symptoms": {
-    "chiefComplaint": "Throbbing headache",
-    "onset": "2 days ago",
-    "location": "Head",
-    "duration": "Intermittent",
-    "character": "Throbbing",
-    "aggravating": "Bright light",
-    "alleviating": "Rest",
-    "radiation": "None",
-    "timing": "Worse at night",
-    "severity": "7/10"
-  },
-  "context": {
-    "history": "Migraine in family. No head trauma.",
-    "meds": "Ibuprofen 400 mg as needed"
-  }
-}</pre>
-
-  <form id="form">
-    <label>Input JSON</label>
-    <textarea id="input" rows="12" placeholder='{"symptoms": {...}, "context": {...}}'></textarea>
-    <button type="submit">Generate Questions</button>
-  </form>
-
-  <div class="grid">
-    <div>
-      <h3>Questions</h3>
-      <ul id="questions"></ul>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+      <a href="/TrendTrack/">TrendTrack</a>
+    </nav>
+    
+    <header>
+      <h1>Get the Answers That Actually Move Your Care Forward</h1>
+      <p class="subtitle">Generate evidence-backed questions that force specificity about diagnosis, testing, treatment options, and clear next steps</p>
+    </header>
+    
+    <div class="safety-banner">
+      <strong>ℹ️ Important:</strong> PromptPro supports communication and planning. It does not provide medical or legal advice.
     </div>
-    <div>
-      <h3>Notes</h3>
-      <pre id="notes"></pre>
+    
+    <!-- Input Phase -->
+    <div id="inputPhase" class="phase-section">
+      <h2>Step 1: Describe Your Situation</h2>
+      
+      <!-- Quick Input -->
+      <div class="quick-input">
+        <div class="form-group">
+          <label for="symptoms">What symptoms or concerns bring you to this visit?</label>
+          <textarea id="symptoms" placeholder="e.g., Rapid heartbeat and dizziness when standing. Worse in heat. Better with fluids and salt. Started 2 months ago."></textarea>
+          <p class="hint">Be specific about onset, triggers, and what helps or worsens symptoms</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="visitGoals">What are your top 1-2 goals for this visit?</label>
+          <input type="text" id="visitGoals" placeholder="e.g., Get a diagnosis, adjust medications, referral to specialist">
+        </div>
+      </div>
+      
+      <!-- Context -->
+      <div class="context-grid">
+        <div class="form-group">
+          <label for="conditions">Current Conditions</label>
+          <input type="text" id="conditions" placeholder="e.g., POTS, hEDS, MCAS">
+          <p class="hint">Separate with commas</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="medications">Current Medications</label>
+          <input type="text" id="medications" placeholder="e.g., Metoprolol, Florinef">
+          <p class="hint">Include supplements if relevant</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="allergies">Allergies</label>
+          <input type="text" id="allergies" placeholder="e.g., Penicillin, latex">
+        </div>
+        
+        <div class="form-group">
+          <label for="visitTime">Expected Visit Length</label>
+          <select id="visitTime">
+            <option value="7">7 minutes (typical follow-up)</option>
+            <option value="10" selected>10 minutes (standard)</option>
+            <option value="15">15 minutes (new patient)</option>
+            <option value="20">20 minutes (complex)</option>
+            <option value="30">30 minutes (extended)</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Specialty & Pack Selection -->
+      <div class="specialty-bar">
+        <label>Visit Context:</label>
+        <select id="specialty">
+          <option value="auto">Auto-detect</option>
+          <option value="pcp">Primary Care</option>
+          <option value="specialist">Specialist</option>
+          <option value="ed">Emergency/Urgent</option>
+        </select>
+      </div>
+      
+      <div class="pack-selector">
+        <label>Condition Focus Pack (optional):</label>
+        <div class="pack-chips">
+          <div class="pack-chip" data-pack="pots">POTS/Dysautonomia</div>
+          <div class="pack-chip" data-pack="heds">hEDS/Hypermobility</div>
+          <div class="pack-chip" data-pack="mcas">MCAS</div>
+          <div class="pack-chip" data-pack="mecfs">ME/CFS</div>
+          <div class="pack-chip" data-pack="migraine">Migraine</div>
+          <div class="pack-chip" data-pack="endo">Endometriosis</div>
+          <div class="pack-chip" data-pack="pcos">PCOS</div>
+          <div class="pack-chip" data-pack="ibs-ibd">IBS vs IBD</div>
+          <div class="pack-chip" data-pack="autoimmune">Autoimmune</div>
+          <div class="pack-chip" data-pack="long-covid">Long COVID</div>
+        </div>
+      </div>
+      
+      <!-- Preferences -->
+      <div class="preferences-bar">
+        <div class="pref-group">
+          <label for="readingLevel">Reading Level:</label>
+          <select id="readingLevel">
+            <option value="plain">Simple</option>
+            <option value="standard" selected>Standard</option>
+          </select>
+        </div>
+        
+        <div class="pref-group">
+          <label for="tone">Tone:</label>
+          <select id="tone">
+            <option value="neutral" selected>Neutral</option>
+            <option value="warm">Warm</option>
+          </select>
+        </div>
+        
+        <div class="pref-group">
+          <label for="brainFogMode">Brain Fog Mode:</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="brainFogMode">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="pref-group">
+          <label for="biasSafeMode">Bias-Safe Phrasing:</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="biasSafeMode" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="button" class="btn-primary" onclick="generateQuestions()">
+          Generate Smart Questions
+        </button>
+        <button type="button" class="btn-secondary" onclick="importFromTrendTrack()">
+          Import from TrendTrack
+        </button>
+        <button type="button" class="btn-secondary" onclick="loadSampleData()">
+          Load Example
+        </button>
+      </div>
+      
+      <div id="status" aria-live="polite"></div>
+    </div>
+    
+    <!-- Planning Phase (hidden initially) -->
+    <div id="planningPhase" class="phase-section hidden">
+      <h2>Step 2: Your Question Strategy</h2>
+      
+      <!-- Opener Display -->
+      <div class="form-group">
+        <label>Your 90-Second Opener:</label>
+        <div id="openerText" class="quick-input" style="padding: 12px; background: white; border-left: 4px solid var(--brand-green);"></div>
+      </div>
+      
+      <!-- View Tabs -->
+      <div class="view-tabs">
+        <button class="view-tab active" onclick="switchView('planner')">Priority Planner</button>
+        <button class="view-tab" onclick="switchView('all')">All Questions</button>
+      </div>
+      
+      <!-- Priority Planner View -->
+      <div class="planner-view active">
+        <!-- 90-Second Intro Block -->
+        <div class="time-block">
+          <div class="time-block-header">
+            <span class="time-block-title">🚀 90-Second Opening (1-2 questions)</span>
+            <span class="time-estimate">~90 sec</span>
+          </div>
+          <div id="introQuestions"></div>
+        </div>
+        
+        <!-- 5-Minute Core Block -->
+        <div class="time-block">
+          <div class="time-block-header">
+            <span class="time-block-title">💎 5-Minute Core (4-6 questions)</span>
+            <span class="time-estimate">~5 min</span>
+          </div>
+          <div id="coreQuestions"></div>
+        </div>
+        
+        <!-- 60-Second Close Block -->
+        <div class="time-block">
+          <div class="time-block-header">
+            <span class="time-block-title">🎯 60-Second Close (1-2 questions)</span>
+            <span class="time-estimate">~60 sec</span>
+          </div>
+          <div id="closeQuestions"></div>
+        </div>
+        
+        <!-- Safety Net -->
+        <div class="time-block" style="background: #fff3cd;">
+          <div class="time-block-header">
+            <span class="time-block-title">🛡️ Safety Net Checklist</span>
+          </div>
+          <div id="safetyNetList"></div>
+        </div>
+      </div>
+      
+      <!-- All Questions View -->
+      <div class="all-questions-view">
+        <div class="category-filters">
+          <div class="category-chip active" data-category="all">All</div>
+          <div class="category-chip" data-category="diagnostic_clarity">Diagnostic Clarity</div>
+          <div class="category-chip" data-category="testing">Testing</div>
+          <div class="category-chip" data-category="treatment_options">Treatment Options</div>
+          <div class="category-chip" data-category="safety_netting">Safety Netting</div>
+          <div class="category-chip" data-category="process_access">Process & Access</div>
+        </div>
+        
+        <div id="allQuestionsList"></div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <button type="button" class="btn-success" onclick="startLiveMode()">
+          🎯 Start Live Companion
+        </button>
+        <button type="button" class="btn-secondary" onclick="exportPDF()">
+          📄 Export PDF
+        </button>
+        <button type="button" class="btn-secondary" onclick="saveToVault()">
+          💾 Save to Vault
+        </button>
+        <button type="button" class="btn-secondary" onclick="sendToPortal()">
+          📨 Create Portal Message
+        </button>
+      </div>
+    </div>
+    
+    <!-- Live Companion Mode (hidden initially) -->
+    <div id="liveMode" class="live-mode">
+      <div class="live-header">
+        <h2>🎯 Live Companion Mode</h2>
+        <div class="live-timer" id="liveTimer">0:00</div>
+        <button class="btn-warning" onclick="stopLiveMode()">Stop Session</button>
+      </div>
+      
+      <div class="live-queue">
+        <div class="queue-title">Up Next:</div>
+        <div id="liveQueue"></div>
+      </div>
+      
+      <div class="live-queue">
+        <div class="queue-title">Current Question:</div>
+        <div id="currentQuestion"></div>
+      </div>
+      
+      <div id="followupSuggestions" class="hidden">
+        <div class="queue-title">💡 Suggested Follow-up:</div>
+        <div id="followupList"></div>
+      </div>
+    </div>
+    
+    <!-- Evidence Bottom Sheet -->
+    <div id="evidenceSheet" class="evidence-sheet">
+      <div class="evidence-header">
+        <h3>Evidence & Reasoning</h3>
+        <button class="evidence-close" onclick="closeEvidence()">×</button>
+      </div>
+      
+      <div id="evidenceContent">
+        <div id="evidenceWhy"></div>
+        <div class="citation-list" id="citationList"></div>
+        <button type="button" class="btn-secondary" onclick="copyEvidence()">Copy Evidence Links</button>
+      </div>
+    </div>
+    
+    <!-- Related Tools -->
+    <div class="phase-section">
+      <h2>Related Tools</h2>
+      <div class="button-group">
+        <a href="/TrendTrack/" class="btn-secondary">Track Patterns</a>
+        <a href="/SymptomPro/" class="btn-secondary">Create Summary</a>
+        <a href="/ResetPro/" class="btn-secondary">Challenge Dismissal</a>
+        <a href="/BriefMe/AgendaDesigner/" class="btn-secondary">Design Full Agenda</a>
+      </div>
     </div>
   </div>
-
+  
   <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#promptProForm",
-      type: "promptPro",
-      title: d => `PromptPro: ${d.primarySymptom || d.topic || "Questions"}`,
-      extraTags: ["questions","prep"]
+    import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { functions } from "/lib/appBootstrap.js";
+    import { 
+      initAuth, 
+      saveEntryToVaultWithHooks, 
+      registerCopilotIngest,
+      listEpisodes 
+    } from "/lib/briefmeSave.js";
+    
+    // Initialize auth and telemetry
+    await initAuth();
+    const hooks = registerCopilotIngest({ enabled: true, defaultTool: "promptpro" });
+    
+    // Fire page open event
+    try {
+      window.briefme?.copilot?.ingest?.("page_open", "promptpro", {});
+    } catch {}
+    
+    // Global state
+    let currentQuestions = null;
+    let liveState = {
+      started: false,
+      elapsed: 0,
+      asked: [],
+      answered: {},
+      deferred: []
+    };
+    let liveInterval = null;
+    let selectedPack = null;
+    
+    // Pack chip selection
+    document.querySelectorAll('.pack-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('.pack-chip').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedPack = this.dataset.pack;
+      });
     });
+    
+    // Category filter selection
+    document.querySelectorAll('.category-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        filterQuestions(this.dataset.category);
+      });
+    });
+    
+    // Main generation function
+    window.generateQuestions = async function() {
+      const symptoms = document.getElementById('symptoms').value.trim();
+      const goals = document.getElementById('visitGoals').value.trim();
+      
+      if (!symptoms) {
+        showStatus('Please describe your symptoms or concerns', 'error');
+        return;
+      }
+      
+      showStatus('Generating strategic questions...', 'working');
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("generate_click", "promptpro", {
+          has_symptoms: !!symptoms,
+          has_goals: !!goals,
+          pack: selectedPack
+        });
+      } catch {}
+      
+      try {
+        // Gather context
+        const context = {
+          meds: document.getElementById('medications').value.split(',').map(m => m.trim()).filter(Boolean),
+          conditions: document.getElementById('conditions').value.split(',').map(c => c.trim()).filter(Boolean),
+          allergies: document.getElementById('allergies').value.split(',').map(a => a.trim()).filter(Boolean),
+          goals: goals,
+          specialty: document.getElementById('specialty').value,
+          pack: selectedPack,
+          language: 'en'
+        };
+        
+        const ui_prefs = {
+          reading_level: document.getElementById('readingLevel').value,
+          tone: document.getElementById('tone').value,
+          brain_fog_mode: document.getElementById('brainFogMode').checked
+        };
+        
+        const visit_time_min = parseInt(document.getElementById('visitTime').value);
+        
+        // Call Firebase function
+        const promptProRun = httpsCallable(functions, "promptProRun");
+        const response = await promptProRun({ 
+          symptoms, 
+          context, 
+          visit_time_min,
+          ui_prefs
+        });
+        
+        currentQuestions = response.data;
+        
+        // Display opener
+        document.getElementById('openerText').textContent = currentQuestions.opener;
+        
+        // Display questions in priority blocks
+        displayPriorityQuestions(currentQuestions.priority_blocks);
+        
+        // Display safety net
+        displaySafetyNet(currentQuestions.safety_net);
+        
+        // Display all questions
+        displayAllQuestions(currentQuestions.categories);
+        
+        // Show planning phase
+        document.getElementById('planningPhase').classList.remove('hidden');
+        document.getElementById('planningPhase').scrollIntoView({ behavior: 'smooth' });
+        
+        showStatus('Questions generated successfully!', 'success');
+        
+        // Fire telemetry
+        try {
+          window.briefme?.copilot?.ingest?.("generate_success", "promptpro", {
+            question_count: countQuestions(currentQuestions),
+            specialty: currentQuestions.metadata?.specialty,
+            confidence: currentQuestions.metadata?.confidence
+          });
+        } catch {}
+        
+      } catch (error) {
+        console.error('Generation error:', error);
+        showStatus('Unable to generate questions. Please try again.', 'error');
+      }
+    };
+    
+    // Display functions
+    function displayPriorityQuestions(blocks) {
+      displayQuestionBlock('introQuestions', blocks.intro_90s || []);
+      displayQuestionBlock('coreQuestions', blocks.core_5min || []);
+      displayQuestionBlock('closeQuestions', blocks.close_60s || []);
+    }
+    
+    function displayQuestionBlock(elementId, questions) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = '';
+      
+      questions.forEach(q => {
+        const item = createQuestionElement(q);
+        container.appendChild(item);
+      });
+    }
+    
+    function createQuestionElement(question, isLive = false) {
+      const div = document.createElement('div');
+      div.className = isLive ? 'live-question' : 'question-item';
+      div.dataset.questionId = question.id;
+      
+      const biasSafe = document.getElementById('biasSafeMode')?.checked;
+      const text = biasSafe && question.phrasing_variants?.length > 0 
+        ? question.phrasing_variants[0] 
+        : question.text;
+      
+      div.innerHTML = `
+        <div class="question-header">
+          <div class="question-text">${text}</div>
+          <div class="info-dot" onclick="showEvidence('${question.id}')">i</div>
+        </div>
+        <div class="question-meta">
+          <span class="category-tag">${formatCategory(question.category)}</span>
+          <span class="time-tag">~${question.ask_time_sec}s</span>
+          ${question.bias_safe ? '<span class="bias-safe-badge">Bias-Safe</span>' : ''}
+        </div>
+        ${isLive ? `
+          <div class="live-controls">
+            <button class="live-btn" onclick="markAsked('${question.id}')">Asked</button>
+            <button class="live-btn" onclick="markAnswered('${question.id}')">Answered</button>
+            <button class="live-btn" onclick="markDeferred('${question.id}')">Defer</button>
+          </div>
+        ` : ''}
+      `;
+      
+      return div;
+    }
+    
+    function displaySafetyNet(items) {
+      const container = document.getElementById('safetyNetList');
+      container.innerHTML = '';
+      
+      if (!items || items.length === 0) return;
+      
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.style.padding = '8px 0';
+        div.innerHTML = `<label><input type="checkbox"> ${item}</label>`;
+        container.appendChild(div);
+      });
+    }
+    
+    function displayAllQuestions(categories) {
+      const container = document.getElementById('allQuestionsList');
+      container.innerHTML = '';
+      
+      if (!categories) return;
+      
+      Object.entries(categories).forEach(([category, questions]) => {
+        questions.forEach(q => {
+          const item = createQuestionElement(q);
+          item.dataset.category = category;
+          container.appendChild(item);
+        });
+      });
+    }
+    
+    // View switching
+    window.switchView = function(view) {
+      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.planner-view, .all-questions-view').forEach(v => v.classList.remove('active'));
+      
+      if (view === 'planner') {
+        document.querySelector('.view-tab:nth-child(1)').classList.add('active');
+        document.querySelector('.planner-view').classList.add('active');
+      } else {
+        document.querySelector('.view-tab:nth-child(2)').classList.add('active');
+        document.querySelector('.all-questions-view').classList.add('active');
+      }
+    };
+    
+    // Filter questions
+    function filterQuestions(category) {
+      const items = document.querySelectorAll('#allQuestionsList .question-item');
+      
+      items.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+    
+    // Live Companion Mode
+    window.startLiveMode = function() {
+      if (!currentQuestions) return;
+      
+      document.getElementById('liveMode').classList.add('active');
+      document.getElementById('liveMode').scrollIntoView({ behavior: 'smooth' });
+      
+      liveState.started = true;
+      liveState.startTime = Date.now();
+      
+      // Start timer
+      liveInterval = setInterval(updateTimer, 1000);
+      
+      // Load initial queue
+      updateLiveQueue();
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("live_start", "promptpro", {});
+      } catch {}
+    };
+    
+    window.stopLiveMode = function() {
+      liveState.started = false;
+      clearInterval(liveInterval);
+      document.getElementById('liveMode').classList.remove('active');
+      
+      // Generate recap
+      generateRecap();
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("live_stop", "promptpro", {
+          elapsed: liveState.elapsed,
+          asked_count: liveState.asked.length,
+          deferred_count: liveState.deferred.length
+        });
+      } catch {}
+    };
+    
+    function updateTimer() {
+      liveState.elapsed++;
+      const minutes = Math.floor(liveState.elapsed / 60);
+      const seconds = liveState.elapsed % 60;
+      document.getElementById('liveTimer').textContent = 
+        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    function updateLiveQueue() {
+      const queue = document.getElementById('liveQueue');
+      const current = document.getElementById('currentQuestion');
+      
+      // Get all unasked questions
+      const allQuestions = [
+        ...(currentQuestions.priority_blocks.intro_90s || []),
+        ...(currentQuestions.priority_blocks.core_5min || []),
+        ...(currentQuestions.priority_blocks.close_60s || [])
+      ];
+      
+      const remaining = allQuestions.filter(q => 
+        !liveState.asked.includes(q.id) && 
+        !liveState.deferred.includes(q.id)
+      );
+      
+      if (remaining.length > 0) {
+        current.innerHTML = '';
+        current.appendChild(createQuestionElement(remaining[0], true));
+        
+        queue.innerHTML = '';
+        remaining.slice(1, 3).forEach(q => {
+          queue.appendChild(createQuestionElement(q, false));
+        });
+      } else {
+        current.innerHTML = '<p>All questions addressed!</p>';
+        queue.innerHTML = '';
+      }
+    }
+    
+    window.markAsked = function(id) {
+      const btn = document.querySelector(`[data-question-id="${id}"] .live-btn:nth-child(1)`);
+      btn.classList.add('asked');
+      
+      if (!liveState.asked.includes(id)) {
+        liveState.asked.push(id);
+      }
+      
+      // Check for follow-up rules
+      checkFollowupRules(id);
+      
+      setTimeout(() => updateLiveQueue(), 500);
+    };
+    
+    window.markAnswered = function(id) {
+      const btn = document.querySelector(`[data-question-id="${id}"] .live-btn:nth-child(2)`);
+      btn.classList.add('answered');
+      
+      liveState.answered[id] = true;
+    };
+    
+    window.markDeferred = function(id) {
+      const btn = document.querySelector(`[data-question-id="${id}"] .live-btn:nth-child(3)`);
+      btn.classList.add('deferred');
+      
+      if (!liveState.deferred.includes(id)) {
+        liveState.deferred.push(id);
+      }
+      
+      setTimeout(() => updateLiveQueue(), 500);
+    };
+    
+    function checkFollowupRules(questionId) {
+      // Check if there are follow-up suggestions based on the question asked
+      if (currentQuestions.followups) {
+        const relevantFollowups = currentQuestions.followups.filter(rule => 
+          rule.then_questions.includes(questionId)
+        );
+        
+        if (relevantFollowups.length > 0) {
+          showFollowupSuggestions(relevantFollowups);
+        }
+      }
+    }
+    
+    function showFollowupSuggestions(followups) {
+      const container = document.getElementById('followupSuggestions');
+      const list = document.getElementById('followupList');
+      
+      list.innerHTML = '';
+      followups.forEach(f => {
+        const div = document.createElement('div');
+        div.className = 'quick-input';
+        div.style.marginBottom = '8px';
+        div.innerHTML = `<strong>If they say:</strong> "${f.if_phrase}"<br>
+                        <strong>Consider asking:</strong> ${f.then_questions.join(', ')}`;
+        list.appendChild(div);
+      });
+      
+      container.classList.remove('hidden');
+      
+      setTimeout(() => {
+        container.classList.add('hidden');
+      }, 10000);
+    }
+    
+    // Evidence display
+    window.showEvidence = function(questionId) {
+      const question = findQuestion(questionId);
+      if (!question) return;
+      
+      const whyEl = document.getElementById('evidenceWhy');
+      whyEl.innerHTML = `<p><strong>Why this matters:</strong> ${question.why}</p>`;
+      
+      const citationEl = document.getElementById('citationList');
+      citationEl.innerHTML = '';
+      
+      if (question.citation_ids && currentQuestions.citations) {
+        question.citation_ids.forEach(citId => {
+          const citation = currentQuestions.citations.find(c => c.id === citId);
+          if (citation) {
+            const chip = document.createElement('div');
+            chip.className = `citation-chip strength-${citation.strength || 'moderate'}`;
+            chip.innerHTML = `${citation.label} (${citation.year})`;
+            citationEl.appendChild(chip);
+          }
+        });
+      }
+      
+      document.getElementById('evidenceSheet').classList.add('active');
+    };
+    
+    window.closeEvidence = function() {
+      document.getElementById('evidenceSheet').classList.remove('active');
+    };
+    
+    window.copyEvidence = function() {
+      const citations = currentQuestions.citations || [];
+      const text = citations.map(c => `${c.label} (${c.year}): ${c.url}`).join('\n');
+      navigator.clipboard.writeText(text);
+      showStatus('Evidence links copied to clipboard', 'success');
+    };
+    
+    // Import from TrendTrack
+    window.importFromTrendTrack = async function() {
+      showStatus('Importing from TrendTrack...', 'working');
+      
+      try {
+        // Get TrendTrack data from vault
+        const episodes = await listEpisodes();
+        const trendTrackEntries = episodes.filter(e => e.type === 'trendTrack');
+        
+        if (trendTrackEntries.length > 0) {
+          const latest = trendTrackEntries[0];
+          if (latest.structured && latest.structured.insights) {
+            // Extract key patterns
+            const patterns = latest.structured.insights.slice(0, 3).join('. ');
+            const currentSymptoms = document.getElementById('symptoms').value;
+            document.getElementById('symptoms').value = 
+              currentSymptoms + '\n\nTrendTrack patterns: ' + patterns;
+            
+            showStatus('TrendTrack patterns imported', 'success');
+          }
+        } else {
+          showStatus('No TrendTrack data found', 'error');
+        }
+      } catch (error) {
+        console.error('Import error:', error);
+        showStatus('Unable to import from TrendTrack', 'error');
+      }
+    };
+    
+    // Load sample data
+    window.loadSampleData = function() {
+      document.getElementById('symptoms').value = 
+        'Rapid heartbeat and dizziness when standing. Worse in heat and after meals. Better with fluids and salt. Started 2 months ago. Heart rate increases by 40+ bpm on standing.';
+      document.getElementById('visitGoals').value = 'Get diagnosis, discuss treatment options';
+      document.getElementById('conditions').value = 'Suspected POTS';
+      document.getElementById('medications').value = 'None currently';
+      
+      // Select POTS pack
+      document.querySelectorAll('.pack-chip').forEach(c => c.classList.remove('selected'));
+      document.querySelector('[data-pack="pots"]').classList.add('selected');
+      selectedPack = 'pots';
+      
+      showStatus('Sample data loaded', 'success');
+    };
+    
+    // Export functions
+    window.exportPDF = function() {
+      // Generate PDF content
+      const content = {
+        opener: currentQuestions.opener,
+        questions: [
+          ...currentQuestions.priority_blocks.intro_90s,
+          ...currentQuestions.priority_blocks.core_5min,
+          ...currentQuestions.priority_blocks.close_60s
+        ],
+        safety_net: currentQuestions.safety_net,
+        portal_seed: currentQuestions.portal_message_seed
+      };
+      
+      // For now, just download as JSON
+      const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `promptpro-questions-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showStatus('Questions exported', 'success');
+    };
+    
+    window.saveToVault = async function() {
+      if (!currentQuestions) return;
+      
+      showStatus('Saving to Medical Memory Vault...', 'working');
+      
+      try {
+        const title = `PromptPro Questions - ${new Date().toLocaleDateString()}`;
+        const saveResult = await saveEntryToVaultWithHooks(
+          {
+            type: "promptPro",
+            title: title,
+            structured: currentQuestions,
+            extraTags: ["questions", "visit-prep", selectedPack].filter(Boolean)
+          },
+          hooks
+        );
+        
+        showStatus('✓ Saved to your Medical Memory Vault', 'success');
+        
+      } catch (error) {
+        console.error('Save error:', error);
+        showStatus('Unable to save. Please try again.', 'error');
+      }
+    };
+    
+    window.sendToPortal = function() {
+      const portalMessage = currentQuestions.portal_message_seed || 
+        'Questions from my recent visit that we did not have time to address...';
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(portalMessage);
+      showStatus('Portal message template copied to clipboard', 'success');
+    };
+    
+    // Generate recap after live mode
+    function generateRecap() {
+      const recap = {
+        date: new Date().toISOString(),
+        duration: liveState.elapsed,
+        asked: liveState.asked,
+        answered: Object.keys(liveState.answered),
+        deferred: liveState.deferred,
+        questions: currentQuestions
+      };
+      
+      // Save recap to vault automatically
+      saveRecapToVault(recap);
+    }
+    
+    async function saveRecapToVault(recap) {
+      try {
+        const title = `Visit Recap - ${new Date().toLocaleDateString()}`;
+        await saveEntryToVaultWithHooks(
+          {
+            type: "promptProRecap",
+            title: title,
+            structured: recap,
+            extraTags: ["visit", "live-companion", "recap"]
+          },
+          hooks
+        );
+      } catch (error) {
+        console.error('Recap save error:', error);
+      }
+    }
+    
+    // Helper functions
+    function findQuestion(id) {
+      const allQuestions = [
+        ...(currentQuestions?.priority_blocks?.intro_90s || []),
+        ...(currentQuestions?.priority_blocks?.core_5min || []),
+        ...(currentQuestions?.priority_blocks?.close_60s || [])
+      ];
+      
+      if (currentQuestions?.categories) {
+        Object.values(currentQuestions.categories).forEach(questions => {
+          allQuestions.push(...questions);
+        });
+      }
+      
+      return allQuestions.find(q => q.id === id);
+    }
+    
+    function countQuestions(data) {
+      let count = 0;
+      if (data.priority_blocks) {
+        count += (data.priority_blocks.intro_90s || []).length;
+        count += (data.priority_blocks.core_5min || []).length;
+        count += (data.priority_blocks.close_60s || []).length;
+      }
+      return count;
+    }
+    
+    function formatCategory(category) {
+      return category.replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+    
+    function showStatus(message, type) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = type;
+      
+      if (type === 'success' || type === 'error') {
+        setTimeout(() => {
+          status.className = '';
+          status.textContent = '';
+        }, 5000);
+      }
+    }
   </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+  <script type="module" src="/lib/toolAccessCheck.js"></script>
 </body>
 </html>

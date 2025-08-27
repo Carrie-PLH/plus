@@ -1,4 +1,4 @@
-// functions/index.js — minimal template with ping + toolTemplateRun + vaultWriteEpisode
+// functions/index.js
 import { onCall, onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import { initializeApp } from "firebase-admin/app";
@@ -8,13 +8,7 @@ import Anthropic from "@anthropic-ai/sdk";
 initializeApp();
 const db = getFirestore();
 
-// Secret set with: npx firebase-tools@latest functions:secrets:set ANTHROPIC_API_KEY
 const ANTHROPIC_API_KEY = defineSecret("ANTHROPIC_API_KEY");
-
-// --- Health check (callable)
-export const ping = onCall({ region: "us-east4" }, async () => {
-  return { ok: true, pong: true, ts: Date.now() };
-});
 
 /**
  * --- CoPilot ingest (HTTP + CORS)
@@ -364,53 +358,6 @@ RETURN ONLY THE JSON OBJECT WITH NO ADDITIONAL TEXT OR MARKDOWN FORMATTING.
   }
 );
 
-// --- PromptPro (callable)
-export const promptProRun = onCall(
-  { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
-  async (request) => {
-    try {
-      const { symptoms, context } = request.data || {};
-      if (!symptoms || typeof symptoms !== "object") {
-        return { ok: false, error: "Provide 'symptoms' as an object. Optionally include 'context'." };
-      }
-
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const prompt = `
-You help patients prepare for clinical visits. 
-Turn the provided symptom details into clear, specific, ready-to-ask questions for a clinician. 
-Organize output into categories: Clarifying Diagnosis, Severity and Risk, Triggers and Patterns, Workup and Next Steps, Self-care and Safety. 
-Write questions in plain language. Avoid medical jargon unless necessary. 
-Return JSON with:
-{
-  "questions": [
-    { "category": "Clarifying Diagnosis", "q": "..." },
-    { "category": "Severity and Risk", "q": "..." }
-  ],
-  "notes": "Any short caveats or missing info that would improve the questions."
-}
-
-Input:
-${JSON.stringify({ symptoms, context }).slice(0, 20000)}
-`.trim();
-
-      const msg = await client.messages.create({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 900,
-        messages: [{ role: "user", content: prompt }],
-      });
-
-      const text = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
-      let data;
-      try { data = JSON.parse(text); } catch { data = { questions: [], notes: text }; }
-
-      return { ok: true, data };
-    } catch (err) {
-      console.error("promptProRun error:", err?.response?.data || err);
-      return { ok: false, error: err?.message || String(err) };
-    }
-  }
-);
-
 // Add this enhanced implementation to functions/index.js
 // Replace the existing minimal resetProRun function
 
@@ -711,160 +658,6 @@ Thread: ${JSON.stringify(clean).slice(0, 18000)}
   }
 );
 
-// --- AppealBuilder (callable)
-export const appealBuilderRun = onCall(
-  { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
-  async (request) => {
-    try {
-      const { patientInfo, denialReason, denialDate, submissionDate } = request.data || {};
-      if (!patientInfo || !denialReason) {
-        return { ok: false, error: "Provide patientInfo and denialReason" };
-      }
-
-      const toISO = (d) => { try { return new Date(d).toISOString().slice(0, 10); } catch { return null; } };
-      const addDaysISO = (d, n) => { try { return new Date(new Date(d).getTime() + n * 86400000).toISOString().slice(0, 10); } catch { return null; } };
-      const denialISO = denialDate ? toISO(denialDate) : null;
-      const submissionISO = submissionDate ? toISO(submissionDate) : null;
-
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const prompt = `...`; // (kept as in your version to stay concise)
-
-      const msg = await client.messages.create({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }],
-      });
-
-      const raw = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
-      const cleaned = raw.replace(/```(?:json)?\s*([\s\S]*?)```/i, "$1").trim();
-
-      let parsed = null;
-      try { parsed = JSON.parse(cleaned); } catch {}
-      if (!parsed) parsed = { appealText: cleaned, evidence: [], deadlines: {} };
-
-      const out = { ...parsed };
-      out.deadlines = out.deadlines || {};
-      if (!out.deadlines.submitBy && denialISO) out.deadlines.submitBy = addDaysISO(denialISO, 60) || "Submit within 60 days of denial";
-      if (!out.deadlines.followUp) {
-        const base = submissionISO || denialISO;
-        out.deadlines.followUp = base ? addDaysISO(base, 30) || "Follow up 30 days after submission" : "Follow up 30 days after submission";
-      }
-      if (typeof out.appealText !== "string" || !out.appealText.trim()) out.appealText = "No appeal text produced.";
-      if (!Array.isArray(out.evidence)) out.evidence = [];
-      if (typeof out.deadlines !== "object" || out.deadlines === null) out.deadlines = {};
-
-      return { ok: true, data: out };
-    } catch (e) {
-      console.error("appealBuilderRun error:", e?.response?.data || e);
-      return { ok: false, error: e?.message || "Internal error" };
-    }
-  }
-);
-
-// --- RightsBuilder (callable)
-export const rightsBuilderRun = onCall(
-  { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
-  async (request) => {
-    try {
-      const { question, context, jurisdiction } = request.data || {};
-      if (!question || typeof question !== "string") {
-        return { ok: false, error: "Provide 'question' as a non-empty string. Optional: 'context', 'jurisdiction'." };
-      }
-
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const prompt = `...`; // (kept as in your version)
-
-      const msg = await client.messages.create({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 900,
-        messages: [{ role: "user", content: prompt }],
-      });
-
-      const raw = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
-      const cleaned = raw.replace(/```(?:json)?\s*([\s\S]*?)```/i, "$1").trim();
-
-      let data = null;
-      try { data = JSON.parse(cleaned); }
-      catch { data = { rightsSummary: cleaned, nextSteps: [], templates: [], notes: "", references: [] }; }
-
-      if (typeof data.rightsSummary !== "string") data.rightsSummary = String(data.rightsSummary || "");
-      if (!Array.isArray(data.nextSteps)) data.nextSteps = [];
-      if (!Array.isArray(data.templates)) data.templates = [];
-      if (!Array.isArray(data.references)) data.references = [];
-      if (typeof data.notes !== "string") data.notes = String(data.notes || "");
-
-      return { ok: true, data };
-    } catch (e) {
-      console.error("rightsBuilderRun error:", e?.response?.data || e);
-      return { ok: false, error: e?.message || "Internal error" };
-    }
-  }
-);
-
-// --- TriageTrack (callable)
-export const triageTrackRun = onCall(
-  { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
-  async (request) => {
-    try {
-      const { patient, events, context } = request.data || {};
-      if (!Array.isArray(events) || events.length === 0) {
-        return { ok: false, error: "Provide 'events' as a non-empty array." };
-      }
-
-      const clean = events.slice(0, 50);
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const system = `...`;
-      const user = `...`;
-
-      const msg = await client.messages.create({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 900,
-        system,
-        messages: [{ role: "user", content: user }],
-      });
-
-      const raw = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
-      const cleaned = raw.replace(/```(?:json)?\s*([\s\S]*?)```/i, "$1").trim();
-
-      let data;
-      try { data = JSON.parse(cleaned); }
-      catch { data = { summary: cleaned, redFlags: [], vitalsOfConcern: [], immediateActions: [], next24h: [], communicationPoints: [], riskLevel: "unknown", notes: "" }; }
-
-      const normArr = (x) => Array.isArray(x) ? x.map(String) : [];
-      const out = {
-        summary: String(data.summary || ""),
-        redFlags: normArr(data.redFlags),
-        vitalsOfConcern: normArr(data.vitalsOfConcern),
-        immediateActions: normArr(data.immediateActions),
-        next24h: normArr(data.next24h),
-        communicationPoints: normArr(data.communicationPoints),
-        riskLevel: String(data.riskLevel || "unknown"),
-        notes: String(data.notes || ""),
-      };
-
-      return { ok: true, data: out };
-    } catch (e) {
-      console.error("triageTrackRun error:", e?.response?.data || e);
-      return { ok: false, error: e?.message || "Internal error" };
-    }
-  }
-);
-
-// --- PeerMatch (callable)
-export const peerMatchRun = onCall(
-  { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
-  async (request) => {
-    try {
-      // (kept as in your version)
-      // ...
-      return { ok: true, data: { matches: results, safetyGuide, notes: "Educational use only. This is not clinical advice." } };
-    } catch (e) {
-      console.error("peerMatchRun error:", e?.response?.data || e);
-      return { ok: false, error: e?.message || "Internal error" };
-    }
-  }
-);
-
 // --- ProviderMatch (callable)
 export const providerMatchRun = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
@@ -1080,11 +873,6 @@ export const createCheckoutSession = onCall(
   stripeFunctions.createCheckoutSession
 );
 
-export const createPortalSession = onCall(
-  { region: "us-east4", secrets: [STRIPE_SECRET_KEY] },
-  stripeFunctions.createPortalSession
-);
-
 export const stripeWebhook = onRequest(
   { region: "us-east4", secrets: [STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET] },
   stripeFunctions.stripeWebhook
@@ -1094,3 +882,351 @@ export const checkSubscription = onCall(
   { region: "us-east4" },
   stripeFunctions.checkSubscription
 );
+// Add this to your functions/index.js file
+
+export const promptProRun = onCall(
+  { 
+    region: "us-east4",
+    secrets: [ANTHROPIC_API_KEY]
+  },
+  async (request) => {
+    try {
+      const { symptoms, context, visit_time_min = 10, ui_prefs } = request.data;
+      
+      if (!symptoms) {
+        throw new Error("Symptoms are required");
+      }
+      
+      const anthropic = new Anthropic({
+        apiKey: ANTHROPIC_API_KEY.value()
+      });
+      
+      // Build the compose prompt
+      const composeSystemPrompt = `You are PromptPro, a clinical communication planner that converts symptoms into concise, bias-aware questions for clinicians. You never diagnose or recommend specific treatments. You produce questions that clarify decisions, criteria, next steps, and safety. Prefer plain language. Tie each question to a one-line why with a citation label if available. Respect time limits. If the user provides meds or comorbidities, avoid risky phrasing and focus on decision-relevant questions. Output structured JSON using the provided schema.`;
+      
+      const composeUserPrompt = `
+Patient symptoms: ${symptoms}
+Context:
+- Conditions: ${context.conditions?.join(', ') || 'None specified'}
+- Medications: ${context.meds?.join(', ') || 'None specified'}
+- Allergies: ${context.allergies?.join(', ') || 'None specified'}
+- Key findings or logs: ${context.key_findings || 'None'}
+Patient goals for this visit: ${context.goals || 'Not specified'}
+Visit time available: ${visit_time_min} minutes
+Requested specialty context: ${context.specialty || 'auto'}
+Selected pack (optional): ${context.pack || 'none'}
+Preferences: reading_level=${ui_prefs?.reading_level || 'standard'}, tone=${ui_prefs?.tone || 'neutral'}, brain_fog_mode=${ui_prefs?.brain_fog_mode || false}
+
+Tasks:
+1) Draft a 90-second opener that is objective and functional-impact oriented.
+2) Generate question candidates across categories: diagnostic_clarity, testing, treatment_options, safety_netting, process_access.
+3) For each question provide: text, why (≤ 20 words), category, priority (1 highest), ask_time_sec estimate, bias_safe flag, and zero to two citation labels.
+4) Rank to fit the time limit. Build intro_90s, core_5min, close_60s blocks. Add a safety-net checklist.
+5) Produce two follow-up rules for likely clinician replies.
+6) Provide a short portal message seed for unanswered items.
+
+Return exactly this JSON structure:
+{
+  "opener": "string - 90 second opener script",
+  "priority_blocks": {
+    "intro_90s": [
+      {
+        "id": "q1",
+        "text": "question text",
+        "why": "brief reason",
+        "category": "diagnostic_clarity|testing|treatment_options|safety_netting|process_access",
+        "priority": 1,
+        "ask_time_sec": 25,
+        "citation_ids": ["c1"],
+        "bias_safe": true,
+        "phrasing_variants": ["alternative phrasing"]
+      }
+    ],
+    "core_5min": [],
+    "close_60s": []
+  },
+  "categories": {
+    "diagnostic_clarity": [],
+    "testing": [],
+    "treatment_options": [],
+    "safety_netting": [],
+    "process_access": []
+  },
+  "timeline": [
+    {
+      "label": "Opening",
+      "start_sec": 0,
+      "end_sec": 90,
+      "question_ids": ["q1"]
+    }
+  ],
+  "citations": [
+    {
+      "id": "c1",
+      "label": "citation label",
+      "year": 2024,
+      "source": "guideline|review|trial",
+      "url": "https://...",
+      "strength": "high|moderate|emerging"
+    }
+  ],
+  "followups": [
+    {
+      "if_phrase": "let's watch and wait",
+      "then_questions": ["q3"]
+    }
+  ],
+  "pack_used": "${context.pack || null}",
+  "safety_net": [
+    "safety checklist item 1",
+    "safety checklist item 2"
+  ],
+  "portal_message_seed": "template for portal follow-up",
+  "metadata": {
+    "specialty": "pcp|specialist|ed",
+    "confidence": 0.75,
+    "created_at": "${new Date().toISOString()}",
+    "model": "claude-3"
+  }
+}
+
+Return JSON only, no other text.`;
+      
+      // Step 1: Compose questions
+      const composeResponse = await anthropic.messages.create({
+        model: "claude-3-opus-20240229",
+        max_tokens: 4000,
+        system: composeSystemPrompt,
+        messages: [{
+          role: "user",
+          content: composeUserPrompt
+        }]
+      });
+      
+      let questionsData;
+      try {
+        const responseText = composeResponse.content[0].text;
+        // Clean any markdown formatting if present
+        const cleanedText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        questionsData = JSON.parse(cleanedText);
+      } catch (parseError) {
+        console.error("Parse error:", parseError);
+        // Return fallback structure
+        questionsData = generateFallbackQuestions(symptoms, context, visit_time_min);
+      }
+      
+      // Step 2: Apply ranking (simplified for now - could be another AI call)
+      questionsData = applyRanking(questionsData, visit_time_min);
+      
+      // Enhance with pack-specific questions if selected
+      if (context.pack) {
+        questionsData = enhanceWithPack(questionsData, context.pack);
+      }
+      
+      // Add safety banner
+      questionsData.safety_banner = "Communication support only. No diagnosis or treatment advice.";
+      
+      return questionsData;
+      
+    } catch (error) {
+      console.error("promptProRun error:", error);
+      throw new Error(`Failed to generate questions: ${error.message}`);
+    }
+  }
+);
+
+// Helper function to apply time-based ranking
+function applyRanking(data, timeLimit) {
+  // Calculate total time budget in seconds
+  const totalSeconds = timeLimit * 60;
+  
+  // Allocate time blocks
+  const intro_budget = 90; // 90 seconds
+  const close_budget = 60; // 60 seconds
+  const core_budget = Math.max(totalSeconds - intro_budget - close_budget, 180); // At least 3 minutes
+  
+  // Ensure we have the right number of questions in each block
+  if (data.priority_blocks) {
+    // Limit intro questions
+    if (data.priority_blocks.intro_90s && data.priority_blocks.intro_90s.length > 2) {
+      data.priority_blocks.intro_90s = data.priority_blocks.intro_90s.slice(0, 2);
+    }
+    
+    // Limit core questions based on time
+    if (data.priority_blocks.core_5min) {
+      const maxCoreQuestions = Math.floor(core_budget / 30); // ~30 seconds per question
+      if (data.priority_blocks.core_5min.length > maxCoreQuestions) {
+        data.priority_blocks.core_5min = data.priority_blocks.core_5min.slice(0, maxCoreQuestions);
+      }
+    }
+    
+    // Limit close questions
+    if (data.priority_blocks.close_60s && data.priority_blocks.close_60s.length > 2) {
+      data.priority_blocks.close_60s = data.priority_blocks.close_60s.slice(0, 2);
+    }
+  }
+  
+  return data;
+}
+
+// Helper function to enhance with condition-specific pack
+function enhanceWithPack(data, packName) {
+  const packQuestions = getPackQuestions(packName);
+  
+  if (packQuestions && data.priority_blocks) {
+    // Add pack-specific questions to core block
+    if (data.priority_blocks.core_5min) {
+      data.priority_blocks.core_5min.push(...packQuestions);
+    }
+  }
+  
+  data.pack_used = packName;
+  
+  return data;
+}
+
+// Get pack-specific questions
+function getPackQuestions(packName) {
+  const packs = {
+    pots: [
+      {
+        id: "pots1",
+        text: "Can we capture orthostatic vitals today and repeat if borderline?",
+        why: "Documents objective change and guides next steps",
+        category: "diagnostic_clarity",
+        priority: 1,
+        ask_time_sec: 30,
+        citation_ids: ["c_pots1"],
+        bias_safe: true
+      },
+      {
+        id: "pots2",
+        text: "What non-pharmacological strategies should I try first, and how long before expecting improvement?",
+        why: "Establishes conservative management timeline",
+        category: "treatment_options",
+        priority: 2,
+        ask_time_sec: 25,
+        citation_ids: ["c_pots2"],
+        bias_safe: true
+      }
+    ],
+    heds: [
+      {
+        id: "heds1",
+        text: "Which joints show hypermobility on Beighton scoring, and should we document this today?",
+        why: "Objective criteria for diagnosis",
+        category: "diagnostic_clarity",
+        priority: 1,
+        ask_time_sec: 40,
+        citation_ids: ["c_heds1"],
+        bias_safe: true
+      }
+    ],
+    mcas: [
+      {
+        id: "mcas1",
+        text: "What baseline tryptase level would suggest mast cell involvement, and when should we test?",
+        why: "Establishes diagnostic threshold",
+        category: "testing",
+        priority: 1,
+        ask_time_sec: 25,
+        citation_ids: ["c_mcas1"],
+        bias_safe: true
+      }
+    ],
+    "long-covid": [
+      {
+        id: "lc1",
+        text: "Which post-COVID symptoms meet criteria for long COVID diagnosis, and what documentation do we need?",
+        why: "Ensures proper coding and treatment access",
+        category: "diagnostic_clarity",
+        priority: 1,
+        ask_time_sec: 30,
+        citation_ids: ["c_lc1"],
+        bias_safe: true
+      }
+    ]
+  };
+  
+  return packs[packName] || [];
+}
+
+// Fallback question generation if AI fails
+function generateFallbackQuestions(symptoms, context, timeLimit) {
+  const firstSymptom = symptoms.split('.')[0] || symptoms.substring(0, 100);
+  
+  return {
+    opener: `I'm experiencing ${firstSymptom}. This has been affecting my daily activities and I'd like to understand what's happening and discuss next steps.`,
+    priority_blocks: {
+      intro_90s: [
+        {
+          id: "fb1",
+          text: "What are the most likely causes of these symptoms based on my history?",
+          why: "Establishes differential diagnosis",
+          category: "diagnostic_clarity",
+          priority: 1,
+          ask_time_sec: 30,
+          citation_ids: [],
+          bias_safe: true
+        }
+      ],
+      core_5min: [
+        {
+          id: "fb2",
+          text: "What tests would help narrow down the diagnosis?",
+          why: "Clarifies diagnostic pathway",
+          category: "testing",
+          priority: 1,
+          ask_time_sec: 25,
+          citation_ids: [],
+          bias_safe: true
+        },
+        {
+          id: "fb3",
+          text: "What initial treatment options are available while we investigate?",
+          why: "Addresses symptom management",
+          category: "treatment_options",
+          priority: 2,
+          ask_time_sec: 30,
+          citation_ids: [],
+          bias_safe: true
+        }
+      ],
+      close_60s: [
+        {
+          id: "fb4",
+          text: "What symptoms would require urgent evaluation before our next visit?",
+          why: "Establishes safety plan",
+          category: "safety_netting",
+          priority: 1,
+          ask_time_sec: 20,
+          citation_ids: [],
+          bias_safe: true
+        }
+      ]
+    },
+    categories: {
+      diagnostic_clarity: [],
+      testing: [],
+      treatment_options: [],
+      safety_netting: [],
+      process_access: []
+    },
+    timeline: [],
+    citations: [],
+    followups: [],
+    pack_used: context.pack || null,
+    safety_net: [
+      "Clarify when to seek urgent care",
+      "Document today's findings",
+      "Schedule follow-up if symptoms persist"
+    ],
+    portal_message_seed: "Following up on our visit, I have additional questions about my symptoms and next steps.",
+    metadata: {
+      specialty: context.specialty || "auto",
+      confidence: 0.5,
+      created_at: new Date().toISOString(),
+      model: "fallback"
+    }
+  };
+}
