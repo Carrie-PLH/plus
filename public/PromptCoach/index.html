@@ -2,88 +2,1351 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>PromptCoach</title>
+  <title>PromptCoach - Practice Medical Conversations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">💬</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 1100px; }
-    textarea, select { width: 100%; font: inherit; margin-bottom: 10px; }
-    button { padding: 8px 14px; font: inherit; cursor: pointer; }
-    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
-    .chat { border: 1px solid #ddd; padding: 10px; max-height: 260px; overflow: auto; background: #fafafa; }
-    .msg { margin: 6px 0; }
-    .who { font-weight: 600; }
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #fafafa;
+      --muted: #666;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+      --info: #2196f3;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    nav {
+      margin-bottom: 16px;
+    }
+    
+    nav a {
+      color: var(--brand-coral);
+      text-decoration: none;
+      margin-right: 16px;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    .safety-banner {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #856404;
+    }
+    
+    .safety-banner strong {
+      color: #856404;
+    }
+    
+    /* Mode Tabs */
+    .mode-tabs {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .mode-tab {
+      padding: 10px 20px;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .mode-tab:hover {
+      background: var(--brand-light);
+      border-color: var(--brand-green);
+    }
+    
+    .mode-tab.active {
+      background: var(--brand-green);
+      color: white;
+      border-color: var(--brand-green);
+    }
+    
+    .mode-tab.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .mode-icon {
+      font-size: 20px;
+    }
+    
+    .coming-soon {
+      font-size: 11px;
+      background: var(--warning);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+    
+    /* Phase Sections */
+    .phase-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    
+    .phase-section.active {
+      display: block;
+    }
+    
+    .phase-section h2 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 22px;
+      font-weight: 600;
+      border-bottom: 2px solid var(--brand-green);
+      padding-bottom: 8px;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(163, 185, 163, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Persona Selector */
+    .persona-selector {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .persona-chips {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .persona-chip {
+      padding: 8px 16px;
+      border: 2px solid var(--brand-green);
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .persona-chip:hover {
+      background: var(--brand-light);
+    }
+    
+    .persona-chip.selected {
+      background: var(--brand-green);
+      color: white;
+    }
+    
+    /* Coaching Level */
+    .coaching-level {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .level-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+    }
+    
+    .level-option:hover {
+      border-color: var(--brand-green);
+      background: var(--brand-light);
+    }
+    
+    .level-option.selected {
+      border-color: var(--brand-coral);
+      background: rgba(201, 127, 109, 0.1);
+    }
+    
+    /* Conversation Display */
+    .conversation-thread {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .message {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .message.patient .message-avatar {
+      background: var(--brand-light);
+    }
+    
+    .message.provider .message-avatar {
+      background: rgba(201, 127, 109, 0.2);
+    }
+    
+    .message-content {
+      flex: 1;
+    }
+    
+    .message-header {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--brand-dark);
+      font-size: 14px;
+    }
+    
+    .message-text {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    
+    /* Response Options */
+    .response-options {
+      margin: 20px 0;
+    }
+    
+    .response-option {
+      background: white;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .response-option:hover {
+      border-color: var(--brand-green);
+      background: var(--brand-light);
+    }
+    
+    .response-option.selected {
+      border-color: var(--brand-coral);
+      background: rgba(201, 127, 109, 0.1);
+    }
+    
+    .option-label {
+      font-weight: 500;
+      color: var(--brand-dark);
+      margin-bottom: 4px;
+    }
+    
+    /* Coaching Feedback */
+    .coaching-panel {
+      background: rgba(33, 150, 243, 0.05);
+      border: 2px solid var(--info);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+    
+    .coaching-title {
+      color: var(--info);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .coaching-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .coaching-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(33, 150, 243, 0.2);
+    }
+    
+    .coaching-item:last-child {
+      border-bottom: none;
+    }
+    
+    /* Debrief Report */
+    .debrief-report {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .debrief-section {
+      margin-bottom: 20px;
+    }
+    
+    .debrief-title {
+      font-weight: 600;
+      color: var(--brand-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    
+    .metric-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brand-coral);
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #45a049;
+    }
+    
+    /* Status Messages */
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    #status.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+    }
+    
+    #status.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+      border: 1px solid var(--error);
+      display: block;
+    }
+    
+    #status.working {
+      background: rgba(163, 185, 163, 0.1);
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-green);
+      display: block;
+    }
+    
+    /* Voice Input (Optional) */
+    .voice-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    
+    .voice-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--brand-coral);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    
+    .voice-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .voice-btn.recording {
+      background: var(--error);
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+    }
+    
+    .voice-status {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    
+    /* Hidden by default */
+    .hidden {
+      display: none !important;
+    }
   </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+  <link rel="stylesheet" href="/css/upgrade-overlay.css">
 </head>
 <body>
-  <h1>PromptCoach</h1>
-  <p>Real-time role-play and coaching for challenging provider conversations.</p>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+    </nav>
+    
+    <header>
+      <h1>Stop Getting Dismissed & Start Getting Referrals</h1>
+      <p class="subtitle">Practice and perfect the communication skills that make providers listen and take action to give you the care you deserve</p>
+    </header>
+    
+    <div class="safety-banner">
+      <strong>Communication coaching only.</strong> No medical or legal advice. Practice builds confidence, not clinical guidance.
+    </div>
+    
+    <!-- Mode Selection -->
+    <div class="mode-tabs">
+      <div class="mode-tab active" onclick="switchMode('rehearse')">
+        <span class="mode-icon">🎭</span>
+        <span>Rehearse</span>
+      </div>
+      <div class="mode-tab disabled">
+        <span class="mode-icon">🎮</span>
+        <span>Simulate</span>
+        <span class="coming-soon">Phase 2</span>
+      </div>
+      <div class="mode-tab disabled">
+        <span class="mode-icon">🎯</span>
+        <span>Live Assist</span>
+        <span class="coming-soon">Phase 2</span>
+      </div>
+      <div class="mode-tab" onclick="switchMode('debrief')">
+        <span class="mode-icon">📊</span>
+        <span>Debrief</span>
+      </div>
+      <div class="mode-tab disabled">
+        <span class="mode-icon">💪</span>
+        <span>Skills</span>
+        <span class="coming-soon">Coming Soon</span>
+      </div>
+    </div>
+    
+    <!-- REHEARSE MODE -->
+    <div id="rehearseMode" class="phase-section active">
+      <h2>Rehearse Your Conversation</h2>
+      
+      <form id="rehearseForm">
+        <!-- Scenario Setup -->
+        <div class="form-group">
+          <label for="symptoms">What symptoms or concerns will you discuss?</label>
+          <textarea id="symptoms" name="symptoms" placeholder="Persistent fatigue that affects work, orthostatic symptoms when standing, brain fog..."></textarea>
+          <p class="hint">Describe your main symptoms and how they impact your daily life</p>
+        </div>
+        
+        <div class="two-column">
+          <div class="form-group">
+            <label for="visitGoals">Primary goal for this visit</label>
+            <input type="text" id="visitGoals" name="visitGoals" placeholder="Get autonomic testing referral">
+            <p class="hint">What specific outcome do you need?</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="visitTime">Expected visit length</label>
+            <select id="visitTime" name="visitTime">
+              <option value="10">10 minutes (typical)</option>
+              <option value="15">15 minutes</option>
+              <option value="20">20 minutes</option>
+              <option value="30">30 minutes (new patient)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Provider Persona -->
+        <div class="persona-selector">
+          <label>Provider persona to practice with:</label>
+          <div class="persona-chips">
+            <div class="persona-chip selected" data-persona="pcp_rushed">
+              PCP Running Behind
+            </div>
+            <div class="persona-chip" data-persona="specialist_thorough">
+              Thorough Subspecialist
+            </div>
+            <div class="persona-chip" data-persona="gatekeeper">
+              Rules-Focused Gatekeeper
+            </div>
+          </div>
+        </div>
+        
+        <!-- Coaching Level -->
+        <div class="form-group">
+          <label>Coaching level:</label>
+          <div class="coaching-level">
+            <div class="level-option selected" data-level="light">
+              <input type="radio" name="coachingLevel" value="light" checked>
+              <div>
+                <strong>Light Coaching</strong>
+                <div style="font-size: 13px; color: var(--muted);">Simple tips and timing cues</div>
+              </div>
+            </div>
+            <div class="level-option" data-level="deep">
+              <input type="radio" name="coachingLevel" value="deep">
+              <div>
+                <strong>Deep Coaching</strong>
+                <div style="font-size: 13px; color: var(--muted);">Detailed analysis and rewrites</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button type="button" class="btn-primary" onclick="startRehearsal()">
+            Start Practice Session
+          </button>
+          <button type="button" class="btn-secondary" onclick="loadExample()">
+            Load Example Scenario
+          </button>
+        </div>
+      </form>
+      
+      <div id="rehearsalContent" class="hidden">
+        <!-- Conversation Thread -->
+        <div class="conversation-thread" id="conversationThread"></div>
+        
+        <!-- Current Input -->
+        <div class="form-group">
+          <label for="userInput">Your response:</label>
+          <textarea id="userInput" placeholder="Type what you would say..."></textarea>
+          
+          <!-- Optional Voice Input -->
+          <div class="voice-controls hidden">
+            <button class="voice-btn" onclick="toggleVoiceInput()">
+              <span>🎤</span>
+            </button>
+            <span class="voice-status">Click to speak</span>
+          </div>
+        </div>
+        
+        <!-- Coaching Panel -->
+        <div class="coaching-panel" id="coachingPanel">
+          <div class="coaching-title">
+            <span>💡</span>
+            <span>Coaching Suggestions</span>
+          </div>
+          <ul class="coaching-list" id="coachingSuggestions"></ul>
+        </div>
+        
+        <!-- Response Options -->
+        <div class="response-options" id="responseOptions">
+          <h4>Suggested responses:</h4>
+          <div id="optionsList"></div>
+        </div>
+        
+        <div class="button-group">
+          <button type="button" class="btn-primary" onclick="submitResponse()">
+            Continue Conversation
+          </button>
+          <button type="button" class="btn-secondary" onclick="getCoaching()">
+            Get More Coaching
+          </button>
+          <button type="button" class="btn-success" onclick="finishRehearsal()">
+            Finish & Debrief
+          </button>
+        </div>
+      </div>
+      
+      <div id="status" aria-live="polite"></div>
+    </div>
+    
+    <!-- DEBRIEF MODE -->
+    <div id="debriefMode" class="phase-section">
+      <h2>Session Debrief</h2>
+      
+      <!-- Performance Metrics -->
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-value" id="clarityScore">85%</div>
+          <div class="metric-label">Clarity Score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="confidenceScore">78%</div>
+          <div class="metric-label">Confidence</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="timeUsed">4:32</div>
+          <div class="metric-label">Time Used</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="goalsAchieved">2/3</div>
+          <div class="metric-label">Goals Met</div>
+        </div>
+      </div>
+      
+      <!-- Debrief Report -->
+      <div class="debrief-report">
+        <!-- What Went Well -->
+        <div class="debrief-section">
+          <div class="debrief-title">
+            <span>✅</span>
+            <span>What Went Well</span>
+          </div>
+          <ul id="wentWellList">
+            <li>Clear opening statement with specific symptoms</li>
+            <li>Successfully asked for testing criteria</li>
+            <li>Maintained professional tone throughout</li>
+          </ul>
+        </div>
+        
+        <!-- Areas to Improve -->
+        <div class="debrief-section">
+          <div class="debrief-title">
+            <span>🎯</span>
+            <span>Try Next Time</span>
+          </div>
+          <ul id="improvementsList">
+            <li>Land your primary ask within the first 90 seconds</li>
+            <li>Use more specific functional impact examples</li>
+            <li>Confirm follow-up timeline before closing</li>
+          </ul>
+        </div>
+        
+        <!-- Key Techniques -->
+        <div class="debrief-section">
+          <div class="debrief-title">
+            <span>🔧</span>
+            <span>Techniques to Practice</span>
+          </div>
+          <ul id="techniquesList">
+            <li><strong>Reflective Acknowledgment:</strong> "I hear that you're concerned about X..."</li>
+            <li><strong>Criteria Seeking:</strong> "What specific findings would indicate..."</li>
+            <li><strong>Safety Netting:</strong> "If symptoms worsen, what should I..."</li>
+          </ul>
+        </div>
+        
+        <!-- Portal Message Draft -->
+        <div class="debrief-section">
+          <div class="debrief-title">
+            <span>📝</span>
+            <span>Portal Follow-up Message</span>
+          </div>
+          <textarea id="portalDraft" style="width: 100%; min-height: 150px;">
+Thank you for today's visit. As discussed:
 
-  <div>
-    <label>Starter scenario or latest user line</label>
-    <textarea id="starter" rows="4" placeholder="I want to set an agenda for this visit and discuss ongoing pain that affects work and sleep."></textarea>
+1. Primary concern: [Symptom impact on daily function]
+2. Requested action: [Specific test/referral]
+3. Timeline: [When to follow up]
+
+Please confirm receipt and next steps.
+          </textarea>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="button" class="btn-primary" onclick="copyPortalMessage()">
+          Copy Portal Message
+        </button>
+        <button type="button" class="btn-secondary" onclick="saveToVault()">
+          Save to Medical Vault
+        </button>
+        <button type="button" class="btn-secondary" onclick="startNewSession()">
+          Practice Again
+        </button>
+      </div>
+      
+      <div id="debriefStatus" aria-live="polite"></div>
+    </div>
+    
+    <!-- Related Tools -->
+    <div class="phase-section" style="display: block;">
+      <h2>Related Tools</h2>
+      <div class="button-group">
+        <a href="/PromptPro/" class="btn-secondary">Generate Questions</a>
+        <a href="/SymptomPro/" class="btn-secondary">Document Symptoms</a>
+        <a href="/ResetPro/" class="btn-secondary">Challenge Dismissal</a>
+        <a href="/BriefMe/AgendaDesigner/" class="btn-secondary">Design Agenda</a>
+      </div>
+    </div>
   </div>
-
-  <div class="grid">
-    <div>
-      <label>Who speaks next</label>
-      <select id="role">
-        <option value="provider">provider</option>
-        <option value="patient">patient</option>
-      </select>
-    </div>
-    <div>
-      <label>Mode</label>
-      <select id="goal">
-        <option value="practice">practice</option>
-        <option value="prep">prep</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="grid">
-    <div>
-      <label>Coaching level</label>
-      <select id="level">
-        <option value="light">light</option>
-        <option value="deep">deep</option>
-      </select>
-    </div>
-    <div>
-      <button id="start">Start Scene</button>
-      <button id="next">Next Turn</button>
-      <button id="coach">Get Coaching</button>
-    </div>
-  </div>
-
-  <h3>Conversation</h3>
-  <div id="chat" class="chat"></div>
-
-  <div class="grid">
-    <div>
-      <h3>Response Options</h3>
-      <ul id="options"></ul>
-    </div>
-    <div>
-      <h3>Coaching</h3>
-      <pre id="coaching"></pre>
-    </div>
-  </div>
-
-  <h3>Next Turn Prompt</h3>
-  <pre id="prompt"></pre>
-
+  
   <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#promptCoachForm",
-      type: "promptCoach",
-      title: d => `PromptCoach: ${d.goal || "Practice"}`,
-      extraTags: ["coaching","practice"]
+    import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { functions } from "/lib/appBootstrap.js";
+    import { 
+      initAuth, 
+      saveEntryToVaultWithHooks, 
+      registerCopilotIngest 
+    } from "/lib/briefmeSave.js";
+    
+    // Initialize auth and telemetry
+    await initAuth();
+    const hooks = registerCopilotIngest({ enabled: true, defaultTool: "promptcoach" });
+    
+    // Fire page open event
+    try {
+      window.briefme?.copilot?.ingest?.("page_open", "promptcoach", {});
+    } catch {}
+    
+    // Global state
+    let currentMode = 'rehearse';
+    let conversationThread = [];
+    let selectedPersona = 'pcp_rushed';
+    let coachingLevel = 'light';
+    let sessionMetrics = {
+      startTime: null,
+      responses: 0,
+      techniques: [],
+      goals: []
+    };
+    
+    // Mode switching
+    window.switchMode = function(mode) {
+      // Update tabs
+      document.querySelectorAll('.mode-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.closest('.mode-tab').classList.add('active');
+      
+      // Update sections
+      document.querySelectorAll('.phase-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      if (mode === 'rehearse') {
+        document.getElementById('rehearseMode').classList.add('active');
+      } else if (mode === 'debrief') {
+        document.getElementById('debriefMode').classList.add('active');
+        if (conversationThread.length > 0) {
+          generateDebrief();
+        }
+      }
+      
+      currentMode = mode;
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("mode_switch", "promptcoach", { mode });
+      } catch {}
+    };
+    
+    // Persona selection
+    document.querySelectorAll('.persona-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('.persona-chip').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedPersona = this.dataset.persona;
+      });
     });
+    
+    // Coaching level selection
+    document.querySelectorAll('.level-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.level-option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+        const radio = this.querySelector('input[type="radio"]');
+        radio.checked = true;
+        coachingLevel = this.dataset.level;
+      });
+    });
+    
+    // Start rehearsal
+    window.startRehearsal = async function() {
+      const symptoms = document.getElementById('symptoms').value.trim();
+      const goals = document.getElementById('visitGoals').value.trim();
+      
+      if (!symptoms) {
+        showStatus('Please describe your symptoms', 'error');
+        return;
+      }
+      
+      showStatus('Starting practice session...', 'working');
+      sessionMetrics.startTime = Date.now();
+      sessionMetrics.goals = goals.split(',').map(g => g.trim());
+      
+      // Initialize conversation
+      conversationThread = [{
+        speaker: 'patient',
+        text: `I'd like to discuss ${symptoms}. My main goal today is to ${goals || 'get help with my symptoms'}.`,
+        timestamp: Date.now()
+      }];
+      
+      // Get provider response
+      try {
+        const promptCoachRun = httpsCallable(functions, "promptCoachRun");
+        const response = await promptCoachRun({
+          role: 'provider',
+          goal: 'practice',
+          thread: conversationThread,
+          coachingLevel: coachingLevel
+        });
+        
+        if (response.data?.ok && response.data?.data) {
+          const coachData = response.data.data;
+          
+          // Add provider response to thread
+          conversationThread.push({
+            speaker: 'provider',
+            text: coachData.counterpartyReply || getDefaultProviderResponse(),
+            timestamp: Date.now()
+          });
+          
+          // Display conversation
+          displayConversation();
+          
+          // Show coaching
+          displayCoaching(coachData.coaching);
+          
+          // Show response options
+          displayResponseOptions(coachData.responseOptions);
+          
+          // Show rehearsal content
+          document.getElementById('rehearsalContent').classList.remove('hidden');
+          document.getElementById('rehearseForm').style.display = 'none';
+          
+          showStatus('', 'clear');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showStatus('Unable to start session. Please try again.', 'error');
+      }
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("rehearsal_start", "promptcoach", {
+          persona: selectedPersona,
+          level: coachingLevel,
+          has_goals: !!goals
+        });
+      } catch {}
+    };
+    
+    // Display conversation thread
+    function displayConversation() {
+      const thread = document.getElementById('conversationThread');
+      thread.innerHTML = '';
+      
+      conversationThread.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${msg.speaker}`;
+        
+        msgDiv.innerHTML = `
+          <div class="message-avatar">
+            ${msg.speaker === 'patient' ? '👤' : '👨‍⚕️'}
+          </div>
+          <div class="message-content">
+            <div class="message-header">
+              ${msg.speaker === 'patient' ? 'You' : 'Provider'}
+            </div>
+            <div class="message-text">${msg.text}</div>
+          </div>
+        `;
+        
+        thread.appendChild(msgDiv);
+      });
+      
+      thread.scrollTop = thread.scrollHeight;
+    }
+    
+    // Display coaching suggestions
+    function displayCoaching(coaching) {
+      if (!coaching) return;
+      
+      const list = document.getElementById('coachingSuggestions');
+      list.innerHTML = '';
+      
+      const suggestions = [
+        ...(coaching.whatWentWell || []).map(s => '✅ ' + s),
+        ...(coaching.improveNextTurn || []).map(s => '🎯 ' + s),
+        ...(coaching.techniques || []).map(s => '💡 ' + s)
+      ];
+      
+      suggestions.forEach(suggestion => {
+        const li = document.createElement('li');
+        li.className = 'coaching-item';
+        li.textContent = suggestion;
+        list.appendChild(li);
+      });
+    }
+    
+    // Display response options
+    function displayResponseOptions(options) {
+      const container = document.getElementById('optionsList');
+      container.innerHTML = '';
+      
+      if (!options || options.length === 0) {
+        // Provide default options
+        options = [
+          { label: 'Acknowledge & Redirect', text: "I understand your concern. However, my symptoms..." },
+          { label: 'Ask for Criteria', text: "What specific findings would indicate the need for..." },
+          { label: 'Provide Evidence', text: "According to recent labs and my symptom log..." }
+        ];
+      }
+      
+      options.forEach((option, idx) => {
+        const div = document.createElement('div');
+        div.className = 'response-option';
+        div.innerHTML = `
+          <div class="option-label">${option.label || `Option ${idx + 1}`}</div>
+          <div>${option.text}</div>
+        `;
+        div.onclick = () => selectResponse(option.text);
+        container.appendChild(div);
+      });
+    }
+    
+    // Select a response option
+    function selectResponse(text) {
+      document.getElementById('userInput').value = text;
+      document.querySelectorAll('.response-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      event.target.closest('.response-option').classList.add('selected');
+    }
+    
+    // Submit user response
+    window.submitResponse = async function() {
+      const userText = document.getElementById('userInput').value.trim();
+      
+      if (!userText) {
+        showStatus('Please enter your response', 'error');
+        return;
+      }
+      
+      // Add to thread
+      conversationThread.push({
+        speaker: 'patient',
+        text: userText,
+        timestamp: Date.now()
+      });
+      
+      sessionMetrics.responses++;
+      
+      // Clear input
+      document.getElementById('userInput').value = '';
+      
+      // Get next provider response
+      showStatus('Provider is responding...', 'working');
+      
+      try {
+        const promptCoachRun = httpsCallable(functions, "promptCoachRun");
+        const response = await promptCoachRun({
+          role: 'provider',
+          goal: 'practice',
+          thread: conversationThread,
+          coachingLevel: coachingLevel
+        });
+        
+        if (response.data?.ok && response.data?.data) {
+          const coachData = response.data.data;
+          
+          // Add provider response
+          conversationThread.push({
+            speaker: 'provider',
+            text: coachData.counterpartyReply || getDefaultProviderResponse(),
+            timestamp: Date.now()
+          });
+          
+          displayConversation();
+          displayCoaching(coachData.coaching);
+          displayResponseOptions(coachData.responseOptions);
+          
+          showStatus('', 'clear');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showStatus('Unable to continue. Please try again.', 'error');
+      }
+    };
+    
+    // Get more coaching
+    window.getCoaching = function() {
+      // In a real implementation, this would call the backend for deeper analysis
+      const additionalCoaching = {
+        whatWentWell: ['Clear symptom description'],
+        improveNextTurn: ['Try to be more specific about timeline'],
+        techniques: ['Use "I statements" to maintain ownership of your experience']
+      };
+      
+      displayCoaching(additionalCoaching);
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("coaching_request", "promptcoach", {});
+      } catch {}
+    };
+    
+    // Finish rehearsal and go to debrief
+    window.finishRehearsal = function() {
+      if (conversationThread.length < 2) {
+        showStatus('Practice a bit more before debriefing', 'error');
+        return;
+      }
+      
+      // Switch to debrief mode
+      document.querySelector('[onclick="switchMode(\'debrief\')"]').click();
+    };
+    
+    // Generate debrief report
+    function generateDebrief() {
+      // Calculate metrics
+      const duration = Date.now() - sessionMetrics.startTime;
+      const minutes = Math.floor(duration / 60000);
+      const seconds = Math.floor((duration % 60000) / 1000);
+      
+      document.getElementById('timeUsed').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      document.getElementById('goalsAchieved').textContent = `${Math.min(sessionMetrics.responses, sessionMetrics.goals.length)}/${sessionMetrics.goals.length}`;
+      
+      // Generate portal message
+      const portalMessage = `
+Thank you for today's practice session. Key points discussed:
+
+1. Primary symptoms: ${document.getElementById('symptoms').value}
+2. Goals: ${document.getElementById('visitGoals').value}
+3. Next steps: Follow up as discussed
+
+Please confirm receipt and let me know if you need any clarification.
+      `.trim();
+      
+      document.getElementById('portalDraft').value = portalMessage;
+    }
+    
+    // Copy portal message
+    window.copyPortalMessage = function() {
+      const text = document.getElementById('portalDraft').value;
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showStatus('Copied to clipboard!', 'success', 'debriefStatus');
+        })
+        .catch(() => {
+          showStatus('Failed to copy', 'error', 'debriefStatus');
+        });
+    };
+    
+    // Save to vault
+    window.saveToVault = async function() {
+      showStatus('Saving to vault...', 'working', 'debriefStatus');
+      
+      try {
+        const structured = {
+          mode: currentMode,
+          thread: conversationThread,
+          metrics: sessionMetrics,
+          persona: selectedPersona,
+          coachingLevel: coachingLevel,
+          timestamp: Date.now()
+        };
+        
+        const result = await saveEntryToVaultWithHooks({
+          type: 'promptcoach_session',
+          title: `PromptCoach Practice - ${new Date().toLocaleDateString()}`,
+          structured: structured,
+          extraTags: ['practice', selectedPersona, coachingLevel]
+        });
+        
+        if (result?.ok) {
+          showStatus('Saved to Medical Memory Vault!', 'success', 'debriefStatus');
+        } else {
+          showStatus('Unable to save. Please try again.', 'error', 'debriefStatus');
+        }
+      } catch (error) {
+        console.error('Save error:', error);
+        showStatus('Save failed. Please try again.', 'error', 'debriefStatus');
+      }
+    };
+    
+    // Start new session
+    window.startNewSession = function() {
+      conversationThread = [];
+      sessionMetrics = {
+        startTime: null,
+        responses: 0,
+        techniques: [],
+        goals: []
+      };
+      
+      // Reset form
+      document.getElementById('rehearseForm').style.display = 'block';
+      document.getElementById('rehearsalContent').classList.add('hidden');
+      
+      // Switch to rehearse mode
+      document.querySelector('[onclick="switchMode(\'rehearse\')"]').click();
+    };
+    
+    // Load example scenario
+    window.loadExample = function() {
+      document.getElementById('symptoms').value = "Persistent orthostatic intolerance with heart rate increase >30bpm on standing, accompanied by brain fog, fatigue, and exercise intolerance. Symptoms worsen after meals and improve when lying down.";
+      document.getElementById('visitGoals').value = "Get referral for autonomic testing, specifically tilt table test";
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("load_example", "promptcoach", {});
+      } catch {}
+    };
+    
+    // Helper: Get default provider response based on persona
+    function getDefaultProviderResponse() {
+      const responses = {
+        'pcp_rushed': "I see you're having some symptoms. We're running behind today. Have you tried increasing your water intake?",
+        'specialist_thorough': "I'd like to understand more about these symptoms. Can you tell me when they first started?",
+        'gatekeeper': "We typically need to rule out more common causes before considering specialized testing."
+      };
+      
+      return responses[selectedPersona] || responses['pcp_rushed'];
+    }
+    
+    // Show status message
+    function showStatus(message, type, elementId = 'status') {
+      const status = document.getElementById(elementId);
+      if (!status) return;
+      
+      if (type === 'clear' || !message) {
+        status.style.display = 'none';
+        status.className = '';
+        return;
+      }
+      
+      status.textContent = message;
+      status.className = type;
+      status.style.display = 'block';
+      
+      if (type === 'success') {
+        setTimeout(() => showStatus('', 'clear', elementId), 3000);
+      }
+    }
+    
+    // Optional: Voice input support (browser API)
+    window.toggleVoiceInput = function() {
+      if (!('webkitSpeechRecognition' in window)) {
+        showStatus('Voice input not supported in this browser', 'error');
+        return;
+      }
+      
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      
+      recognition.onstart = function() {
+        document.querySelector('.voice-btn').classList.add('recording');
+        document.querySelector('.voice-status').textContent = 'Listening...';
+      };
+      
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('userInput').value = transcript;
+      };
+      
+      recognition.onerror = function(event) {
+        showStatus('Voice input error: ' + event.error, 'error');
+      };
+      
+      recognition.onend = function() {
+        document.querySelector('.voice-btn').classList.remove('recording');
+        document.querySelector('.voice-status').textContent = 'Click to speak';
+      };
+      
+      recognition.start();
+    };
   </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+  <script type="module" src="/lib/toolAccessCheck.js"></script>
 </body>
 </html>

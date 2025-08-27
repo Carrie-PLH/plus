@@ -1,150 +1,1031 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>CareMapper</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
-    * { box-sizing: border-box; }
-    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
-    h1, h2 { margin-top:1.2em; }
-    form { display:flex; flex-direction:column; gap:20px; }
-    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
-    label { display:block; margin-top:10px; font-weight:600; }
-    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
-    input[type="text"], textarea { width:100%; padding:8px; margin-top:6px; border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff; }
-    textarea { resize:vertical; min-height:72px; }
-    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-    .chip { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
-    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
-    .btn-primary { background:#0a66c2; color:#fff; }
-    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
-    .small { font-size:12px; color:var(--muted); }
-    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    nav { margin-bottom:16px }
-    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
-  </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareMapper - PatientLead Health</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* CSS Variables for Brand Colors */
+        :root {
+            --primary-green: #a3b9a3;
+            --primary-coral: #c97f6d;
+            --dark-accent: #3c5c5e;
+            --light-accent: #ebf0eb;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --border-color: #ddd;
+            --focus-color: #3c5c5e;
+            --warning-color: #f39c12;
+            --success-color: #27ae60;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header with Logo */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--light-accent);
+        }
+
+        h1 {
+            color: var(--dark-accent);
+            font-size: 2.5em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: var(--light-accent);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .form-section h2 {
+            color: var(--dark-accent);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .form-section .section-description {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: var(--primary-coral);
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--focus-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--white);
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Character Counter */
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background-color: var(--light-accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-coral);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-coral);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Grounding Phrases Highlight */
+        .grounding-section {
+            background-color: var(--primary-coral);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #b56d5c;
+        }
+
+        .grounding-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .grounding-section .example {
+            font-style: italic;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .grounding-section textarea,
+        .grounding-section input {
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        /* Follow-up Options */
+        .followup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .followup-item {
+            display: flex;
+            align-items: flex-start;
+            background-color: var(--white);
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .followup-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .followup-item input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 4px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .followup-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .followup-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-coral);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #b56d5c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #8fa58f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(163, 185, 163, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-accent);
+            border: 2px solid var(--dark-accent);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--dark-accent);
+            color: var(--white);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background-color: #fef5e7;
+            color: #8a6d3b;
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: var(--success-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .checkbox-item {
+                width: 100%;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .form-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav>
-    <a href="/BriefMe/">BriefMe Hub</a> |
-    <a href="/Vault/">Vault</a>
-  </nav>
-
-  <h1>CareMapper</h1>
-  <p class="hint">If an appointment left you feeling dismissed or unheard, map what happened, ground yourself, and plan next steps. Saves to your Vault.</p>
-
-  <form id="cmForm">
-    <!-- What just happened -->
-    <section>
-      <h2>What Just Happened?</h2>
-      <label for="dismissiveWhat">What did the provider say or do that felt dismissive or invalidating? *</label>
-      <textarea id="dismissiveWhat" name="dismissiveWhat" maxlength="500" required placeholder="Describe specific words, actions, or behaviors that felt dismissive"></textarea>
-      <div class="small" id="dismissiveWhatCount">0/500</div>
-
-      <label for="feelings">Did I feel rushed, unheard, or misunderstood?</label>
-      <textarea id="feelings" name="feelings" placeholder="Describe how you felt during the appointment"></textarea>
-
-      <label for="whatITried">What did I try saying or asking? Did it help or backfire?</label>
-      <textarea id="whatITried" name="whatITried" placeholder="Describe what you tried and how the provider responded"></textarea>
-    </section>
-
-    <!-- Grounding reframes -->
-    <section>
-      <h2>Grounding Reframes to Keep You Centered</h2>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="reframes" value="This is about their behavior, not my worth." /> “This is about their behavior, not my worth.”</label>
-        <label class="chip"><input type="checkbox" name="reframes" value="They may be overworked, but I still deserve respect." /> “They may be overworked, but I still deserve respect.”</label>
-        <label class="chip"><input type="checkbox" name="reframes" value="My body doesn’t stop being real because someone else doesn’t understand it." /> “My body doesn’t stop being real because someone else doesn’t understand it.”</label>
-        <label class="chip"><input type="checkbox" name="reframes" value="I’ve handled worse. I can regroup and try again." /> “I’ve handled worse. I can regroup and try again.”</label>
-        <label class="chip"><input type="checkbox" name="reframes" value="This doesn’t define my care; it’s one stop on the path." /> “This doesn’t define my care; it’s one stop on the path.”</label>
-      </div>
-      <label for="reframeCustom">My own grounding phrase</label>
-      <input type="text" id="reframeCustom" name="reframeCustom" placeholder="Write your own reframe" />
-    </section>
-
-    <!-- Redirect phrases -->
-    <section>
-      <h2>Phrases to Use in the Moment</h2>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="redirects" value="I don’t feel like I’m being fully heard right now. Can we slow this down?" /> “I don’t feel like I’m being fully heard right now. Can we slow this down?”</label>
-        <label class="chip"><input type="checkbox" name="redirects" value="I’d like to make sure I explain this again more clearly." /> “I’d like to make sure I explain this again more clearly.”</label>
-        <label class="chip"><input type="checkbox" name="redirects" value="I understand your perspective. I still have some unresolved concerns I’d like to share." /> “I understand your perspective. I still have some unresolved concerns I’d like to share.”</label>
-        <label class="chip"><input type="checkbox" name="redirects" value="If we’re not able to address this today, who else might be the right person to follow up with?" /> “If we’re not able to address this today, who else might be the right person to follow up with?”</label>
-      </div>
-      <label for="redirectCustom">My own redirect phrase</label>
-      <input type="text" id="redirectCustom" name="redirectCustom" placeholder="Write your own phrase for redirecting difficult conversations" />
-    </section>
-
-    <!-- Follow-up options -->
-    <section>
-      <h2>Follow-Up Options</h2>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="followups" value="Request visit notes or After-Visit Summary" /> Request visit notes or After-Visit Summary</label>
-        <label class="chip"><input type="checkbox" name="followups" value="Send a portal message to clarify or restate concern" /> Send a portal message to clarify or restate concern</label>
-        <label class="chip"><input type="checkbox" name="followups" value="Request a second opinion or change providers" /> Request a second opinion or change providers</label>
-        <label class="chip"><input type="checkbox" name="followups" value="Contact patient relations if harm or dismissal occurred" /> Contact patient relations if harm or dismissal occurred</label>
-        <label class="chip"><input type="checkbox" name="followups" value="Reflect, regroup, and reframe for next appointment" /> Reflect, regroup, and reframe for next appointment</label>
-      </div>
-    </section>
-
-    <!-- Reflection -->
-    <section>
-      <h2>What I Want to Remember From This Experience</h2>
-      <label for="learned">What did I learn about how I want to advocate next time? <span class="small">(for you; not for the doctor)</span></label>
-      <textarea id="learned" name="learned" maxlength="500" placeholder="Insights about self-advocacy"></textarea>
-      <div class="small" id="learnedCount">0/500</div>
-
-      <label for="carryForward">What do I want to carry forward, and what do I want to leave behind?</label>
-      <textarea id="carryForward" name="carryForward" maxlength="500" placeholder="Skills or approaches to keep; what to release"></textarea>
-      <div class="small" id="carryForwardCount">0/500</div>
-    </section>
-
-    <!-- Next steps planning -->
-    <section>
-      <h2>Next Steps Planning</h2>
-      <div class="row">
-        <div>
-          <label for="immediate">Immediate actions I will take within 1 week</label>
-          <textarea id="immediate" name="immediate" placeholder="Concrete steps in the next week"></textarea>
+    <div class="form-container" id="bonusContainer">
+        <div class="form-header">
+            <h1>BriefMe™ Bonus Power Tool</h1>
+            <p class="tagline">Stay grounded, protect your clarity, and plan your next step when the conversation doesn't go as planned.</p>
         </div>
-        <div>
-          <label for="longer">Longer-term plan for my healthcare</label>
-          <textarea id="longer" name="longer" placeholder="Broader plan to get the care I need"></textarea>
-        </div>
-      </div>
-      <label for="support">Support I need from others</label>
-      <textarea id="support" name="support" placeholder="What help I need from family, friends, or providers"></textarea>
-    </section>
 
-    <div class="actions">
-      <button type="button" id="build" class="btn-secondary">Build Reflection Summary</button>
-      <button type="button" id="copySummary" class="btn-secondary">Copy Summary</button>
-      <button type="submit" class="btn-primary">Save to Vault</button>
-      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
-      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Complete</div>
+        </div>
+
+        <form id="bonusForm">
+            <!-- What Just Happened Section -->
+            <div class="form-section">
+                <h2>What Just Happened?</h2>
+                <p class="section-description">Use this space to write down what felt off about the appointment</p>
+                
+                <div class="form-group">
+                    <label for="dismissiveBehavior">What did the provider say or do that felt dismissive or invalidating? <span class="required">*</span></label>
+                    <textarea id="dismissiveBehavior" name="dismissiveBehavior" rows="4" placeholder="Describe specific words, actions, or behaviors that felt dismissive" required></textarea>
+                    <div class="char-counter" id="dismissiveCounter">0/500 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="feelingState">Did I feel rushed, unheard, or misunderstood?</label>
+                    <textarea id="feelingState" name="feelingState" rows="3" placeholder="Describe how you felt during the appointment"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="myAttempts">What did I try saying or asking? Did it help or backfire?</label>
+                    <textarea id="myAttempts" name="myAttempts" rows="3" placeholder="Describe what you tried to communicate and how the provider responded"></textarea>
+                </div>
+            </div>
+
+            <!-- Grounding Reframes Section -->
+            <div class="grounding-section">
+                <h3>Grounding Reframes to Keep You Centered</h3>
+                <p class="section-description" style="color: white; opacity: 0.9;">Select the reframes that help you stay centered</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="groundingReframes" value="This is about their behavior, not my worth">
+                        <span>"This is about their behavior, not my worth."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="groundingReframes" value="They may be overworked, but I still deserve respect">
+                        <span>"They may be overworked, but I still deserve respect."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="groundingReframes" value="My body doesn't stop being real because someone else doesn't understand it">
+                        <span>"My body doesn't stop being real because someone else doesn't understand it."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="groundingReframes" value="I've handled worse. I can regroup and try again">
+                        <span>"I've handled worse. I can regroup and try again."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="groundingReframes" value="This doesn't define my care, it's just one stop on the path">
+                        <span>"This doesn't define my care, it's just one stop on the path."</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="customReframe" style="color: white;">My own grounding phrase</label>
+                    <input type="text" id="customReframe" name="customReframe" placeholder="Write your own reframe that helps you feel centered" style="background-color: white; color: #333;">
+                </div>
+            </div>
+
+            <!-- Phrases to Use in the Moment Section -->
+            <div class="form-section">
+                <h2>Phrases to Use in the Moment</h2>
+                <p class="section-description">Try these if you need to redirect a provider during the appointment</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="redirectPhrases" value="I don't feel like I'm being fully heard right now. Can we slow this down?">
+                        <span>"I don't feel like I'm being fully heard right now. Can we slow this down?"</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="redirectPhrases" value="I'd like to make sure I explain this again more clearly">
+                        <span>"I'd like to make sure I explain this again more clearly."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="redirectPhrases" value="I understand your perspective. I still have some unresolved concerns I'd like to share">
+                        <span>"I understand your perspective. I still have some unresolved concerns I'd like to share."</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="redirectPhrases" value="If we're not able to address this today, who else might be the right person to follow up with?">
+                        <span>"If we're not able to address this today, who else might be the right person to follow up with?"</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="customRedirect">My own redirect phrase</label>
+                    <input type="text" id="customRedirect" name="customRedirect" placeholder="Write your own phrase for redirecting difficult conversations">
+                </div>
+            </div>
+
+            <!-- Follow-Up Options Section -->
+            <div class="form-section">
+                <h2>Follow-Up Options</h2>
+                <p class="section-description">Choose what feels right for you moving forward</p>
+                
+                <div class="followup-options">
+                    <label class="followup-item">
+                        <input type="checkbox" name="followupOptions" value="Request your visit notes or After-Visit Summary">
+                        <span>Request your visit notes or After-Visit Summary</span>
+                    </label>
+                    <label class="followup-item">
+                        <input type="checkbox" name="followupOptions" value="Send a follow-up message via portal to clarify or restate your concern">
+                        <span>Send a follow-up message via portal to clarify or restate your concern</span>
+                    </label>
+                    <label class="followup-item">
+                        <input type="checkbox" name="followupOptions" value="Request a second opinion or change providers">
+                        <span>Request a second opinion or change providers</span>
+                    </label>
+                    <label class="followup-item">
+                        <input type="checkbox" name="followupOptions" value="Contact patient relations if harm or dismissal occurred">
+                        <span>Contact patient relations if harm or dismissal occurred</span>
+                    </label>
+                    <label class="followup-item">
+                        <input type="checkbox" name="followupOptions" value="Reflect, regroup, and reframe for your next appointment">
+                        <span>Reflect, regroup, and reframe for your next appointment</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Personal Reflection Section -->
+            <div class="form-section">
+                <h2>What I Want to Remember From This Experience</h2>
+                <p class="section-description">This is for you, not the doctor - focus on learning and growth</p>
+                
+                <div class="form-group">
+                    <label for="advocacyLearning">What did I learn about how I want to advocate next time?</label>
+                    <textarea id="advocacyLearning" name="advocacyLearning" rows="4" placeholder="Reflect on what you learned about self-advocacy from this experience"></textarea>
+                    <div class="char-counter" id="advocacyCounter">0/500 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carryForward">What do I want to carry forward, and what do I want to leave behind?</label>
+                    <textarea id="carryForward" name="carryForward" rows="4" placeholder="What insights, skills, or approaches do you want to keep? What do you want to release?"></textarea>
+                    <div class="char-counter" id="carryCounter">0/500 characters</div>
+                </div>
+            </div>
+
+            <!-- Next Steps Planning Section -->
+            <div class="form-section">
+                <h2>Next Steps Planning</h2>
+                <p class="section-description">Create a concrete plan for moving forward with your healthcare</p>
+                
+                <div class="form-group">
+                    <label for="immediateActions">Immediate actions I will take (within 1 week)</label>
+                    <textarea id="immediateActions" name="immediateActions" rows="3" placeholder="List specific actions you'll take in the next week"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="longerTermPlan">Longer-term plan for my healthcare</label>
+                    <textarea id="longerTermPlan" name="longerTermPlan" rows="3" placeholder="Describe your broader plan for getting the care you need"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="supportNeeded">Support I need from others</label>
+                    <textarea id="supportNeeded" name="supportNeeded" rows="2" placeholder="What kind of support do you need from family, friends, or other healthcare providers?"></textarea>
+                </div>
+            </div>
+
+            <!-- Button Group -->
+            <div class="button-group">
+                <button type="button" class="btn btn-outline" onclick="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-secondary" onclick="saveForm()">Save Progress</button>
+                <button type="button" class="btn btn-primary" onclick="showPreview()">Preview & Export PDF</button>
+            </div>
+        </form>
     </div>
-  </form>
 
-  <!-- Output -->
-  <section>
-    <h2>Reflection Summary</h2>
-    <pre id="summaryOut">Click "Build Reflection Summary" to generate a concise write-up and plan.</pre>
-  </section>
+    <!-- Preview Modal -->
+    <div id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow: auto;">
+        <div style="position: relative; max-width: 850px; margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <!-- Modal Header -->
+            <div style="padding: 20px; border-bottom: 2px solid #ebf0eb; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #3c5c5e;">Preview Your Bonus Power Tool</h2>
+                <button onclick="closePreview()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
+            </div>
+            
+            <!-- Preview Content -->
+            <div id="letterPreview" style="padding: 40px; background: white;">
+                <!-- Preview content will be generated here -->
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px; border-top: 2px solid #ebf0eb; text-align: center;">
+                <button class="btn btn-secondary" onclick="closePreview()">Go Back to Edit</button>
+                <button class="btn btn-primary" onclick="exportPDF()">Export as PDF</button>
+            </div>
+        </div>
+    </div>
 
-  <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#careMapperForm",
-      type: "careMapper",
-      title: d => `CareMapper: ${d.encounter || "Encounter"}`,
-      extraTags: ["processing","next-steps"]
-    });
-  </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+    <script>
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            updateProgress();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Character counters
+            setupCharacterCounter('dismissiveBehavior', 'dismissiveCounter', 500);
+            setupCharacterCounter('advocacyLearning', 'advocacyCounter', 500);
+            setupCharacterCounter('carryForward', 'carryCounter', 500);
+
+            // Checkbox styling
+            document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parent = this.closest('.checkbox-item, .followup-item');
+                    if (this.checked) {
+                        parent.classList.add('checked');
+                    } else {
+                        parent.classList.remove('checked');
+                    }
+                    updateProgress();
+                });
+            });
+
+            // Form inputs for progress tracking
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function setupCharacterCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else if (length > maxLength * 0.7) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#666';
+                }
+            });
+        }
+
+        function updateProgress() {
+            const form = document.getElementById('bonusForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            let totalFields = 0;
+            let completedFields = 0;
+
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    // Count checkbox groups as single fields
+                    const checkboxGroup = input.closest('.checkbox-group, .followup-options');
+                    if (checkboxGroup && !checkboxGroup.dataset.counted) {
+                        totalFields++;
+                        checkboxGroup.dataset.counted = true;
+                        if (checkboxGroup.querySelector('input[type="checkbox"]:checked')) {
+                            completedFields++;
+                        }
+                    }
+                } else {
+                    totalFields++;
+                    if (input.value.trim() !== '') {
+                        completedFields++;
+                    }
+                }
+            });
+
+            const progress = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '% Complete';
+
+            // Reset counted flags for next calculation
+            document.querySelectorAll('.checkbox-group, .followup-options').forEach(group => {
+                delete group.dataset.counted;
+            });
+        }
+
+        function saveForm() {
+            const formData = new FormData(document.getElementById('bonusForm'));
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            localStorage.setItem('bonusFormData', JSON.stringify(data));
+            
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = 'Your progress has been saved! You can come back to this form later.';
+            document.querySelector('.form-container').insertBefore(alert, document.querySelector('.form-header').nextSibling);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('bonusFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const form = document.getElementById('bonusForm');
+                
+                Object.keys(data).forEach(key => {
+                    const elements = form.elements[key];
+                    if (elements) {
+                        if (elements.length) {
+                            if (Array.isArray(data[key])) {
+                                data[key].forEach(value => {
+                                    const element = Array.from(elements).find(el => el.value === value);
+                                    if (element) {
+                                        element.checked = true;
+                                        element.dispatchEvent(new Event('change'));
+                                    }
+                                });
+                            } else {
+                                const element = Array.from(elements).find(el => el.value === data[key]);
+                                if (element) {
+                                    element.checked = true;
+                                    element.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        } else {
+                            elements.value = data[key];
+                        }
+                    }
+                });
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+                document.getElementById('bonusForm').reset();
+                localStorage.removeItem('bonusFormData');
+                
+                // Reset checkboxes
+                document.querySelectorAll('.checkbox-item, .followup-item').forEach(item => {
+                    item.classList.remove('checked');
+                });
+                
+                updateProgress();
+            }
+        }
+
+        function showPreview() {
+            const form = document.getElementById('bonusForm');
+            const formData = new FormData(form);
+            
+            const previewContent = buildPreviewContent(formData);
+            document.getElementById('letterPreview').innerHTML = previewContent;
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function buildPreviewContent(formData) {
+            let html = `
+                <div style="font-family: 'Roboto', Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <h1 style="color: #3c5c5e; text-align: center; margin-bottom: 30px; font-size: 28px;">BriefMe Bonus Power Tool</h1>
+                    <h2 style="color: #3c5c5e; text-align: center; margin-bottom: 30px; font-size: 18px; font-style: italic;">Reflecting on a Difficult Appointment</h2>
+            `;
+
+            // What Just Happened section
+            const dismissiveBehavior = formData.get('dismissiveBehavior');
+            const feelingState = formData.get('feelingState');
+            const myAttempts = formData.get('myAttempts');
+            
+            if (dismissiveBehavior || feelingState || myAttempts) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">What Just Happened</h2>
+                `;
+                if (dismissiveBehavior) {
+                    html += `<div style="margin: 15px 0;"><strong>Dismissive behavior I experienced:</strong><br>${dismissiveBehavior.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (feelingState) {
+                    html += `<div style="margin: 15px 0;"><strong>How I felt:</strong><br>${feelingState.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (myAttempts) {
+                    html += `<div style="margin: 15px 0;"><strong>What I tried to communicate:</strong><br>${myAttempts.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Grounding Reframes section
+            const groundingReframes = formData.getAll('groundingReframes');
+            const customReframe = formData.get('customReframe');
+            if (groundingReframes.length > 0 || customReframe) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 20px;">My Grounding Reframes</h2>
+                        <p style="margin-bottom: 15px; font-style: italic;">Phrases to help me stay centered:</p>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                groundingReframes.forEach(reframe => {
+                    html += `<li style="margin: 8px 0;">${reframe}</li>`;
+                });
+                if (customReframe) {
+                    html += `<li style="margin: 8px 0;"><strong>My personal reframe:</strong> "${customReframe}"</li>`;
+                }
+                html += `</ul></div>`;
+            }
+
+            // Redirect Phrases section
+            const redirectPhrases = formData.getAll('redirectPhrases');
+            const customRedirect = formData.get('customRedirect');
+            if (redirectPhrases.length > 0 || customRedirect) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Phrases for Redirecting Difficult Conversations</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                redirectPhrases.forEach(phrase => {
+                    html += `<li style="margin: 8px 0;">${phrase}</li>`;
+                });
+                if (customRedirect) {
+                    html += `<li style="margin: 8px 0;"><strong>My custom phrase:</strong> "${customRedirect}"</li>`;
+                }
+                html += `</ul></div>`;
+            }
+
+            // Follow-up Options section
+            const followupOptions = formData.getAll('followupOptions');
+            if (followupOptions.length > 0) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">My Follow-Up Plan</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                followupOptions.forEach(option => {
+                    html += `<li style="margin: 8px 0;">✓ ${option}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            // Personal Reflection section
+            const advocacyLearning = formData.get('advocacyLearning');
+            const carryForward = formData.get('carryForward');
+            
+            if (advocacyLearning || carryForward) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Personal Reflections</h2>
+                `;
+                if (advocacyLearning) {
+                    html += `<div style="margin: 15px 0;"><strong>What I learned about advocacy:</strong><br>${advocacyLearning.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (carryForward) {
+                    html += `<div style="margin: 15px 0;"><strong>What I want to carry forward/leave behind:</strong><br>${carryForward.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Next Steps Planning section
+            const immediateActions = formData.get('immediateActions');
+            const longerTermPlan = formData.get('longerTermPlan');
+            const supportNeeded = formData.get('supportNeeded');
+            
+            if (immediateActions || longerTermPlan || supportNeeded) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 20px;">Next Steps Planning</h2>
+                `;
+                if (immediateActions) {
+                    html += `<div style="margin: 15px 0;"><strong>Immediate actions (within 1 week):</strong><br>${immediateActions.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (longerTermPlan) {
+                    html += `<div style="margin: 15px 0;"><strong>Longer-term healthcare plan:</strong><br>${longerTermPlan.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (supportNeeded) {
+                    html += `<div style="margin: 15px 0;"><strong>Support I need:</strong><br>${supportNeeded.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Footer
+            html += `
+                <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ebf0eb;">
+                    <p style="color: #666; font-size: 12px;">
+                        © 2025 PatientLead Health LLC | patientlead.health | (617) 798-0150<br>
+                        Prepared on ${new Date().toLocaleDateString()}
+                    </p>
+                </div>
+            </div>
+            `;
+
+            return html;
+        }
+
+        async function exportPDF() {
+            const element = document.getElementById('letterPreview');
+            
+            // Show loading state
+            const exportButton = event.target;
+            const originalText = exportButton.textContent;
+            exportButton.textContent = 'Generating PDF...';
+            exportButton.disabled = true;
+            
+            // Create a clone of the preview content for PDF generation
+            const pdfContent = element.cloneNode(true);
+            pdfContent.style.width = '800px';
+            pdfContent.style.padding = '40px';
+            pdfContent.style.backgroundColor = 'white';
+            pdfContent.style.position = 'absolute';
+            pdfContent.style.left = '0';
+            pdfContent.style.top = '0';
+            pdfContent.style.zIndex = '-9999';
+            
+            // Append to body temporarily
+            document.body.appendChild(pdfContent);
+            
+            // Configure PDF options
+            const opt = {
+                margin: 0.5,
+                filename: `briefme-bonus-power-tool-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { 
+                    type: 'jpeg', 
+                    quality: 0.98 
+                },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    windowWidth: 800,
+                    width: 800,
+                    height: pdfContent.scrollHeight,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            try {
+                // Wait for content to be fully rendered
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate PDF from the cloned element
+                await html2pdf().set(opt).from(pdfContent).save();
+                
+                // Clean up
+                document.body.removeChild(pdfContent);
+                
+                // Restore button state
+                setTimeout(() => {
+                    exportButton.textContent = originalText;
+                    exportButton.disabled = false;
+                }, 500);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                // Clean up on error
+                if (pdfContent.parentNode) {
+                    document.body.removeChild(pdfContent);
+                }
+                exportButton.textContent = originalText;
+                exportButton.disabled = false;
+                alert('There was an error generating the PDF. Please try again.');
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && document.getElementById('previewModal').style.display === 'block') {
+                closePreview();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePreview();
+            }
+        });
+    </script>
 </body>
 </html>

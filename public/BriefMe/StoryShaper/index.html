@@ -1,238 +1,1295 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Story Shaper</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
-    * { box-sizing: border-box; }
-    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
-    h1, h2 { margin-top:1.2em; }
-    form { display:flex; flex-direction:column; gap:20px; }
-    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
-    label { display:block; margin-top:10px; font-weight:600; }
-    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
-    input[type="text"], input[type="date"], textarea, select {
-      width:100%; padding:8px; margin-top:6px;
-      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
-    }
-    textarea { resize:vertical; min-height:72px; }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .chips, .options { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-    .chip, .opt { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
-    .range-wrap { display:flex; align-items:center; gap:12px; margin-top:8px; }
-    .range-wrap input[type="range"] { flex:1; }
-    .small { font-size:12px; color:var(--muted); }
-    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
-    .btn-primary { background:#0a66c2; color:#fff; }
-    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
-    .danger { background:#b00020; color:#fff; }
-    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
-    table { width:100%; border-collapse:collapse; margin-top:10px; }
-    td { border:1px solid var(--line); padding:8px; vertical-align:top; }
-    td:first-child { width:180px; font-weight:600; background:#f8f8f8; }
-  </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Shaper - PatientLead Health</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* CSS Variables for Brand Colors */
+        :root {
+            --primary-green: #a3b9a3;
+            --primary-coral: #c97f6d;
+            --dark-accent: #3c5c5e;
+            --light-accent: #ebf0eb;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --border-color: #ddd;
+            --focus-color: #3c5c5e;
+            --warning-color: #f39c12;
+            --success-color: #27ae60;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header with Logo */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--light-accent);
+        }
+
+        h1 {
+            color: var(--dark-accent);
+            font-size: 2.5em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: var(--light-accent);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .form-section h2 {
+            color: var(--dark-accent);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .form-section .section-description {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: var(--primary-coral);
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--focus-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--white);
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Severity Scale */
+        .severity-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+        }
+
+        .severity-scale input[type="range"] {
+            flex: 1;
+            margin: 0 15px;
+        }
+
+        .severity-scale .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Character Counter */
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background-color: var(--light-accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-coral);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-coral);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-coral);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #b56d5c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #8fa58f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(163, 185, 163, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-accent);
+            border: 2px solid var(--dark-accent);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--dark-accent);
+            color: var(--white);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background-color: #fef5e7;
+            color: #8a6d3b;
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: var(--success-color);
+        }
+
+        /* Because Statement Highlight */
+        .because-statement {
+            background-color: var(--primary-coral);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #b56d5c;
+        }
+
+        .because-statement h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .because-statement .example {
+            font-style: italic;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .because-statement textarea {
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .checkbox-item {
+                width: 100%;
+            }
+
+            .severity-scale {
+                flex-direction: column;
+            }
+
+            .severity-scale input[type="range"] {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .form-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Story Shaper</h1>
-  <p class="hint">Practice a clear, confident symptom story and generate an OLD CARTS summary. You can save to your Vault when ready.</p>
-
-  <form id="storyForm">
-    <!-- Onset and Triggers -->
-    <section>
-      <h2>Onset and Triggers</h2>
-      <div class="row">
-        <div>
-          <label for="startDate">Approximate start date</label>
-          <input type="date" id="startDate" name="startDate" />
+    <div class="form-container" id="storyContainer">
+        <div class="form-header">
+            <h1>BriefMe™ Story Shaper</h1>
+            <p class="tagline">Practice describing your symptoms in a way that gets taken seriously, not dismissed.</p>
         </div>
-        <div>
-          <label for="startApprox">If not exact, approximate timeframe</label>
-          <input type="text" id="startApprox" name="startApprox" placeholder="e.g., About 6 months ago; Early 2024" />
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Complete</div>
         </div>
-      </div>
 
-      <label>Was there a known trigger or event?</label>
-      <div class="options">
-        <label class="opt"><input type="radio" name="triggerKnown" value="Yes" /> Yes</label>
-        <label class="opt"><input type="radio" name="triggerKnown" value="No" /> No</label>
-        <label class="opt"><input type="radio" name="triggerKnown" value="Not sure" /> Not sure</label>
-      </div>
-      <label for="triggerDesc">If yes, describe</label>
-      <input type="text" id="triggerDesc" name="triggerDesc" placeholder="e.g., After a car accident; during a stressful period" />
-    </section>
+        <form id="storyForm">
+            <!-- Symptom Start Section -->
+            <div class="form-section">
+                <h2>When did this symptom begin?</h2>
+                <p class="section-description">Understanding the timeline helps doctors identify potential causes</p>
+                
+                <div class="form-group">
+                    <label for="startDate">Approximate start date</label>
+                    <input type="date" id="startDate" name="startDate">
+                </div>
 
-    <!-- Location and Radiation -->
-    <section>
-      <h2>Location and Radiation</h2>
-      <label for="location">Where in your body do you feel it? <span class="small">(be specific)</span></label>
-      <textarea id="location" name="location" maxlength="300" placeholder="e.g., Right side of my head above the ear; lower back on the left, sometimes down my leg" required></textarea>
-      <div class="small" id="locationCount">0/300</div>
+                <div class="form-group">
+                    <label for="approximateTime">If you don't know the exact date, approximate timeframe</label>
+                    <input type="text" id="approximateTime" name="approximateTime" placeholder="e.g., 'About 6 months ago' or 'Early 2024'">
+                </div>
 
-      <label>Does it move or radiate to other areas?</label>
-      <div class="options">
-        <label class="opt"><input type="radio" name="radiates" value="Yes" /> Yes</label>
-        <label class="opt"><input type="radio" name="radiates" value="No" /> No</label>
-      </div>
-      <label for="radiationDesc">If yes, where does it move?</label>
-      <input type="text" id="radiationDesc" name="radiationDesc" placeholder="e.g., Starts in my neck and goes into my head" />
-    </section>
+                <div class="form-group">
+                    <label>Was there a known trigger or event?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="radio" name="hasTrigger" value="yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="hasTrigger" value="no">
+                            <span>No</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="hasTrigger" value="unsure">
+                            <span>Not sure</span>
+                        </label>
+                    </div>
+                </div>
 
-    <!-- Character and Severity -->
-    <section>
-      <h2>Character and Severity</h2>
-      <p class="hint">Choose all that apply. You can add your own words below.</p>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="character" value="Throbbing" /> Throbbing</label>
-        <label class="chip"><input type="checkbox" name="character" value="Burning" /> Burning</label>
-        <label class="chip"><input type="checkbox" name="character" value="Sharp" /> Sharp</label>
-        <label class="chip"><input type="checkbox" name="character" value="Tingling" /> Tingling</label>
-        <label class="chip"><input type="checkbox" name="character" value="Numbness" /> Numbness</label>
-        <label class="chip"><input type="checkbox" name="character" value="Pressure" /> Pressure</label>
-        <label class="chip"><input type="checkbox" name="character" value="Stiffness" /> Stiffness</label>
-        <label class="chip"><input type="checkbox" name="character" value="Cramping" /> Cramping</label>
-        <label class="chip"><input type="checkbox" name="character" value="Aching" /> Aching</label>
-        <label class="chip"><input type="checkbox" name="character" value="Electric/Shock-like" /> Electric/Shock-like</label>
-        <label class="chip"><input type="checkbox" name="character" value="Stabbing" /> Stabbing</label>
-        <label class="chip"><input type="checkbox" name="character" value="Heavy" /> Heavy</label>
-      </div>
-      <label for="characterOther">Other description</label>
-      <input type="text" id="characterOther" name="characterOther" placeholder="Your own words" />
+                <div class="form-group">
+                    <label for="triggerDescription">If yes, describe the trigger or event</label>
+                    <textarea id="triggerDescription" name="triggerDescription" rows="3" placeholder="e.g., 'Started after a car accident' or 'Began during a stressful period at work'"></textarea>
+                </div>
+            </div>
 
-      <label>Average severity</label>
-      <div class="range-wrap">
-        <span class="small">Mild</span>
-        <input type="range" id="severity" name="severity" min="1" max="10" step="1" value="5" />
-        <span class="small">Severe</span>
-        <span id="severityValue" class="small">5/10</span>
-      </div>
-    </section>
+            <!-- Location Section -->
+            <div class="form-section">
+                <h2>Where in your body do you feel it?</h2>
+                <p class="section-description">Be as specific as possible about the location</p>
+                
+                <div class="form-group">
+                    <label for="symptomLocation">Location description <span class="required">*</span></label>
+                    <textarea id="symptomLocation" name="symptomLocation" rows="3" placeholder="e.g., 'Right side of my head above the ear' or 'Lower back on the left side, sometimes radiating down my leg'" required></textarea>
+                    <div class="char-counter" id="locationCounter">0/300 characters</div>
+                </div>
 
-    <!-- Timing and Frequency -->
-    <section>
-      <h2>Timing and Frequency</h2>
-      <div class="chips">
-        <label class="chip"><input type="radio" name="frequency" value="Constant" /> Constant</label>
-        <label class="chip"><input type="radio" name="frequency" value="Daily" /> Daily</label>
-        <label class="chip"><input type="radio" name="frequency" value="A few times a week" /> A few times a week</label>
-        <label class="chip"><input type="radio" name="frequency" value="Weekly" /> Weekly</label>
-        <label class="chip"><input type="radio" name="frequency" value="Monthly" /> Monthly</label>
-        <label class="chip"><input type="radio" name="frequency" value="Random or unpredictable" /> Random or unpredictable</label>
-        <label class="chip"><input type="radio" name="frequency" value="Only with certain triggers" /> Only with certain triggers</label>
-      </div>
+                <div class="form-group">
+                    <label>Does it move or radiate to other areas?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="radio" name="radiates" value="yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="radiates" value="no">
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
 
-      <label for="frequencyDetails">Additional frequency details</label>
-      <input type="text" id="frequencyDetails" name="frequencyDetails" placeholder="e.g., Worse in the mornings; episodes last ~2 hours" />
+                <div class="form-group">
+                    <label for="radiationDescription">If yes, describe where it moves to</label>
+                    <textarea id="radiationDescription" name="radiationDescription" rows="2" placeholder="e.g., 'Starts in my neck and goes up into my head' or 'Spreads from my chest to my left arm'"></textarea>
+                </div>
+            </div>
 
-      <label for="knownTriggers">If triggered, list the triggers</label>
-      <input type="text" id="knownTriggers" name="knownTriggers" placeholder="e.g., Stress, bright lights, certain foods" />
+            <!-- Description Section -->
+            <div class="form-section">
+                <h2>How would you describe it?</h2>
+                <p class="section-description">Check all that apply - multiple descriptions help doctors understand the nature of your symptom</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Throbbing">
+                        <span>Throbbing</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Burning">
+                        <span>Burning</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Sharp">
+                        <span>Sharp</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Tingling">
+                        <span>Tingling</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Numbness">
+                        <span>Numbness</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Pressure">
+                        <span>Pressure</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Stiffness">
+                        <span>Stiffness</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Cramping">
+                        <span>Cramping</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Aching">
+                        <span>Aching</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Electric">
+                        <span>Electric/Shock-like</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Stabbing">
+                        <span>Stabbing</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="descriptions" value="Heavy">
+                        <span>Heavy</span>
+                    </label>
+                </div>
 
-      <label for="timeOfDay">Does it vary by time of day?</label>
-      <select id="timeOfDay" name="timeOfDay">
-        <option value="">Select if applicable…</option>
-        <option>Morning</option>
-        <option>Afternoon</option>
-        <option>Evening</option>
-        <option>Night</option>
-        <option>Variable</option>
-      </select>
-    </section>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="otherDescription">Other description not listed above</label>
+                    <input type="text" id="otherDescription" name="otherDescription" placeholder="Use your own words to describe the sensation">
+                </div>
 
-    <!-- Aggravating / Alleviating -->
-    <section>
-      <h2>What makes it worse or better?</h2>
-      <label for="worse">What makes it worse?</label>
-      <textarea id="worse" name="worse" placeholder="Movement, stress, positions, weather changes, lack of sleep…"></textarea>
+                <div class="form-group">
+                    <label for="severityRating">How severe is it on average?</label>
+                    <div class="severity-scale">
+                        <span>Mild (1)</span>
+                        <input type="range" id="severityRating" name="severityRating" min="1" max="10" value="5">
+                        <span>Severe (10)</span>
+                    </div>
+                    <div class="severity-scale">
+                        <div class="scale-labels">
+                            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span>Current rating: <strong id="severityValue">5</strong>/10</span>
+                    </div>
+                </div>
+            </div>
 
-      <label for="better">What makes it better?</label>
-      <textarea id="better" name="better" placeholder="Rest, heat, ice, medications, specific positions…"></textarea>
-    </section>
+            <!-- Frequency Section -->
+            <div class="form-section">
+                <h2>How often does it happen?</h2>
+                <p class="section-description">Frequency patterns help doctors understand the condition better</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Constant">
+                        <span>Constant</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Daily">
+                        <span>Daily</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Few times a week">
+                        <span>A few times a week</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Weekly">
+                        <span>Weekly</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Monthly">
+                        <span>Monthly</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Random">
+                        <span>Random or unpredictable</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frequency" value="Triggered">
+                        <span>Only with certain triggers</span>
+                    </label>
+                </div>
 
-    <!-- Impact -->
-    <section>
-      <h2>How does this affect your daily life?</h2>
-      <label for="impactDaily">Daily activities affected *</label>
-      <textarea id="impactDaily" name="impactDaily" maxlength="500" placeholder="Be specific about what you can no longer do or must limit" required></textarea>
-      <div class="small" id="impactDailyCount">0/500</div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="frequencyDetails">Additional frequency details</label>
+                    <textarea id="frequencyDetails" name="frequencyDetails" rows="2" placeholder="e.g., 'Worse in the mornings' or 'Episodes last about 2 hours'"></textarea>
+                </div>
 
-      <div class="row">
-        <div>
-          <label for="impactWork">Impact on work or school</label>
-          <textarea id="impactWork" name="impactWork" placeholder="Difficulty concentrating, need for breaks, missed days…"></textarea>
-        </div>
-        <div>
-          <label for="impactSleep">Impact on sleep</label>
-          <textarea id="impactSleep" name="impactSleep" placeholder="Wakes you at night, trouble finding a position…"></textarea>
-        </div>
-      </div>
+                <div class="form-group">
+                    <label for="triggers">If triggered, list the triggers</label>
+                    <textarea id="triggers" name="triggers" rows="2" placeholder="e.g., 'Stress, bright lights, certain foods' or 'Physical activity, weather changes'"></textarea>
+                </div>
+            </div>
 
-      <label for="impactMood">Impact on mood or mental health</label>
-      <textarea id="impactMood" name="impactMood" placeholder="Frustration, anxiety, avoiding social activities…"></textarea>
-    </section>
+            <!-- What Makes It Better/Worse Section -->
+            <div class="form-section">
+                <h2>What makes it worse or better?</h2>
+                <p class="section-description">These details help doctors understand potential causes and treatments</p>
+                
+                <div class="form-group">
+                    <label for="worsens">What makes it worse?</label>
+                    <textarea id="worsens" name="worsens" rows="3" placeholder="e.g., 'Movement, stress, certain positions, weather changes, lack of sleep'"></textarea>
+                </div>
 
-    <!-- Because Statement and Visit Goals -->
-    <section>
-      <h2>My “Because” Statement and Visit Goals</h2>
-      <label for="because">Complete this: “I’m concerned about [symptom] because…”</label>
-      <textarea id="because" name="because" maxlength="300" placeholder="Tie the symptom to your history or risks (max 300 chars)"></textarea>
-      <div class="small" id="becauseCount">0/300</div>
+                <div class="form-group">
+                    <label for="improves">What makes it better?</label>
+                    <textarea id="improves" name="improves" rows="3" placeholder="e.g., 'Rest, heat, ice, certain medications, specific positions'"></textarea>
+                </div>
 
-      <p class="hint">What do you hope to get out of this visit?</p>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="visitGoals" value="A diagnosis or explanation" /> A diagnosis or explanation</label>
-        <label class="chip"><input type="checkbox" name="visitGoals" value="A treatment plan" /> A treatment plan</label>
-        <label class="chip"><input type="checkbox" name="visitGoals" value="A referral to specialist" /> A referral to specialist</label>
-        <label class="chip"><input type="checkbox" name="visitGoals" value="Testing or imaging" /> Testing or imaging</label>
-        <label class="chip"><input type="checkbox" name="visitGoals" value="Pain management" /> Pain management</label>
-        <label class="chip"><input type="checkbox" name="visitGoals" value="Rule out serious conditions" /> Rule out serious conditions</label>
-      </div>
-      <label for="visitGoalsOther">Other goals</label>
-      <input type="text" id="visitGoalsOther" name="visitGoalsOther" placeholder="Any other goals or expectations" />
+                <div class="form-group">
+                    <label for="timeOfDay">Does it vary by time of day?</label>
+                    <select id="timeOfDay" name="timeOfDay">
+                        <option value="">Select if applicable...</option>
+                        <option value="Worse in morning">Worse in the morning</option>
+                        <option value="Worse in evening">Worse in the evening</option>
+                        <option value="Worse at night">Worse at night</option>
+                        <option value="Better in morning">Better in the morning</option>
+                        <option value="Better in evening">Better in the evening</option>
+                        <option value="No pattern">No clear pattern</option>
+                    </select>
+                </div>
+            </div>
 
-      <label for="prevTreatments">Previous treatments tried (if any)</label>
-      <textarea id="prevTreatments" name="prevTreatments" placeholder="e.g., Ibuprofen with minimal relief; PT helped temporarily"></textarea>
-    </section>
+            <!-- Daily Life Impact Section -->
+            <div class="form-section">
+                <h2>How does this affect your daily life?</h2>
+                <p class="section-description">Be specific about what you can't do that you used to be able to do</p>
+                
+                <div class="form-group">
+                    <label for="dailyImpact">Daily activities affected <span class="required">*</span></label>
+                    <textarea id="dailyImpact" name="dailyImpact" rows="4" placeholder="e.g., 'I can't lift my children anymore' or 'I have to call out of work 2-3 times per month' or 'I can't drive when it's severe'" required></textarea>
+                    <div class="char-counter" id="impactCounter">0/500 characters</div>
+                </div>
 
-    <div class="actions">
-      <button type="button" id="build" class="btn-secondary">Build Story</button>
-      <button type="button" id="copyStory" class="btn-secondary">Copy Story</button>
-      <button type="submit" class="btn-primary">Save to Vault</button>
+                <div class="form-group">
+                    <label for="workImpact">Impact on work or school</label>
+                    <textarea id="workImpact" name="workImpact" rows="3" placeholder="e.g., 'Difficulty concentrating during meetings' or 'Need to take frequent breaks'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="sleepImpact">Impact on sleep</label>
+                    <textarea id="sleepImpact" name="sleepImpact" rows="2" placeholder="e.g., 'Wakes me up at night' or 'Can't find comfortable position to sleep'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="moodImpact">Impact on mood or mental health</label>
+                    <textarea id="moodImpact" name="moodImpact" rows="2" placeholder="e.g., 'Feeling frustrated and hopeless' or 'Avoiding social activities'"></textarea>
+                </div>
+            </div>
+
+            <!-- Because Statement Section -->
+            <div class="because-statement">
+                <h3>My "Because" Statement</h3>
+                <p class="section-description" style="color: white; opacity: 0.9;">Use this to connect your symptom to your medical history or concerns</p>
+                
+                <div class="example">
+                    <strong>Example:</strong> "I'm concerned about the numbness in my hands because I've had past nerve issues in my neck and this feels similar but worse."
+                </div>
+
+                <div class="form-group">
+                    <label for="becauseStatement" style="color: white;">Complete this statement: "I'm concerned about [your symptom] because..."</label>
+                    <textarea id="becauseStatement" name="becauseStatement" rows="4" placeholder="I'm concerned about _______ because _______" style="background-color: white; color: #333;"></textarea>
+                    <div class="char-counter" id="becauseCounter" style="color: white; opacity: 0.8;">0/300 characters</div>
+                </div>
+            </div>
+
+            <!-- Visit Goals Section -->
+            <div class="form-section">
+                <h2>What I hope to get out of this visit</h2>
+                <p class="section-description">Setting clear expectations helps guide the conversation</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="A diagnosis or explanation">
+                        <span>A diagnosis or explanation</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="A treatment plan">
+                        <span>A treatment plan</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="A referral to specialist">
+                        <span>A referral to specialist</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="Testing or imaging">
+                        <span>Testing or imaging</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="Pain management">
+                        <span>Pain management</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="visitGoals" value="Rule out serious conditions">
+                        <span>Rule out serious conditions</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="otherGoals">Other goals for this visit</label>
+                    <textarea id="otherGoals" name="otherGoals" rows="2" placeholder="Any other specific goals or expectations for this appointment"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="pastTreatments">Previous treatments tried (if any)</label>
+                    <textarea id="pastTreatments" name="pastTreatments" rows="3" placeholder="e.g., 'Tried ibuprofen with minimal relief' or 'Physical therapy helped temporarily'"></textarea>
+                </div>
+            </div>
+
+            <!-- Button Group -->
+            <div class="button-group">
+                <button type="button" class="btn btn-outline" onclick="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-secondary" onclick="saveForm()">Save Progress</button>
+                <button type="button" class="btn btn-primary" onclick="showPreview()">Preview & Export PDF</button>
+            </div>
+        </form>
     </div>
-  </form>
 
-  <!-- Output -->
-  <section>
-    <h2>Draft Story</h2>
-    <pre id="storyOut">Click “Build Story” to generate a concise narrative.</pre>
+    <!-- Preview Modal -->
+    <div id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow: auto;">
+        <div style="position: relative; max-width: 850px; margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <!-- Modal Header -->
+            <div style="padding: 20px; border-bottom: 2px solid #ebf0eb; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #3c5c5e;">Preview Your Story Shaper</h2>
+                <button onclick="closePreview()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
+            </div>
+            
+            <!-- Preview Content - REMOVED MAX-HEIGHT AND OVERFLOW RESTRICTIONS -->
+            <div id="storyPreview" style="padding: 40px; background: white;">
+                <!-- Preview content will be generated here -->
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px; border-top: 2px solid #ebf0eb; text-align: center;">
+                <button class="btn btn-secondary" onclick="closePreview()">Go Back to Edit</button>
+                <button class="btn btn-primary" onclick="exportPDF()">Export as PDF</button>
+            </div>
+        </div>
+    </div>
 
-    <h2>OLD CARTS Summary</h2>
-    <table id="oldcarts">
-      <tbody>
-        <tr><td>Onset</td><td id="o_onset"></td></tr>
-        <tr><td>Location</td><td id="o_location"></td></tr>
-        <tr><td>Duration/Frequency</td><td id="o_duration"></td></tr>
-        <tr><td>Character</td><td id="o_character"></td></tr>
-        <tr><td>Aggravating</td><td id="o_aggravating"></td></tr>
-        <tr><td>Alleviating</td><td id="o_alleviating"></td></tr>
-        <tr><td>Radiation</td><td id="o_radiation"></td></tr>
-        <tr><td>Timing</td><td id="o_timing"></td></tr>
-        <tr><td>Severity</td><td id="o_severity"></td></tr>
-      </tbody>
-    </table>
-  </section>
+    <script>
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            updateProgress();
+            setupEventListeners();
+        });
 
-  <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#storyForm",
-      type: "storyShaper",
-      title: d => `Story: ${d.location || "Symptom"}${d.severity ? " (sev "+d.severity+"/10)" : ""}`,
-      extraTags: ["story","OLD_CARTS"]
-    });
-  </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+        function setupEventListeners() {
+            // Character counters
+            setupCharacterCounter('symptomLocation', 'locationCounter', 300);
+            setupCharacterCounter('dailyImpact', 'impactCounter', 500);
+            setupCharacterCounter('becauseStatement', 'becauseCounter', 300);
+
+            // Checkbox styling
+            document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parent = this.closest('.checkbox-item');
+                    if (this.type === 'radio') {
+                        // For radio buttons, remove checked class from siblings
+                        document.querySelectorAll(`input[name="${this.name}"]`).forEach(radio => {
+                            radio.closest('.checkbox-item').classList.remove('checked');
+                        });
+                    }
+                    if (this.checked) {
+                        parent.classList.add('checked');
+                    } else {
+                        parent.classList.remove('checked');
+                    }
+                    updateProgress();
+                });
+            });
+
+            // Severity scale
+            const severitySlider = document.getElementById('severityRating');
+            const severityValue = document.getElementById('severityValue');
+            severitySlider.addEventListener('input', function() {
+                severityValue.textContent = this.value;
+            });
+
+            // Form inputs for progress tracking
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function setupCharacterCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else if (length > maxLength * 0.7) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#666';
+                }
+            });
+        }
+
+        function updateProgress() {
+            const form = document.getElementById('storyForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            let totalFields = 0;
+            let completedFields = 0;
+
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    // Count checkbox groups as single fields
+                    const checkboxGroup = input.closest('.checkbox-group');
+                    if (checkboxGroup && !checkboxGroup.dataset.counted) {
+                        totalFields++;
+                        checkboxGroup.dataset.counted = true;
+                        if (checkboxGroup.querySelector('input[type="checkbox"]:checked')) {
+                            completedFields++;
+                        }
+                    }
+                } else if (input.type === 'radio') {
+                    // Count radio groups as single fields
+                    const radioGroup = input.closest('.checkbox-group');
+                    if (radioGroup && !radioGroup.dataset.counted) {
+                        totalFields++;
+                        radioGroup.dataset.counted = true;
+                        if (radioGroup.querySelector('input[type="radio"]:checked')) {
+                            completedFields++;
+                        }
+                    }
+                } else if (input.type === 'range') {
+                    // Don't count range sliders as they have default values
+                    // Skip range inputs to avoid inflating progress
+                } else {
+                    totalFields++;
+                    if (input.value.trim() !== '') {
+                        completedFields++;
+                    }
+                }
+            });
+
+            const progress = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '% Complete';
+
+            // Reset counted flags for next calculation
+            document.querySelectorAll('.checkbox-group').forEach(group => {
+                delete group.dataset.counted;
+            });
+        }
+
+        function saveForm() {
+            const formData = new FormData(document.getElementById('storyForm'));
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            localStorage.setItem('storyFormData', JSON.stringify(data));
+            
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = 'Your progress has been saved! You can come back to this form later.';
+            document.querySelector('.form-container').insertBefore(alert, document.querySelector('.form-header').nextSibling);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('storyFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const form = document.getElementById('storyForm');
+                
+                Object.keys(data).forEach(key => {
+                    const elements = form.elements[key];
+                    if (elements) {
+                        if (elements.length) {
+                            if (Array.isArray(data[key])) {
+                                data[key].forEach(value => {
+                                    const element = Array.from(elements).find(el => el.value === value);
+                                    if (element) {
+                                        element.checked = true;
+                                        element.dispatchEvent(new Event('change'));
+                                    }
+                                });
+                            } else {
+                                const element = Array.from(elements).find(el => el.value === data[key]);
+                                if (element) {
+                                    element.checked = true;
+                                    element.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        } else {
+                            elements.value = data[key];
+                            if (elements.type === 'range') {
+                                document.getElementById('severityValue').textContent = data[key];
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+                document.getElementById('storyForm').reset();
+                localStorage.removeItem('storyFormData');
+                
+                // Reset checkboxes
+                document.querySelectorAll('.checkbox-item').forEach(item => {
+                    item.classList.remove('checked');
+                });
+                
+                // Reset severity value
+                document.getElementById('severityValue').textContent = '5';
+                
+                updateProgress();
+            }
+        }
+
+        function showPreview() {
+            const form = document.getElementById('storyForm');
+            const formData = new FormData(form);
+            
+            const previewContent = buildPreviewContent(formData);
+            document.getElementById('storyPreview').innerHTML = previewContent;
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function buildPreviewContent(formData) {
+            const formatDate = (dateString) => {
+                if (!dateString) return 'Not specified';
+                const dateParts = dateString.split('-');
+                const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            };
+
+            let html = `
+                <div style="font-family: 'Roboto', Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <h1 style="color: #3c5c5e; text-align: center; margin-bottom: 30px; font-size: 28px;">My Symptom Story</h1>
+                    
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">When It Started</h2>
+            `;
+
+            const startDate = formData.get('startDate');
+            const approximateTime = formData.get('approximateTime');
+            if (startDate) {
+                html += `<p style="margin: 8px 0;"><strong>Start Date:</strong> ${formatDate(startDate)}</p>`;
+            }
+            if (approximateTime) {
+                html += `<p style="margin: 8px 0;"><strong>Timeframe:</strong> ${approximateTime}</p>`;
+            }
+
+            const hasTrigger = formData.get('hasTrigger');
+            const triggerDescription = formData.get('triggerDescription');
+            if (hasTrigger) {
+                html += `<p style="margin: 8px 0;"><strong>Known Trigger:</strong> ${hasTrigger === 'yes' ? 'Yes' : hasTrigger === 'no' ? 'No' : 'Not sure'}</p>`;
+            }
+            if (triggerDescription) {
+                html += `<p style="margin: 8px 0;"><strong>Trigger Description:</strong> ${triggerDescription}</p>`;
+            }
+            html += `</div>`;
+
+            // Location
+            const symptomLocation = formData.get('symptomLocation');
+            const radiates = formData.get('radiates');
+            const radiationDescription = formData.get('radiationDescription');
+            
+            if (symptomLocation || radiationDescription) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Location</h2>
+                `;
+                if (symptomLocation) {
+                    html += `<p style="margin: 8px 0;"><strong>Primary Location:</strong> ${symptomLocation}</p>`;
+                }
+                if (radiates) {
+                    html += `<p style="margin: 8px 0;"><strong>Radiates to other areas:</strong> ${radiates === 'yes' ? 'Yes' : 'No'}</p>`;
+                }
+                if (radiationDescription) {
+                    html += `<p style="margin: 8px 0;"><strong>Radiation Pattern:</strong> ${radiationDescription}</p>`;
+                }
+                html += `</div>`;
+            }
+
+            // Description
+            const descriptions = formData.getAll('descriptions');
+            const otherDescription = formData.get('otherDescription');
+            const severityRating = formData.get('severityRating');
+            
+            if (descriptions.length > 0 || otherDescription || severityRating) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">How It Feels</h2>
+                `;
+                if (descriptions.length > 0) {
+                    html += `<div style="margin: 15px 0;"><strong>Description:</strong><br>`;
+                    descriptions.forEach(desc => {
+                        html += `• ${desc}<br>`;
+                    });
+                    html += `</div>`;
+                }
+                if (otherDescription) {
+                    html += `<p style="margin: 8px 0;"><strong>Additional Description:</strong> ${otherDescription}</p>`;
+                }
+                if (severityRating) {
+                    html += `<p style="margin: 8px 0;"><strong>Average Severity:</strong> ${severityRating}/10</p>`;
+                }
+                html += `</div>`;
+            }
+
+            // Frequency
+            const frequency = formData.get('frequency');
+            const frequencyDetails = formData.get('frequencyDetails');
+            const triggers = formData.get('triggers');
+            
+            if (frequency || frequencyDetails || triggers) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Frequency & Patterns</h2>
+                `;
+                if (frequency) {
+                    html += `<p style="margin: 8px 0;"><strong>Frequency:</strong> ${frequency}</p>`;
+                }
+                if (frequencyDetails) {
+                    html += `<p style="margin: 8px 0;"><strong>Additional Details:</strong> ${frequencyDetails}</p>`;
+                }
+                if (triggers) {
+                    html += `<p style="margin: 8px 0;"><strong>Triggers:</strong> ${triggers}</p>`;
+                }
+                html += `</div>`;
+            }
+
+            // What makes it better/worse
+            const worsens = formData.get('worsens');
+            const improves = formData.get('improves');
+            const timeOfDay = formData.get('timeOfDay');
+            
+            if (worsens || improves || timeOfDay) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">What Affects It</h2>
+                `;
+                if (worsens) {
+                    html += `<div style="margin: 15px 0;"><strong>Makes it worse:</strong><br>${worsens.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (improves) {
+                    html += `<div style="margin: 15px 0;"><strong>Makes it better:</strong><br>${improves.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (timeOfDay) {
+                    html += `<p style="margin: 8px 0;"><strong>Time of day pattern:</strong> ${timeOfDay}</p>`;
+                }
+                html += `</div>`;
+            }
+
+            // Daily life impact
+            const dailyImpact = formData.get('dailyImpact');
+            const workImpact = formData.get('workImpact');
+            const sleepImpact = formData.get('sleepImpact');
+            const moodImpact = formData.get('moodImpact');
+            
+            if (dailyImpact || workImpact || sleepImpact || moodImpact) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Impact on Daily Life</h2>
+                `;
+                if (dailyImpact) {
+                    html += `<div style="margin: 15px 0;"><strong>Daily Activities:</strong><br>${dailyImpact.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (workImpact) {
+                    html += `<div style="margin: 15px 0;"><strong>Work/School Impact:</strong><br>${workImpact.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (sleepImpact) {
+                    html += `<div style="margin: 15px 0;"><strong>Sleep Impact:</strong><br>${sleepImpact.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (moodImpact) {
+                    html += `<div style="margin: 15px 0;"><strong>Mood/Mental Health Impact:</strong><br>${moodImpact.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Because statement - highlight this section
+            const becauseStatement = formData.get('becauseStatement');
+            if (becauseStatement) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 10px 0; font-size: 20px;">My "Because" Statement</h2>
+                        <p style="margin: 0; font-style: italic; font-size: 18px;">"${becauseStatement}"</p>
+                    </div>
+                `;
+            }
+
+            // Visit goals
+            const visitGoals = formData.getAll('visitGoals');
+            const otherGoals = formData.get('otherGoals');
+            const pastTreatments = formData.get('pastTreatments');
+            
+            if (visitGoals.length > 0 || otherGoals || pastTreatments) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Goals for This Visit</h2>
+                `;
+                if (visitGoals.length > 0) {
+                    html += `<div style="margin: 15px 0;"><strong>What I hope to get:</strong><br>`;
+                    visitGoals.forEach(goal => {
+                        html += `• ${goal}<br>`;
+                    });
+                    html += `</div>`;
+                }
+                if (otherGoals) {
+                    html += `<div style="margin: 15px 0;"><strong>Other Goals:</strong><br>${otherGoals.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (pastTreatments) {
+                    html += `<div style="margin: 15px 0;"><strong>Previous Treatments:</strong><br>${pastTreatments.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Footer
+            html += `
+                <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ebf0eb;">
+                    <p style="color: #666; font-size: 12px;">
+                        © 2025 PatientLead Health LLC | patientlead.health | (617) 798-0150<br>
+                        Prepared on ${new Date().toLocaleDateString()}
+                    </p>
+                </div>
+            </div>
+            `;
+
+            return html;
+        }
+
+        async function exportPDF() {
+            const element = document.getElementById('storyPreview');
+            
+            // Show loading state
+            const exportButton = event.target;
+            const originalText = exportButton.textContent;
+            exportButton.textContent = 'Generating PDF...';
+            exportButton.disabled = true;
+            
+            // Create a clone of the preview content for PDF generation
+            const pdfContent = element.cloneNode(true);
+            pdfContent.style.width = '800px';
+            pdfContent.style.padding = '40px';
+            pdfContent.style.backgroundColor = 'white';
+            pdfContent.style.position = 'absolute';
+            pdfContent.style.left = '0';
+            pdfContent.style.top = '0';
+            pdfContent.style.zIndex = '-9999';
+            
+            // Append to body temporarily
+            document.body.appendChild(pdfContent);
+            
+            // Configure PDF options
+            const opt = {
+                margin: 0.5,
+                filename: `briefme-story-shaper-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { 
+                    type: 'jpeg', 
+                    quality: 0.98 
+                },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    windowWidth: 800,
+                    width: 800,
+                    height: pdfContent.scrollHeight,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            try {
+                // Wait for content to be fully rendered
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate PDF from the cloned element
+                await html2pdf().set(opt).from(pdfContent).save();
+                
+                // Clean up
+                document.body.removeChild(pdfContent);
+                
+                // Restore button state
+                setTimeout(() => {
+                    exportButton.textContent = originalText;
+                    exportButton.disabled = false;
+                }, 500);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                // Clean up on error
+                if (pdfContent.parentNode) {
+                    document.body.removeChild(pdfContent);
+                }
+                exportButton.textContent = originalText;
+                exportButton.disabled = false;
+                alert('There was an error generating the PDF. Please try again.');
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && document.getElementById('previewModal').style.display === 'block') {
+                closePreview();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePreview();
+            }
+        });
+    </script>
 </body>
 </html>

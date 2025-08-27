@@ -1,183 +1,1150 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Action Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
-    * { box-sizing: border-box; }
-    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
-    h1, h2 { margin-top:1.2em; }
-    form { display:flex; flex-direction:column; gap:20px; }
-    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
-    label { display:block; margin-top:10px; font-weight:600; }
-    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
-    input[type="text"], input[type="date"], textarea, select {
-      width:100%; padding:8px; margin-top:6px;
-      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
-    }
-    textarea { resize:vertical; min-height:72px; }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .row-3 { display:grid; grid-template-columns: 2fr 1fr 1fr; gap:12px; }
-    .small { font-size:12px; color:var(--muted); }
-    .chips, .options { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-    .opt { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
-    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
-    .btn-primary { background:#0a66c2; color:#fff; }
-    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
-    .danger { background:#b00020; color:#fff; }
-    .grid-list { display:flex; flex-direction:column; gap:12px; margin-top:12px; }
-    .item-card { border:1px solid #ddd; border-radius:8px; padding:12px; background:#fff; }
-    nav { margin-bottom:16px }
-    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
-  </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Tracker - PatientLead Health</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* CSS Variables for Brand Colors */
+        :root {
+            --primary-green: #a3b9a3;
+            --primary-coral: #c97f6d;
+            --dark-accent: #3c5c5e;
+            --light-accent: #ebf0eb;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --border-color: #ddd;
+            --focus-color: #3c5c5e;
+            --warning-color: #f39c12;
+            --success-color: #27ae60;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header with Logo */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--light-accent);
+        }
+
+        h1 {
+            color: var(--dark-accent);
+            font-size: 2.5em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: var(--light-accent);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .form-section h2 {
+            color: var(--dark-accent);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .form-section .section-description {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: var(--primary-coral);
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--focus-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--white);
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Character Counter */
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background-color: var(--light-accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-coral);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-coral);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Dynamic List Styles */
+        .dynamic-list {
+            margin-top: 15px;
+        }
+
+        .dynamic-item {
+            background-color: var(--white);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .dynamic-item .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dynamic-item .item-number {
+            font-weight: 700;
+            color: var(--primary-coral);
+            font-size: 1.1em;
+        }
+
+        .remove-item {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background-color: #c0392b;
+        }
+
+        .add-item {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .add-item:hover {
+            background-color: #8fa58f;
+            transform: translateY(-2px);
+        }
+
+        /* Follow-up Task Table */
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background-color: var(--white);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .task-table th,
+        .task-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .task-table th {
+            background-color: var(--light-accent);
+            font-weight: 500;
+            color: var(--dark-accent);
+        }
+
+        .task-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .task-table input[type="text"],
+        .task-table input[type="date"] {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .task-table .status-checkbox {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-coral);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #b56d5c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #8fa58f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(163, 185, 163, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-accent);
+            border: 2px solid var(--dark-accent);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--dark-accent);
+            color: var(--white);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background-color: #fef5e7;
+            color: #8a6d3b;
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: var(--success-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .checkbox-item {
+                width: 100%;
+            }
+
+            .task-table {
+                font-size: 14px;
+            }
+
+            .task-table th,
+            .task-table td {
+                padding: 8px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .form-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+         .progress-indicator {
+             display: none;
+         }
+     }
+
+/* keep the task table inside the screen on phones */
+.task-table-wrap{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
 </head>
 <body>
-  <nav>
-    <a href="/BriefMe/">BriefMe Hub</a> |
-    <a href="/Vault/">Vault</a>
-  </nav>
-
-  <h1>Action Tracker</h1>
-  <p class="hint">Capture decisions and next steps immediately after your visit. Track tasks, deadlines, documentation, and reflections. Saves to your Vault.</p>
-
-  <form id="actionForm">
-    <!-- Appointment Recap -->
-    <section>
-      <h2>Appointment Recap</h2>
-      <div class="row">
-        <div>
-          <label for="date">Date *</label>
-          <input type="date" id="date" name="date" required />
+    <div class="form-container" id="trackerContainer">
+        <div class="form-header">
+            <h1>BriefMe™ Action Tracker</h1>
+            <p class="tagline">Capture what happened, track next steps, and make sure nothing falls through the cracks.</p>
         </div>
-        <div>
-          <label for="provider">Provider *</label>
-          <input type="text" id="provider" name="provider" placeholder="e.g., Dr. Smith" required />
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Complete</div>
         </div>
-      </div>
 
-      <label for="mainConcerns">Main concern(s) discussed *</label>
-      <textarea id="mainConcerns" name="mainConcerns" maxlength="500" placeholder="Primary issues or symptoms you talked about" required></textarea>
-      <div class="small" id="mainConcernsCount">0/500</div>
+        <form id="trackerForm">
+            <!-- Appointment Recap Section -->
+            <div class="form-section">
+                <h2>Appointment Recap</h2>
+                <p class="section-description">Capture the basic facts from your visit while they're fresh</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointmentDate">Date <span class="required">*</span></label>
+                        <input type="date" id="appointmentDate" name="appointmentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="providerName">Provider <span class="required">*</span></label>
+                        <input type="text" id="providerName" name="providerName" placeholder="Dr. Smith" required>
+                    </div>
+                </div>
 
-      <label for="workingDx">Doctor’s working diagnosis or main takeaway</label>
-      <textarea id="workingDx" name="workingDx" placeholder="What the doctor thought was going on; overall assessment"></textarea>
+                <div class="form-group">
+                    <label for="mainConcerns">Main concern(s) discussed <span class="required">*</span></label>
+                    <textarea id="mainConcerns" name="mainConcerns" rows="3" placeholder="What were the primary issues or symptoms you talked about?" required></textarea>
+                    <div class="char-counter" id="concernsCounter">0/500 characters</div>
+                </div>
 
-      <label for="keyDecisions">Key decisions made (treatment started, referrals, tests)</label>
-      <textarea id="keyDecisions" name="keyDecisions" placeholder="Concrete actions or decisions from the visit"></textarea>
-    </section>
+                <div class="form-group">
+                    <label for="doctorTakeaway">Doctor's working diagnosis or main takeaway</label>
+                    <textarea id="doctorTakeaway" name="doctorTakeaway" rows="3" placeholder="What did the doctor think was going on? What was their assessment?"></textarea>
+                </div>
 
-    <!-- Tasks / Follow-ups -->
-    <section>
-      <h2>What I Was Told to Do Next</h2>
-      <p class="hint">Track follow-up actions so nothing gets missed.</p>
+                <div class="form-group">
+                    <label for="keyDecisions">Key decisions made (treatment started, referrals, tests)</label>
+                    <textarea id="keyDecisions" name="keyDecisions" rows="3" placeholder="What concrete actions or decisions came out of the appointment?"></textarea>
+                </div>
+            </div>
 
-      <div id="tasks" class="grid-list"></div>
+            <!-- Follow-Up Tasks Section -->
+            <div class="form-section">
+                <h2>What I Was Told to Do Next</h2>
+                <p class="section-description">Track all follow-up actions so nothing gets missed</p>
+                
+                <div class="task-table-wrap">
+    <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>Task or Follow-Up</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTableBody">
+                        <!-- Dynamic task rows will be added here -->
+                    </tbody>
+                </table>
+</div>
+                <button type="button" class="add-item" onclick="addTaskRow()">+ Add Task</button>
+            </div>
 
-      <div class="actions">
-        <button type="button" id="addTask" class="btn-secondary">+ Add Task</button>
-      </div>
+            <!-- Future Appointments Section -->
+            <div class="form-section">
+                <h2>Follow-Up Appointments or Actions</h2>
+                <p class="section-description">Schedule and track next steps in your care</p>
+                
+                <div class="form-group">
+                    <label for="nextVisit">Next visit scheduled for</label>
+                    <input type="text" id="nextVisit" name="nextVisit" placeholder="e.g., 3-month follow-up on March 15th">
+                </div>
 
-      <label for="taskNotes">Additional notes</label>
-      <textarea id="taskNotes" name="taskNotes"></textarea>
-    </section>
+                <div class="form-group">
+                    <label for="testsToComplete">Tests or labs to complete</label>
+                    <textarea id="testsToComplete" name="testsToComplete" rows="2" placeholder="List any tests, labs, or imaging that were ordered"></textarea>
+                </div>
 
-    <!-- Follow-up appointments / actions -->
-    <section>
-      <h2>Follow-Up Appointments or Actions</h2>
-      <label for="nextVisit">Next visit scheduled for</label>
-      <input type="text" id="nextVisit" name="nextVisit" placeholder="e.g., 3-month follow-up on March 15" />
+                <div class="form-group">
+                    <label for="referralsMade">Referrals made to</label>
+                    <textarea id="referralsMade" name="referralsMade" rows="2" placeholder="List any specialists or other providers you were referred to"></textarea>
+                </div>
+            </div>
 
-      <label for="testsLabs">Tests or labs to complete</label>
-      <input type="text" id="testsLabs" name="testsLabs" placeholder="Ordered tests, labs, imaging" />
+            <!-- Communication & Paperwork Section -->
+            <div class="form-section">
+                <h2>Communication & Paperwork</h2>
+                <p class="section-description">Track what documentation you received and any portal communications</p>
+                
+                <div class="form-group">
+                    <label>Did I receive a written summary or instructions?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="radio" name="writtenSummary" value="yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="writtenSummary" value="no">
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
 
-      <label for="referrals">Referrals made to</label>
-      <input type="text" id="referrals" name="referrals" placeholder="Specialists or other providers" />
-    </section>
+                <div class="form-group">
+                    <label>Did I send/receive any messages via portal?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="radio" name="portalMessages" value="yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="portalMessages" value="no">
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
 
-    <!-- Communication & paperwork -->
-    <section>
-      <h2>Communication & Paperwork</h2>
-      <label>Did I receive a written summary or instructions?</label>
-      <div class="options">
-        <label class="opt"><input type="radio" name="gotSummary" value="Yes" /> Yes</label>
-        <label class="opt"><input type="radio" name="gotSummary" value="No" /> No</label>
-      </div>
+                <div class="form-group">
+                    <label for="communicationNotes">Communication notes</label>
+                    <textarea id="communicationNotes" name="communicationNotes" rows="3" placeholder="Any additional notes about follow-up communications or documentation"></textarea>
+                </div>
+            </div>
 
-      <label>Did I send/receive any messages via portal?</label>
-      <div class="options">
-        <label class="opt"><input type="radio" name="portalMsgs" value="Yes" /> Yes</label>
-        <label class="opt"><input type="radio" name="portalMsgs" value="No" /> No</label>
-      </div>
+            <!-- Personal Reflection Section -->
+            <div class="form-section">
+                <h2>Personal Reflection</h2>
+                <p class="section-description">Optional: Track your experience for future reference</p>
+                
+                <div class="form-group">
+                    <label>Did I feel heard?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="radio" name="feltHeard" value="yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="feltHeard" value="no">
+                            <span>No</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="radio" name="feltHeard" value="mixed">
+                            <span>Mixed</span>
+                        </label>
+                    </div>
+                </div>
 
-      <label for="commNotes">Communication notes</label>
-      <textarea id="commNotes" name="commNotes" placeholder="Notes about documentation or follow-up messages"></textarea>
-    </section>
+                <div class="form-group">
+                    <label for="wentWell">What went well in this appointment?</label>
+                    <textarea id="wentWell" name="wentWell" rows="3" placeholder="Note positive aspects of the visit"></textarea>
+                </div>
 
-    <!-- Personal reflection -->
-    <section>
-      <h2>Personal Reflection</h2>
-      <label>Did I feel heard?</label>
-      <div class="options">
-        <label class="opt"><input type="radio" name="feltHeard" value="Yes" /> Yes</label>
-        <label class="opt"><input type="radio" name="feltHeard" value="No" /> No</label>
-        <label class="opt"><input type="radio" name="feltHeard" value="Mixed" /> Mixed</label>
-      </div>
+                <div class="form-group">
+                    <label for="nextTimeDifferently">What could I do differently next time?</label>
+                    <textarea id="nextTimeDifferently" name="nextTimeDifferently" rows="3" placeholder="Reflections on how to advocate better or prepare differently"></textarea>
+                </div>
+            </div>
 
-      <label for="wentWell">What went well in this appointment?</label>
-      <textarea id="wentWell" name="wentWell" placeholder="Positive aspects of the visit"></textarea>
-
-      <label for="doDifferently">What could I do differently next time?</label>
-      <textarea id="doDifferently" name="doDifferently" placeholder="How to prepare or advocate differently"></textarea>
-    </section>
-
-    <div class="actions">
-      <button type="submit" class="btn-primary">Save to Vault</button>
-      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
-      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+            <!-- Button Group -->
+            <div class="button-group">
+                <button type="button" class="btn btn-outline" onclick="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-secondary" onclick="saveForm()">Save Progress</button>
+                <button type="button" class="btn btn-primary" onclick="showPreview()">Preview & Export PDF</button>
+            </div>
+        </form>
     </div>
-  </form>
 
-  <!-- Task template -->
-  <template id="tplTask">
-    <div class="item-card">
-      <div class="row-3">
-        <div>
-          <label>Task or Follow-Up</label>
-          <input type="text" name="what" placeholder="Describe" />
+    <!-- Preview Modal -->
+    <div id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow: auto;">
+        <div style="position: relative; max-width: 850px; margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <!-- Modal Header -->
+            <div style="padding: 20px; border-bottom: 2px solid #ebf0eb; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #3c5c5e;">Preview Your Action Tracker</h2>
+                <button onclick="closePreview()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
+            </div>
+            
+            <!-- Preview Content -->
+            <div id="trackerPreview" style="padding: 40px; background: white;">
+                <!-- Preview content will be generated here -->
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px; border-top: 2px solid #ebf0eb; text-align: center;">
+                <button class="btn btn-secondary" onclick="closePreview()">Go Back to Edit</button>
+                <button class="btn btn-primary" onclick="exportPDF()">Export as PDF</button>
+            </div>
         </div>
-        <div>
-          <label>Deadline</label>
-          <input type="date" name="due" />
-        </div>
-        <div>
-          <label>Status</label>
-          <select name="status">
-            <option>Pending</option>
-            <option>Done</option>
-          </select>
-        </div>
-      </div>
-      <label>Notes</label>
-      <input type="text" name="notes" placeholder="Context, confirmation, who's responsible" />
-      <div class="actions">
-        <button type="button" class="danger btn-remove">Remove</button>
-      </div>
     </div>
-  </template>
 
-  <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#actionForm",
-      type: "actionTracker",
-      title: d => `Actions: ${d.context || "Follow-up"}`,
-      extraTags: ["actions","followup"]
-    });
-  </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+    <script>
+        // Initialize form
+        let taskCount = 0;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            addTaskRow(); // Add initial task row
+            updateProgress();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Character counters
+            setupCharacterCounter('mainConcerns', 'concernsCounter', 500);
+
+            // Checkbox styling
+            document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parent = this.closest('.checkbox-item');
+                    if (this.type === 'radio') {
+                        // For radio buttons, remove checked class from siblings
+                        document.querySelectorAll(`input[name="${this.name}"]`).forEach(radio => {
+                            const radioParent = radio.closest('.checkbox-item');
+                            if (radioParent) radioParent.classList.remove('checked');
+                        });
+                    }
+                    if (this.checked) {
+                        parent.classList.add('checked');
+                    } else {
+                        parent.classList.remove('checked');
+                    }
+                    updateProgress();
+                });
+            });
+
+            // Form inputs for progress tracking
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function setupCharacterCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else if (length > maxLength * 0.7) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#666';
+                }
+            });
+        }
+
+        function addTaskRow() {
+            taskCount++;
+            const tbody = document.getElementById('tasksTableBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" name="taskDescription${taskCount}" placeholder="Describe"></td>
+                <td><input type="date" name="taskDeadline${taskCount}"></td>
+                <td>
+                    <div class="status-checkbox">
+                        <label><input type="radio" name="taskStatus${taskCount}" value="completed"> Done</label>
+                        <label><input type="radio" name="taskStatus${taskCount}" value="pending"> Pending</label>
+                    </div>
+                </td>
+                <td><input type="text" name="taskNotes${taskCount}" placeholder="Additional notes"></td>
+            `;
+            tbody.appendChild(row);
+            
+            // Add event listeners for new inputs
+            row.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function updateProgress() {
+            const form = document.getElementById('trackerForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            let totalFields = 0;
+            let completedFields = 0;
+
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    // Count radio/checkbox groups as single fields
+                    const group = input.closest('.checkbox-group');
+                    if (group && !group.dataset.counted) {
+                        totalFields++;
+                        group.dataset.counted = true;
+                        if (group.querySelector('input:checked')) {
+                            completedFields++;
+                        }
+                    }
+                } else {
+                    totalFields++;
+                    if (input.value.trim() !== '') {
+                        completedFields++;
+                    }
+                }
+            });
+
+            const progress = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '% Complete';
+
+            // Reset counted flags for next calculation
+            document.querySelectorAll('.checkbox-group').forEach(group => {
+                delete group.dataset.counted;
+            });
+        }
+
+        function saveForm() {
+            const formData = new FormData(document.getElementById('trackerForm'));
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            localStorage.setItem('trackerFormData', JSON.stringify(data));
+            
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = 'Your progress has been saved! You can come back to this form later.';
+            document.querySelector('.form-container').insertBefore(alert, document.querySelector('.form-header').nextSibling);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('trackerFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const form = document.getElementById('trackerForm');
+                
+                Object.keys(data).forEach(key => {
+                    const elements = form.elements[key];
+                    if (elements) {
+                        if (elements.length) {
+                            if (Array.isArray(data[key])) {
+                                data[key].forEach(value => {
+                                    const element = Array.from(elements).find(el => el.value === value);
+                                    if (element) {
+                                        element.checked = true;
+                                        element.dispatchEvent(new Event('change'));
+                                    }
+                                });
+                            } else {
+                                const element = Array.from(elements).find(el => el.value === data[key]);
+                                if (element) {
+                                    element.checked = true;
+                                    element.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        } else {
+                            elements.value = data[key];
+                        }
+                    }
+                });
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+                document.getElementById('trackerForm').reset();
+                localStorage.removeItem('trackerFormData');
+                
+                // Reset checkboxes
+                document.querySelectorAll('.checkbox-item').forEach(item => {
+                    item.classList.remove('checked');
+                });
+
+                // Reset task table
+                document.getElementById('tasksTableBody').innerHTML = '';
+                taskCount = 0;
+                addTaskRow();
+                
+                updateProgress();
+            }
+        }
+
+        function showPreview() {
+            const form = document.getElementById('trackerForm');
+            const formData = new FormData(form);
+            
+            const previewContent = buildPreviewContent(formData);
+            document.getElementById('trackerPreview').innerHTML = previewContent;
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function buildPreviewContent(formData) {
+            const formatDate = (dateString) => {
+                if (!dateString) return 'Not specified';
+                const dateParts = dateString.split('-');
+                const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            };
+
+            let html = `
+                <div style="font-family: 'Roboto', Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <h1 style="color: #3c5c5e; text-align: center; margin-bottom: 30px; font-size: 28px;">My Action Tracker</h1>
+                    
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Appointment Recap</h2>
+                        <p style="margin: 8px 0;"><strong>Date:</strong> ${formatDate(formData.get('appointmentDate'))}</p>
+                        <p style="margin: 8px 0;"><strong>Provider:</strong> ${formData.get('providerName') || 'Not specified'}</p>
+            `;
+
+            const mainConcerns = formData.get('mainConcerns');
+            if (mainConcerns) {
+                html += `<div style="margin: 15px 0;"><strong>Main Concerns Discussed:</strong><br>${mainConcerns.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            const doctorTakeaway = formData.get('doctorTakeaway');
+            if (doctorTakeaway) {
+                html += `<div style="margin: 15px 0;"><strong>Doctor's Assessment:</strong><br>${doctorTakeaway.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            const keyDecisions = formData.get('keyDecisions');
+            if (keyDecisions) {
+                html += `<div style="margin: 15px 0;"><strong>Key Decisions Made:</strong><br>${keyDecisions.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            html += `</div>`;
+
+            // Tasks section
+            const tasks = [];
+            for (let i = 1; i <= taskCount; i++) {
+                const description = formData.get(`taskDescription${i}`);
+                const deadline = formData.get(`taskDeadline${i}`);
+                const status = formData.get(`taskStatus${i}`);
+                const notes = formData.get(`taskNotes${i}`);
+                
+                if (description || deadline || status || notes) {
+                    tasks.push({description, deadline, status, notes});
+                }
+            }
+
+            if (tasks.length > 0) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Follow-Up Tasks</h2>
+                        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden;">
+                            <thead>
+                                <tr style="background: #ebf0eb;">
+                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Task</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Deadline</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Status</th>
+                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                tasks.forEach((task, index) => {
+                    const isLast = index === tasks.length - 1;
+                    const statusDisplay = task.status === 'completed' ? '✓ Done' : task.status === 'pending' ? 'Pending' : '';
+                    html += `
+                        <tr>
+                            <td style="padding: 12px; ${isLast ? '' : 'border-bottom: 1px solid #ddd;'}">${task.description || ''}</td>
+                            <td style="padding: 12px; ${isLast ? '' : 'border-bottom: 1px solid #ddd;'}">${task.deadline ? formatDate(task.deadline) : ''}</td>
+                            <td style="padding: 12px; ${isLast ? '' : 'border-bottom: 1px solid #ddd;'}">${statusDisplay}</td>
+                            <td style="padding: 12px; ${isLast ? '' : 'border-bottom: 1px solid #ddd;'}">${task.notes || ''}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `</tbody></table></div>`;
+            }
+
+            // Follow-up appointments section
+            const nextVisit = formData.get('nextVisit');
+            const testsToComplete = formData.get('testsToComplete');
+            const referralsMade = formData.get('referralsMade');
+            
+            if (nextVisit || testsToComplete || referralsMade) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Follow-Up Appointments & Actions</h2>
+                `;
+                if (nextVisit) {
+                    html += `<div style="margin: 15px 0;"><strong>Next Visit:</strong> ${nextVisit}</div>`;
+                }
+                if (testsToComplete) {
+                    html += `<div style="margin: 15px 0;"><strong>Tests/Labs to Complete:</strong><br>${testsToComplete.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (referralsMade) {
+                    html += `<div style="margin: 15px 0;"><strong>Referrals Made:</strong><br>${referralsMade.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Communication section
+            const writtenSummary = formData.get('writtenSummary');
+            const portalMessages = formData.get('portalMessages');
+            const communicationNotes = formData.get('communicationNotes');
+            
+            if (writtenSummary || portalMessages || communicationNotes) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Communication & Paperwork</h2>
+                `;
+                if (writtenSummary) {
+                    html += `<div style="margin: 15px 0;"><strong>Received Written Summary:</strong> ${writtenSummary === 'yes' ? 'Yes' : 'No'}</div>`;
+                }
+                if (portalMessages) {
+                    html += `<div style="margin: 15px 0;"><strong>Portal Messages:</strong> ${portalMessages === 'yes' ? 'Yes' : 'No'}</div>`;
+                }
+                if (communicationNotes) {
+                    html += `<div style="margin: 15px 0;"><strong>Additional Notes:</strong><br>${communicationNotes.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Personal reflection section
+            const feltHeard = formData.get('feltHeard');
+            const wentWell = formData.get('wentWell');
+            const nextTimeDifferently = formData.get('nextTimeDifferently');
+            
+            if (feltHeard || wentWell || nextTimeDifferently) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 20px;">Personal Reflection</h2>
+                `;
+                if (feltHeard) {
+                    const heartDisplay = feltHeard === 'yes' ? 'Yes' : feltHeard === 'no' ? 'No' : 'Mixed';
+                    html += `<div style="margin: 15px 0;"><strong>Did I Feel Heard:</strong> ${heartDisplay}</div>`;
+                }
+                if (wentWell) {
+                    html += `<div style="margin: 15px 0;"><strong>What Went Well:</strong><br>${wentWell.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (nextTimeDifferently) {
+                    html += `<div style="margin: 15px 0;"><strong>What to Do Differently Next Time:</strong><br>${nextTimeDifferently.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Footer
+            html += `
+                <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ebf0eb;">
+                    <p style="color: #666; font-size: 12px;">
+                        © 2025 PatientLead Health LLC | patientlead.health | (617) 798-0150<br>
+                        Prepared on ${new Date().toLocaleDateString()}
+                    </p>
+                </div>
+            </div>
+            `;
+
+            return html;
+        }
+
+        async function exportPDF() {
+            const element = document.getElementById('trackerPreview');
+            
+            // Show loading state
+            const exportButton = event.target;
+            const originalText = exportButton.textContent;
+            exportButton.textContent = 'Generating PDF...';
+            exportButton.disabled = true;
+            
+            // Create a clone of the preview content for PDF generation
+            const pdfContent = element.cloneNode(true);
+            pdfContent.style.width = '800px';
+            pdfContent.style.padding = '40px';
+            pdfContent.style.backgroundColor = 'white';
+            pdfContent.style.position = 'absolute';
+            pdfContent.style.left = '0';
+            pdfContent.style.top = '0';
+            pdfContent.style.zIndex = '-9999';
+            
+            // Append to body temporarily
+            document.body.appendChild(pdfContent);
+            
+            // Configure PDF options
+            const opt = {
+                margin: 0.5,
+                filename: `briefme-action-tracker-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { 
+                    type: 'jpeg', 
+                    quality: 0.98 
+                },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    windowWidth: 800,
+                    width: 800,
+                    height: pdfContent.scrollHeight,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            try {
+                // Wait for content to be fully rendered
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate PDF from the cloned element
+                await html2pdf().set(opt).from(pdfContent).save();
+                
+                // Clean up
+                document.body.removeChild(pdfContent);
+                
+                // Restore button state
+                setTimeout(() => {
+                    exportButton.textContent = originalText;
+                    exportButton.disabled = false;
+                }, 500);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                // Clean up on error
+                if (pdfContent.parentNode) {
+                    document.body.removeChild(pdfContent);
+                }
+                exportButton.textContent = originalText;
+                exportButton.disabled = false;
+                alert('There was an error generating the PDF. Please try again.');
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && document.getElementById('previewModal').style.display === 'block') {
+                closePreview();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePreview();
+            }
+        });
+    </script>
 </body>
 </html>

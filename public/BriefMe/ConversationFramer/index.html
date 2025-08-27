@@ -1,172 +1,1131 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Conversation Framer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
-    * { box-sizing: border-box; }
-    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
-    h1, h2 { margin-top:1.2em; }
-    form { display:flex; flex-direction:column; gap:20px; }
-    section { border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--card); }
-    label { display:block; margin-top:10px; font-weight:600; }
-    .hint { font-size:13px; color:var(--muted); margin-top:2px; }
-    input[type="text"], textarea, select {
-      width:100%; padding:8px; margin-top:6px;
-      border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
-    }
-    textarea { resize:vertical; min-height:72px; }
-    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-    .chip { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfcfcf; border-radius:8px; background:#fff; }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .small { font-size:12px; color:var(--muted); }
-    .actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
-    .btn-primary { background:#0a66c2; color:#fff; }
-    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
-    pre { background:#fff; border:1px solid var(--line); border-radius:8px; padding:12px; white-space:pre-wrap; }
-    nav { margin-bottom:16px }
-    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
-  </style>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversation Framer - PatientLead Health</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* CSS Variables for Brand Colors */
+        :root {
+            --primary-green: #a3b9a3;
+            --primary-coral: #c97f6d;
+            --dark-accent: #3c5c5e;
+            --light-accent: #ebf0eb;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --border-color: #ddd;
+            --focus-color: #3c5c5e;
+            --warning-color: #f39c12;
+            --success-color: #27ae60;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header with Logo */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--light-accent);
+        }
+
+        h1 {
+            color: var(--dark-accent);
+            font-size: 2.5em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: var(--light-accent);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .form-section h2 {
+            color: var(--dark-accent);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .form-section .section-description {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: var(--primary-coral);
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--focus-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--white);
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Character Counter */
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background-color: var(--light-accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-coral);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-coral);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Because Statement Highlight */
+        .because-statement {
+            background-color: var(--primary-coral);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #b56d5c;
+        }
+
+        .because-statement h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .because-statement .example {
+            font-style: italic;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .because-statement textarea,
+        .because-statement input {
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        /* Script Section Styling */
+        .script-section {
+            background-color: var(--white);
+            border: 2px dashed var(--primary-green);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .script-section h3 {
+            color: var(--dark-accent);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .script-section .script-hint {
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* Phrase Options */
+        .phrase-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .phrase-item {
+            display: flex;
+            align-items: flex-start;
+            background-color: var(--light-accent);
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .phrase-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .phrase-item input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 4px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .phrase-item.checked {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        .phrase-item span {
+            line-height: 1.6;
+            word-wrap: break-word;
+            flex: 1;
+            display: block;
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-coral);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #b56d5c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #8fa58f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(163, 185, 163, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-accent);
+            border: 2px solid var(--dark-accent);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--dark-accent);
+            color: var(--white);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background-color: #fef5e7;
+            color: #8a6d3b;
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: var(--success-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .checkbox-item {
+                width: 100%;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .form-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav>
-    <a href="/BriefMe/">BriefMe Hub</a> |
-    <a href="/Vault/">Vault</a>
-  </nav>
-
-  <h1>Conversation Framer</h1>
-  <p class="hint">Plan scripts for tough moments. Frame requests respectfully. Prepare redirect and grounding phrases you can use verbatim.</p>
-
-  <form id="framerForm">
-    <!-- Concerns with "because" statements -->
-    <section>
-      <h2>Concerns I Want to Express</h2>
-      <p class="hint">Use “because” statements to connect concerns to history or context. Template: “I’m concerned about [issue] because [reason].”</p>
-      <label for="c1">Concern #1</label>
-      <textarea id="c1" name="c1" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
-      <div class="small" id="c1Count">0/300</div>
-
-      <label for="c2">Concern #2</label>
-      <textarea id="c2" name="c2" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
-      <div class="small" id="c2Count">0/300</div>
-
-      <label for="c3">Concern #3</label>
-      <textarea id="c3" name="c3" maxlength="300" placeholder="I'm concerned about … because …"></textarea>
-      <div class="small" id="c3Count">0/300</div>
-    </section>
-
-    <!-- Strategic phrasing -->
-    <section>
-      <h2>Strategic Phrasing Options</h2>
-      <p class="hint">Select phrases you may use to explore options and next steps.</p>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="strategic" value="Could that be something worth exploring?" /> Could that be something worth exploring?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="What do you think about trying [X] in my case?" /> What do you think about trying [X] in my case?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="Is there a reason we wouldn’t do [X]?" /> Is there a reason we wouldn’t do [X]?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="Would that be a reasonable next step?" /> Would that be a reasonable next step?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="What might this look like if it were [X]?" /> What might this look like if it were [X]?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="Can I ask what you’re ruling out with that test?" /> Can I ask what you’re ruling out with that test?</label>
-        <label class="chip"><input type="checkbox" name="strategic" value="Do you have other patients like me who’ve responded to [X]?" /> Do you have other patients like me who’ve responded to [X]?</label>
-      </div>
-      <label for="strategicCustom">Custom phrase I want to practice</label>
-      <input type="text" id="strategicCustom" name="strategicCustom" placeholder="Write your own strategic phrase" />
-    </section>
-
-    <!-- Dismissal / disagreement -->
-    <section>
-      <h2>If I Disagree or Feel Dismissed</h2>
-      <p class="hint">Keep the conversation open and collaborative if you feel unheard.</p>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="dismissed" value="Can I share why that approach feels off to me?" /> Can I share why that approach feels off to me?</label>
-        <label class="chip"><input type="checkbox" name="dismissed" value="That doesn’t quite capture what I’m experiencing — can I try again?" /> That doesn’t quite capture what I’m experiencing — can I try again?</label>
-        <label class="chip"><input type="checkbox" name="dismissed" value="I’m not sure that fits, but I want to understand your thinking." /> I’m not sure that fits, but I want to understand your thinking.</label>
-        <label class="chip"><input type="checkbox" name="dismissed" value="That medication hasn’t worked well for me in the past." /> That medication hasn’t worked well for me in the past.</label>
-        <label class="chip"><input type="checkbox" name="dismissed" value="I want to work with you on this, but I’m still worried about [X]." /> I want to work with you on this, but I’m still worried about [X].</label>
-      </div>
-      <label for="dismissedCustom">Custom response for feeling dismissed</label>
-      <input type="text" id="dismissedCustom" name="dismissedCustom" placeholder="Write your own response" />
-    </section>
-
-    <!-- Grounding phrases -->
-    <section>
-      <h2>If I’m Feeling Overwhelmed</h2>
-      <p class="hint">Grounding phrases to stay engaged when conversations become difficult.</p>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="grounding" value="This is hard to talk about, but I want to keep trying." /> This is hard to talk about, but I want to keep trying.</label>
-        <label class="chip"><input type="checkbox" name="grounding" value="Can I take a second and then tell you what I need?" /> Can I take a second and then tell you what I need?</label>
-        <label class="chip"><input type="checkbox" name="grounding" value="I’m not explaining this well — can I start over?" /> I’m not explaining this well — can I start over?</label>
-        <label class="chip"><input type="checkbox" name="grounding" value="I’m feeling a little overwhelmed. I want to stay engaged." /> I’m feeling a little overwhelmed. I want to stay engaged.</label>
-        <label class="chip"><input type="checkbox" name="grounding" value="I don’t feel like I’m being fully heard right now. Can we slow this down?" /> I don’t feel like I’m being fully heard right now. Can we slow this down?</label>
-      </div>
-      <label for="groundingCustom">Custom grounding phrase</label>
-      <input type="text" id="groundingCustom" name="groundingCustom" placeholder="Write your own grounding phrase" />
-    </section>
-
-    <!-- Personal script starters -->
-    <section>
-      <h2>Personal Script Starters</h2>
-      <input type="text" name="s1" placeholder="Script starter #1" />
-      <input type="text" name="s2" placeholder="Script starter #2" />
-      <input type="text" name="s3" placeholder="Script starter #3" />
-    </section>
-
-    <!-- Difficult conversation prep -->
-    <section>
-      <h2>Difficult Conversation Prep</h2>
-      <label for="anticipate">What challenging conversation or pushback do I anticipate? *</label>
-      <textarea id="anticipate" name="anticipate" maxlength="500" placeholder="Describe the difficult conversation or resistance you expect" required></textarea>
-      <div class="small" id="anticipateCount">0/500</div>
-
-      <div class="row">
-        <div>
-          <label for="responsePlan">How do I want to respond?</label>
-          <textarea id="responsePlan" name="responsePlan" placeholder="Write how you plan to respond, including phrases to use"></textarea>
+    <div class="form-container" id="conversationContainer">
+        <div class="form-header">
+            <h1>BriefMe™ Conversation Framer</h1>
+            <p class="tagline">Use strategic phrases and "because" statements to express concerns and get heard.</p>
         </div>
-        <div>
-          <label for="backupPlan">If that doesn’t work, my backup approach is:</label>
-          <textarea id="backupPlan" name="backupPlan" placeholder="Describe an alternative approach you can pivot to"></textarea>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Complete</div>
         </div>
-      </div>
-    </section>
 
-    <!-- Personal reminders -->
-    <section>
-      <h2>Personal Reminders</h2>
-      <label for="reminders">Reminder to myself before/during the appointment</label>
-      <input type="text" id="reminders" name="reminders" placeholder="e.g., I deserve to be heard; My concerns are valid" />
+        <form id="conversationForm">
+            <!-- Concerns I Want to Express Section -->
+            <div class="because-statement">
+                <h3>Concerns I Want to Express</h3>
+                <p class="section-description" style="color: white; opacity: 0.9;">Use "because" statements to connect your concerns to your medical history or context</p>
+                
+                <div class="example">
+                    <strong>Template:</strong> "I'm concerned about [symptom or issue] because [reason]"
+                </div>
 
-      <label for="mainGoal">My main goal for this conversation is:</label>
-      <input type="text" id="mainGoal" name="mainGoal" placeholder="e.g., Get a referral; Be taken seriously about my pain" />
-    </section>
+                <div class="form-group">
+                    <label for="concern1" style="color: white;">Concern #1</label>
+                    <textarea id="concern1" name="concern1" rows="2" placeholder="I'm concerned about _______ because _______" style="background-color: white; color: #333;"></textarea>
+                    <div class="char-counter" id="concern1Counter" style="color: white; opacity: 0.8;">0/300 characters</div>
+                </div>
 
-    <div class="actions">
-      <button type="button" id="build" class="btn-secondary">Build Mini-Script</button>
-      <button type="button" id="copyScript" class="btn-secondary">Copy Script</button>
-      <button type="submit" class="btn-primary">Save to Vault</button>
-      <button type="button" id="downloadJson" class="btn-secondary">Download JSON</button>
-      <button type="button" id="clearForm" class="btn-secondary">Clear</button>
+                <div class="form-group">
+                    <label for="concern2" style="color: white;">Concern #2</label>
+                    <textarea id="concern2" name="concern2" rows="2" placeholder="I'm concerned about _______ because _______" style="background-color: white; color: #333;"></textarea>
+                    <div class="char-counter" id="concern2Counter" style="color: white; opacity: 0.8;">0/300 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="concern3" style="color: white;">Concern #3</label>
+                    <textarea id="concern3" name="concern3" rows="2" placeholder="I'm concerned about _______ because _______" style="background-color: white; color: #333;"></textarea>
+                    <div class="char-counter" id="concern3Counter" style="color: white; opacity: 0.8;">0/300 characters</div>
+                </div>
+            </div>
+
+            <!-- Strategic Phrasing Options Section -->
+            <div class="form-section">
+                <h2>Strategic Phrasing Options</h2>
+                <p class="section-description">Select phrases that fit your style and comfort level for expressing concerns</p>
+                
+                <div class="phrase-options">
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="Could that be something worth exploring?">
+                        <span>"Could that be something worth exploring?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="What do you think about trying [treatment] in my case?">
+                        <span>"What do you think about trying _______ in my case?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="Is there a reason we wouldn't do [test/treatment]?">
+                        <span>"Is there a reason we wouldn't do _______?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="Would that be a reasonable next step?">
+                        <span>"Would that be a reasonable next step?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="What might this look like if it were [condition]?">
+                        <span>"What might this look like if it were _______?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="Can I ask what you're ruling out with that test?">
+                        <span>"Can I ask what you're ruling out with that test?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="strategicPhrases" value="Do you have other patients like me who've responded to [treatment]?">
+                        <span>"Do you have other patients like me who've responded to _______?"</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="customPhrase">Custom phrase I want to practice</label>
+                    <textarea id="customPhrase" name="customPhrase" rows="2" placeholder="Write your own strategic phrase here"></textarea>
+                </div>
+            </div>
+
+            <!-- If I Disagree or Feel Dismissed Section -->
+            <div class="form-section">
+                <h2>If I Disagree or Feel Dismissed</h2>
+                <p class="section-description">Options to keep the conversation open and collaborative when you feel unheard</p>
+                
+                <div class="phrase-options">
+                    <label class="phrase-item">
+                        <input type="checkbox" name="disagreePhrases" value="Can I share why that approach feels off to me?">
+                        <span>"Can I share why that approach feels off to me?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="disagreePhrases" value="That doesn't quite capture what I'm experiencing — can I try again?">
+                        <span>"That doesn't quite capture what I'm experiencing — can I try again?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="disagreePhrases" value="I'm not sure that fits, but I want to understand your thinking.">
+                        <span>"I'm not sure that fits, but I want to understand your thinking."</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="disagreePhrases" value="That medication hasn't worked well for me in the past.">
+                        <span>"That medication hasn't worked well for me in the past."</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="disagreePhrases" value="I want to work with you on this, but I'm still worried about [concern].">
+                        <span>"I want to work with you on this, but I'm still worried about _______."</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="customDisagree">Custom response for feeling dismissed</label>
+                    <textarea id="customDisagree" name="customDisagree" rows="2" placeholder="Write your own response for when you feel dismissed"></textarea>
+                </div>
+            </div>
+
+            <!-- If I'm Feeling Overwhelmed Section -->
+            <div class="form-section">
+                <h2>If I'm Feeling Overwhelmed</h2>
+                <p class="section-description">Grounding phrases to help you stay engaged when conversations become difficult</p>
+                
+                <div class="phrase-options">
+                    <label class="phrase-item">
+                        <input type="checkbox" name="overwhelmedPhrases" value="This is hard to talk about, but I want to keep trying.">
+                        <span>"This is hard to talk about, but I want to keep trying."</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="overwhelmedPhrases" value="Can I take a second and then tell you what I need?">
+                        <span>"Can I take a second and then tell you what I need?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="overwhelmedPhrases" value="I'm not explaining this well — can I start over?">
+                        <span>"I'm not explaining this well — can I start over?"</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="overwhelmedPhrases" value="I'm feeling a little overwhelmed. I want to stay engaged.">
+                        <span>"I'm feeling a little overwhelmed. I want to stay engaged."</span>
+                    </label>
+                    <label class="phrase-item">
+                        <input type="checkbox" name="overwhelmedPhrases" value="I don't feel like I'm being fully heard right now. Can we slow this down?">
+                        <span>"I don't feel like I'm being fully heard right now. Can we slow this down?"</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="customOverwhelmed">Custom grounding phrase</label>
+                    <textarea id="customOverwhelmed" name="customOverwhelmed" rows="2" placeholder="Write your own grounding phrase for overwhelming moments"></textarea>
+                </div>
+            </div>
+
+            <!-- Personal Script Starters Section -->
+            <div class="script-section">
+                <h3>Personal Script Starters</h3>
+                <p class="script-hint">Write out specific phrases you want to practice for your upcoming appointment</p>
+                
+                <div class="form-group">
+                    <label for="scriptStarter1">Script starter #1</label>
+                    <textarea id="scriptStarter1" name="scriptStarter1" rows="3" placeholder="Write out exactly what you want to say in a specific situation"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scriptStarter2">Script starter #2</label>
+                    <textarea id="scriptStarter2" name="scriptStarter2" rows="3" placeholder="Write out another phrase or approach you want to practice"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scriptStarter3">Script starter #3</label>
+                    <textarea id="scriptStarter3" name="scriptStarter3" rows="3" placeholder="Write out a third phrase or response you want to have ready"></textarea>
+                </div>
+            </div>
+
+            <!-- Difficult Conversation Prep Section -->
+            <div class="form-section">
+                <h2>Difficult Conversation Prep</h2>
+                <p class="section-description">Prepare for specific challenging moments you anticipate</p>
+                
+                <div class="form-group">
+                    <label for="anticipatedChallenge">What challenging conversation or pushback do I anticipate? <span class="required">*</span></label>
+                    <textarea id="anticipatedChallenge" name="anticipatedChallenge" rows="3" placeholder="Describe the difficult conversation or resistance you expect to encounter" required></textarea>
+                    <div class="char-counter" id="challengeCounter">0/500 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="myResponse">How do I want to respond?</label>
+                    <textarea id="myResponse" name="myResponse" rows="4" placeholder="Write out how you plan to respond to this challenge, including specific phrases you want to use"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="backupPlan">If that doesn't work, my backup approach is:</label>
+                    <textarea id="backupPlan" name="backupPlan" rows="3" placeholder="Describe your alternative approach if your first response doesn't work"></textarea>
+                </div>
+            </div>
+
+            <!-- Personal Reminders Section -->
+            <div class="form-section">
+                <h2>Personal Reminders</h2>
+                <p class="section-description">Affirmations and reminders to keep you grounded and confident</p>
+                
+                <div class="form-group">
+                    <label for="personalReminder">Reminder to myself before/during the appointment</label>
+                    <textarea id="personalReminder" name="personalReminder" rows="2" placeholder="e.g., 'I deserve to be heard,' 'My concerns are valid,' 'I am advocating for my health'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="conversationGoal">My main goal for this conversation is:</label>
+                    <textarea id="conversationGoal" name="conversationGoal" rows="2" placeholder="e.g., 'Get a referral to a specialist,' 'Be taken seriously about my pain,' 'Get answers about my test results'"></textarea>
+                </div>
+            </div>
+
+            <!-- Button Group -->
+            <div class="button-group">
+                <button type="button" class="btn btn-outline" onclick="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-secondary" onclick="saveForm()">Save Progress</button>
+                <button type="button" class="btn btn-primary" onclick="showPreview()">Preview & Export PDF</button>
+            </div>
+        </form>
     </div>
-  </form>
 
-  <!-- Output -->
-  <section>
-    <h2>Mini-Script</h2>
-    <pre id="scriptOut">Click “Build Mini-Script” to assemble a concise script from your selections.</pre>
-  </section>
+    <!-- Preview Modal -->
+    <div id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow: auto;">
+        <div style="position: relative; max-width: 850px; margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <!-- Modal Header -->
+            <div style="padding: 20px; border-bottom: 2px solid #ebf0eb; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: #3c5c5e;">Preview Your Conversation Framer</h2>
+                <button onclick="closePreview()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">&times;</button>
+            </div>
+            
+            <!-- Preview Content -->
+            <div id="conversationPreview" style="padding: 40px; background: white;">
+                <!-- Preview content will be generated here -->
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px; border-top: 2px solid #ebf0eb; text-align: center;">
+                <button class="btn btn-secondary" onclick="closePreview()">Go Back to Edit</button>
+                <button class="btn btn-primary" onclick="exportPDF()">Export as PDF</button>
+            </div>
+        </div>
+    </div>
 
-  <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#framerForm",
-      type: "conversationFramer",
-      title: d => `Conversation Plan: ${d.scenario || "Scenario"}`,
-      extraTags: ["phrasing","prep"]
-    });
-  </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
+    <script>
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            updateProgress();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Character counters
+            setupCharacterCounter('concern1', 'concern1Counter', 300);
+            setupCharacterCounter('concern2', 'concern2Counter', 300);
+            setupCharacterCounter('concern3', 'concern3Counter', 300);
+            setupCharacterCounter('anticipatedChallenge', 'challengeCounter', 500);
+
+            // Checkbox styling
+            document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parent = this.closest('.phrase-item, .checkbox-item');
+                    if (this.checked) {
+                        parent.classList.add('checked');
+                    } else {
+                        parent.classList.remove('checked');
+                    }
+                    updateProgress();
+                });
+            });
+
+            // Form inputs for progress tracking
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function setupCharacterCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else if (length > maxLength * 0.7) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#666';
+                }
+            });
+        }
+
+        function updateProgress() {
+            const form = document.getElementById('conversationForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            let totalFields = 0;
+            let completedFields = 0;
+
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    // Count checkbox groups as single fields
+                    const checkboxGroup = input.closest('.phrase-options');
+                    if (checkboxGroup && !checkboxGroup.dataset.counted) {
+                        totalFields++;
+                        checkboxGroup.dataset.counted = true;
+                        if (checkboxGroup.querySelector('input[type="checkbox"]:checked')) {
+                            completedFields++;
+                        }
+                    }
+                } else {
+                    totalFields++;
+                    if (input.value.trim() !== '') {
+                        completedFields++;
+                    }
+                }
+            });
+
+            const progress = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '% Complete';
+
+            // Reset counted flags for next calculation
+            document.querySelectorAll('.phrase-options').forEach(group => {
+                delete group.dataset.counted;
+            });
+        }
+
+        function saveForm() {
+            const formData = new FormData(document.getElementById('conversationForm'));
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            localStorage.setItem('conversationFormData', JSON.stringify(data));
+            
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = 'Your progress has been saved! You can come back to this form later.';
+            document.querySelector('.form-container').insertBefore(alert, document.querySelector('.form-header').nextSibling);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('conversationFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const form = document.getElementById('conversationForm');
+                
+                Object.keys(data).forEach(key => {
+                    const elements = form.elements[key];
+                    if (elements) {
+                        if (elements.length) {
+                            if (Array.isArray(data[key])) {
+                                data[key].forEach(value => {
+                                    const element = Array.from(elements).find(el => el.value === value);
+                                    if (element) {
+                                        element.checked = true;
+                                        element.dispatchEvent(new Event('change'));
+                                    }
+                                });
+                            } else {
+                                const element = Array.from(elements).find(el => el.value === data[key]);
+                                if (element) {
+                                    element.checked = true;
+                                    element.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        } else {
+                            elements.value = data[key];
+                        }
+                    }
+                });
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+                document.getElementById('conversationForm').reset();
+                localStorage.removeItem('conversationFormData');
+                
+                // Reset checkboxes
+                document.querySelectorAll('.phrase-item, .checkbox-item').forEach(item => {
+                    item.classList.remove('checked');
+                });
+                
+                updateProgress();
+            }
+        }
+
+        function showPreview() {
+            const form = document.getElementById('conversationForm');
+            const formData = new FormData(form);
+            
+            const previewContent = buildPreviewContent(formData);
+            document.getElementById('conversationPreview').innerHTML = previewContent;
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function buildPreviewContent(formData) {
+            let html = `
+                <div style="font-family: 'Roboto', Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <h1 style="color: #3c5c5e; text-align: center; margin-bottom: 30px; font-size: 28px;">My Conversation Framer</h1>
+            `;
+
+            // Concerns Section
+            const concerns = [];
+            for (let i = 1; i <= 3; i++) {
+                const concern = formData.get(`concern${i}`);
+                if (concern) concerns.push(concern);
+            }
+            
+            if (concerns.length > 0) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 20px;">My "Because" Statements</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                concerns.forEach(concern => {
+                    html += `<li style="margin: 8px 0; font-style: italic;">"${concern}"</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            // Strategic Phrases
+            const strategicPhrases = formData.getAll('strategicPhrases');
+            const customPhrase = formData.get('customPhrase');
+            if (strategicPhrases.length > 0 || customPhrase) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Strategic Phrases I Want to Use</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                strategicPhrases.forEach(phrase => {
+                    html += `<li style="margin: 8px 0;">${phrase}</li>`;
+                });
+                if (customPhrase) {
+                    html += `<li style="margin: 8px 0;"><strong>Custom:</strong> ${customPhrase}</li>`;
+                }
+                html += `</ul></div>`;
+            }
+
+            // Disagreement Phrases
+            const disagreePhrases = formData.getAll('disagreePhrases');
+            const customDisagree = formData.get('customDisagree');
+            if (disagreePhrases.length > 0 || customDisagree) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">If I Disagree or Feel Dismissed</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                disagreePhrases.forEach(phrase => {
+                    html += `<li style="margin: 8px 0;">${phrase}</li>`;
+                });
+                if (customDisagree) {
+                    html += `<li style="margin: 8px 0;"><strong>Custom:</strong> ${customDisagree}</li>`;
+                }
+                html += `</ul></div>`;
+            }
+
+            // Overwhelmed Phrases
+            const overwhelmedPhrases = formData.getAll('overwhelmedPhrases');
+            const customOverwhelmed = formData.get('customOverwhelmed');
+            if (overwhelmedPhrases.length > 0 || customOverwhelmed) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">If I'm Feeling Overwhelmed</h2>
+                        <ul style="margin: 0; padding-left: 25px;">
+                `;
+                overwhelmedPhrases.forEach(phrase => {
+                    html += `<li style="margin: 8px 0;">${phrase}</li>`;
+                });
+                if (customOverwhelmed) {
+                    html += `<li style="margin: 8px 0;"><strong>Custom:</strong> ${customOverwhelmed}</li>`;
+                }
+                html += `</ul></div>`;
+            }
+
+            // Script Starters
+            const scriptStarters = [];
+            for (let i = 1; i <= 3; i++) {
+                const script = formData.get(`scriptStarter${i}`);
+                if (script) scriptStarters.push(script);
+            }
+            
+            if (scriptStarters.length > 0) {
+                html += `
+                    <div style="background: white; border: 2px dashed #a3b9a3; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">My Personal Script Starters</h2>
+                        <ol style="margin: 0; padding-left: 25px;">
+                `;
+                scriptStarters.forEach(script => {
+                    html += `<li style="margin: 15px 0; white-space: pre-wrap;">${script}</li>`;
+                });
+                html += `</ol></div>`;
+            }
+
+            // Difficult Conversation Prep
+            const anticipatedChallenge = formData.get('anticipatedChallenge');
+            const myResponse = formData.get('myResponse');
+            const backupPlan = formData.get('backupPlan');
+            
+            if (anticipatedChallenge || myResponse || backupPlan) {
+                html += `
+                    <div style="background: #ebf0eb; padding: 20px; margin-bottom: 25px; border-left: 4px solid #a3b9a3;">
+                        <h2 style="color: #3c5c5e; margin: 0 0 15px 0; font-size: 20px;">Difficult Conversation Prep</h2>
+                `;
+                if (anticipatedChallenge) {
+                    html += `<div style="margin: 15px 0;"><strong>Challenge I Anticipate:</strong><br>${anticipatedChallenge.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (myResponse) {
+                    html += `<div style="margin: 15px 0;"><strong>My Response:</strong><br>${myResponse.replace(/\n/g, '<br>')}</div>`;
+                }
+                if (backupPlan) {
+                    html += `<div style="margin: 15px 0;"><strong>Backup Plan:</strong><br>${backupPlan.replace(/\n/g, '<br>')}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Personal Reminders
+            const personalReminder = formData.get('personalReminder');
+            const conversationGoal = formData.get('conversationGoal');
+            
+            if (personalReminder || conversationGoal) {
+                html += `
+                    <div style="background: #c97f6d; color: white; padding: 20px; margin-bottom: 25px; border-radius: 6px;">
+                        <h2 style="margin: 0 0 15px 0; font-size: 20px;">Personal Reminders</h2>
+                `;
+                if (personalReminder) {
+                    html += `<div style="margin: 15px 0;"><strong>Reminder to Myself:</strong><br>"${personalReminder}"</div>`;
+                }
+                if (conversationGoal) {
+                    html += `<div style="margin: 15px 0;"><strong>My Main Goal:</strong><br>${conversationGoal}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            // Footer
+            html += `
+                <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ebf0eb;">
+                    <p style="color: #666; font-size: 12px;">
+                        © 2025 PatientLead Health LLC | patientlead.health | (617) 798-0150<br>
+                        Prepared on ${new Date().toLocaleDateString()}
+                    </p>
+                </div>
+            </div>
+            `;
+
+            return html;
+        }
+
+        async function exportPDF() {
+            const element = document.getElementById('conversationPreview');
+            
+            // Show loading state
+            const exportButton = event.target;
+            const originalText = exportButton.textContent;
+            exportButton.textContent = 'Generating PDF...';
+            exportButton.disabled = true;
+            
+            // Create a clone of the preview content for PDF generation
+            const pdfContent = element.cloneNode(true);
+            pdfContent.style.width = '800px';
+            pdfContent.style.padding = '40px';
+            pdfContent.style.backgroundColor = 'white';
+            pdfContent.style.position = 'absolute';
+            pdfContent.style.left = '0';
+            pdfContent.style.top = '0';
+            pdfContent.style.zIndex = '-9999';
+            
+            // Append to body temporarily
+            document.body.appendChild(pdfContent);
+            
+            // Configure PDF options
+            const opt = {
+                margin: 0.5,
+                filename: `briefme-conversation-framer-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { 
+                    type: 'jpeg', 
+                    quality: 0.98 
+                },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    windowWidth: 800,
+                    width: 800,
+                    height: pdfContent.scrollHeight,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            try {
+                // Wait for content to be fully rendered
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate PDF from the cloned element
+                await html2pdf().set(opt).from(pdfContent).save();
+                
+                // Clean up
+                document.body.removeChild(pdfContent);
+                
+                // Restore button state
+                setTimeout(() => {
+                    exportButton.textContent = originalText;
+                    exportButton.disabled = false;
+                }, 500);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                // Clean up on error
+                if (pdfContent.parentNode) {
+                    document.body.removeChild(pdfContent);
+                }
+                exportButton.textContent = originalText;
+                exportButton.disabled = false;
+                alert('There was an error generating the PDF. Please try again.');
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && document.getElementById('previewModal').style.display === 'block') {
+                closePreview();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePreview();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -594,66 +594,241 @@ Sincerely,
 }
 
 // --- PromptCoach (callable)
+
 export const promptCoachRun = onCall(
   { region: "us-east4", secrets: [ANTHROPIC_API_KEY] },
   async (request) => {
     try {
-      const { role, goal, thread, coachingLevel } = request.data || {};
-      if (!role || !["patient", "provider"].includes(role)) {
-        return { ok: false, error: "Provide 'role' as 'patient' or 'provider'." };
-      }
+      const { 
+        mode = 'practice',  // practice, simulate, live, debrief
+        thread = [],        // conversation history
+        context = {},       // symptoms, goals, conditions, etc.
+        persona = 'pcp_rushed', // provider personality
+        coachingLevel = 'light', // light or deep
+        visitTime = 10      // visit length in minutes
+      } = request.data || {};
+
+      // Validate thread
       if (!Array.isArray(thread) || thread.length === 0) {
-        return { ok: false, error: "Provide 'thread' as a non-empty array." };
+        return { 
+          ok: false, 
+          error: "Provide 'thread' as array with at least one message" 
+        };
       }
 
-      const clean = thread
-        .filter(m => m && typeof m.text === "string" && (m.speaker === "patient" || m.speaker === "provider"))
-        .slice(0, 40);
+      // Clean thread entries
+      const cleanThread = thread
+        .filter(m => m && typeof m.text === "string" && 
+                (m.speaker === "patient" || m.speaker === "provider"))
+        .slice(0, 50); // Limit for context window
 
       const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-      const system = `
-You are a communication coach for patient-provider conversations.
-Safety: no medical advice. Do not judge intent. Focus on language and structure.
-`.trim();
 
-      const user = `
-We are doing live practice.
-Return RAW JSON in the specified shape.
-Thread: ${JSON.stringify(clean).slice(0, 18000)}
-`.trim();
+      // Build persona descriptions
+      const personas = {
+        pcp_rushed: "Primary care doctor who is running 45 minutes behind, has 7 minutes for this visit, interrupts frequently, and defaults to 'wait and see' approaches. Often suggests anxiety or lifestyle changes before testing.",
+        specialist_thorough: "Subspecialist who asks detailed questions, takes methodical notes, but is bound by insurance criteria and institutional protocols. Open to discussion but needs evidence.",
+        gatekeeper: "Provider who strictly follows guidelines, frequently cites insurance requirements, defensive about referrals, tends to minimize symptoms that don't fit clear diagnostic criteria.",
+        kind_dismissive: "Warm and friendly doctor who genuinely cares but unconsciously minimizes chronic/invisible illness. Uses phrases like 'you look healthy' and 'have you tried yoga?'"
+      };
+
+      // Build coaching depth instructions
+      const coachingInstructions = coachingLevel === 'deep' ? `
+Provide DETAILED coaching with:
+- Specific language rewrites with exact phrasing
+- Tone and delivery notes (pace, pauses, emphasis)
+- Body language and nonverbal communication tips  
+- Psychological tactics (validation, mirroring, authority citing)
+- Evidence integration strategies
+- Power dynamic management
+- Alternative approaches if first attempt fails
+- Rights-based language when appropriate
+` : `
+Provide LIGHT coaching with:
+- Simple, actionable tips (2-3 key points)
+- One suggested rephrase if needed
+- Basic timing reminder
+- Single follow-up question to ask
+`;
+
+      const systemPrompt = `You are a medical communication coach helping patients practice conversations with healthcare providers.
+
+CURRENT SCENARIO:
+- Provider persona: ${personas[persona] || personas.pcp_rushed}
+- Visit time: ${visitTime} minutes total
+- Coaching level: ${coachingLevel}
+- Mode: ${mode}
+
+SAFETY RULES:
+- Never provide medical advice or treatment recommendations
+- Never suggest dishonesty or exaggeration
+- Never name specific medications or dosages
+- Focus only on communication techniques and structure
+
+APPOINTMENT LEADERSHIP PRINCIPLES:
+1. Agenda-setting: State purpose and top 2 priorities within 90 seconds
+2. Evidence-based: Reference specific symptoms, timelines, and impacts
+3. Criteria-seeking: Ask "What findings would indicate need for [test/referral]?"
+4. Decision-focus: Every question should aim for a decision or action
+5. Safety-netting: Confirm return precautions and follow-up timeline
+6. Documentation: Request specific notes in chart
+
+${coachingInstructions}
+
+RESPONSE FORMAT:
+Always return valid JSON with this structure:
+{
+  "providerResponse": "What the provider says next based on persona",
+  "pushbackType": "none|time|anxiety|policy|skeptical|deflection",
+  "coaching": {
+    "immediate": ["Real-time tip for this moment"],
+    "whatWorked": ["What the patient did well"],
+    "improvements": ["Specific things to improve"],
+    "techniques": ["Communication techniques to try"],
+    "timing": "Time check: X minutes used, Y remaining"
+  },
+  "responseOptions": [
+    {
+      "label": "Acknowledge & Redirect",
+      "text": "I hear your concern about X. However, I'm experiencing Y which affects Z...",
+      "strategy": "Validates provider while maintaining focus"
+    },
+    {
+      "label": "Evidence-Based Counter",
+      "text": "According to my symptom diary from the past 3 months...",
+      "strategy": "Uses objective data to support need"
+    },
+    {
+      "label": "Criteria Question", 
+      "text": "What specific findings or thresholds would indicate the need for...",
+      "strategy": "Shifts from whether to when"
+    }
+  ],
+  "nextTurnPrompt": "Hint for next exchange",
+  "appointmentProgress": {
+    "minutesElapsed": 3,
+    "minutesRemaining": 7,
+    "agendaItemsCovered": 1,
+    "agendaItemsRemaining": 2,
+    "goalsAchieved": []
+  },
+  "metadata": {
+    "pushbackIntensity": 1-5,
+    "collaborationLevel": 1-5,
+    "patientConfidence": 1-5,
+    "progressTowardGoal": "0-100%"
+  }
+}`;
+
+      const userPrompt = `CONVERSATION THREAD:
+${JSON.stringify(cleanThread, null, 2)}
+
+PATIENT CONTEXT:
+- Symptoms: ${context.symptoms || "Not specified"}
+- Goals: ${context.goals || "Get help with symptoms"}
+- Conditions: ${context.conditions?.join(", ") || "None specified"}
+- Previous attempts: ${context.previousAttempts || "None mentioned"}
+
+TASK: Generate the next provider response based on the ${persona} persona, then provide ${coachingLevel} coaching to help the patient navigate this conversation effectively.
+
+The patient needs coaching on:
+1. How to respond to the provider's statement
+2. How to keep the conversation productive
+3. How to work toward their stated goals
+4. How to handle any dismissiveness or pushback
+
+Remember: ${visitTime} minute visit, currently ${Math.min(cleanThread.length * 2, visitTime-2)} minutes in.`;
 
       const msg = await client.messages.create({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 900,
-        system,
-        messages: [{ role: "user", content: user }],
+        max_tokens: 1500,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userPrompt }]
       });
 
+      // Parse Claude's response
       const raw = Array.isArray(msg?.content) ? (msg.content[0]?.text || "") : "";
       const cleaned = raw.replace(/```(?:json)?\s*([\s\S]*?)```/i, "$1").trim();
 
       let data;
-      try { data = JSON.parse(cleaned); }
-      catch {
+      try { 
+        data = JSON.parse(cleaned);
+      } catch {
+        // Fallback structure if parsing fails
         data = {
-          counterpartyReply: cleaned || "",
-          coaching: { whatWentWell: [], improveNextTurn: [], techniques: [] },
-          responseOptions: [],
-          nextTurnPrompt: "",
+          providerResponse: generateCoachingFallbackResponse(persona, cleanThread),
+          pushbackType: "time",
+          coaching: {
+            immediate: ["Stay focused on your main concern"],
+            whatWorked: ["Clear symptom description"],
+            improvements: ["Be more specific about timeline"],
+            techniques: ["Use 'Yes, and...' to acknowledge while redirecting"],
+            timing: `Time check: ${Math.min(cleanThread.length * 2, visitTime-2)} minutes used, ${Math.max(2, visitTime - cleanThread.length * 2)} remaining`
+          },
+          responseOptions: [
+            {
+              label: "Acknowledge time pressure",
+              text: "I understand you're running behind. Let me focus on my main concern...",
+              strategy: "Shows respect for constraints"
+            },
+            {
+              label: "Ask for specific next step",
+              text: "Given the time, what's the one most important test we should start with?",
+              strategy: "Forces prioritization"
+            },
+            {
+              label: "Request follow-up",
+              text: "Can we schedule a longer appointment to properly address this?",
+              strategy: "Acknowledges limitations"
+            }
+          ],
+          nextTurnPrompt: "Make your primary ask before time runs out",
+          appointmentProgress: {
+            minutesElapsed: Math.min(cleanThread.length * 2, visitTime-2),
+            minutesRemaining: Math.max(2, visitTime - cleanThread.length * 2),
+            agendaItemsCovered: Math.floor(cleanThread.length / 4),
+            agendaItemsRemaining: 2,
+            goalsAchieved: []
+          },
+          metadata: {
+            pushbackIntensity: 3,
+            collaborationLevel: 2,
+            patientConfidence: 3,
+            progressTowardGoal: "25%"
+          }
         };
       }
 
-      const arr = x => Array.isArray(x) ? x.map(String) : [];
+      // Ensure arrays are properly formatted
+      const ensureArray = (val) => Array.isArray(val) ? val : [];
+      
       data.coaching = data.coaching || {};
-      data.coaching.whatWentWell = arr(data.coaching.whatWentWell);
-      data.coaching.improveNextTurn = arr(data.coaching.improveNextTurn);
-      data.coaching.techniques = arr(data.coaching.techniques);
-      data.responseOptions = (data.responseOptions || []).slice(0, 3);
+      data.coaching.immediate = ensureArray(data.coaching.immediate);
+      data.coaching.whatWorked = ensureArray(data.coaching.whatWorked);
+      data.coaching.improvements = ensureArray(data.coaching.improvements);
+      data.coaching.techniques = ensureArray(data.coaching.techniques);
+      
+      data.responseOptions = ensureArray(data.responseOptions).slice(0, 3);
 
-      return { ok: true, data };
-    } catch (err) {
-      console.error("promptCoachRun error:", err?.response?.data || err);
-      return { ok: false, error: err?.message || "Internal error" };
+      // Add mode-specific enhancements
+      if (mode === 'debrief') {
+        data.debriefReport = generateCoachDebriefReport(cleanThread, context);
+      }
+
+      return { 
+        ok: true, 
+        data: data,
+        mode: mode,
+        sessionId: `coach_${Date.now()}`
+      };
+
+    } catch (error) {
+      console.error("promptCoachRun error:", error?.response?.data || error);
+      return { 
+        ok: false, 
+        error: error?.message || "Unable to generate coaching response" 
+      };
     }
   }
 );
@@ -1228,5 +1403,94 @@ function generateFallbackQuestions(symptoms, context, timeLimit) {
       created_at: new Date().toISOString(),
       model: "fallback"
     }
+  };
+}
+
+// Helper function for fallback responses - renamed to avoid conflict
+function generateCoachingFallbackResponse(persona, thread) {
+  const responses = {
+    pcp_rushed: [
+      "I understand you're concerned, but we need to focus on one issue today. Have you tried lifestyle modifications?",
+      "We're running quite behind. Let's start with basic labs and see you back in 3 months.",
+      "That sounds like it could be stress-related. Are you getting enough sleep?",
+      "I have about 2 more minutes. What's your most pressing concern?"
+    ],
+    specialist_thorough: [
+      "Tell me more about when these symptoms occur. Any pattern you've noticed?",
+      "I'd like to review your previous testing. What evaluations have been done so far?",
+      "The symptoms you describe could fit several conditions. Let's be systematic.",
+      "Insurance typically requires we document failed conservative treatment first."
+    ],
+    gatekeeper: [
+      "Your insurance requires three months of documented symptoms before that referral.",
+      "We don't typically order that test unless criteria are met. Let me check the guidelines.",
+      "Have you tried physical therapy? That's the required first step.",
+      "I can't justify that to insurance without more objective findings."
+    ],
+    kind_dismissive: [
+      "You look quite healthy to me! Sometimes our bodies just need time to heal.",
+      "Have you been under stress lately? That can cause all sorts of symptoms.",
+      "At your age, some of this is normal. Have you tried yoga or meditation?",
+      "I don't see anything concerning on exam. Maybe try some vitamins?"
+    ]
+  };
+
+  const personaResponses = responses[persona] || responses.pcp_rushed;
+  const turn = Math.min(thread.length, personaResponses.length - 1);
+  return personaResponses[turn];
+}
+
+// Helper function for debrief report generation - renamed to avoid conflict
+function generateCoachDebriefReport(thread, context) {
+  const patientMessages = thread.filter(m => m.speaker === 'patient');
+  const providerMessages = thread.filter(m => m.speaker === 'provider');
+  
+  return {
+    summary: {
+      totalExchanges: thread.length,
+      patientTurns: patientMessages.length,
+      providerTurns: providerMessages.length,
+      estimatedDuration: `${Math.min(thread.length * 2, 15)} minutes`
+    },
+    strengths: [
+      "Clear initial symptom description",
+      "Maintained professional tone",
+      "Asked at least one clarifying question"
+    ],
+    improvements: [
+      "State your main ask within first 90 seconds",
+      "Prepare specific evidence (dates, measurements)",
+      "Practice the 'broken record' technique for key requests"
+    ],
+    keyPhrases: {
+      effective: [
+        "My primary concern today is...",
+        "What criteria would indicate...",
+        "Can we document that..."
+      ],
+      avoid: [
+        "Sorry to bother you...",
+        "I know you're busy but...",
+        "It's probably nothing..."
+      ]
+    },
+    nextSteps: [
+      "Practice with 'specialist_thorough' persona",
+      "Prepare a one-page symptom summary",
+      "Role-play with timer set to actual appointment length"
+    ],
+    portalTemplate: `Dear Dr. [Name],
+
+Thank you for our discussion today about ${context.symptoms || 'my symptoms'}.
+
+As we discussed:
+1. Primary concern: [Specific symptom and impact]
+2. Requested action: [Test/referral/treatment]
+3. Timeline: [When to follow up]
+
+Please confirm receipt and next steps.
+
+Best regards,
+[Your name]`
   };
 }
