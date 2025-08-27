@@ -1,1 +1,2 @@
-npx stylelint '**/*.css' --fix || exit 1
+#!/bin/sh
+npx lint-staged

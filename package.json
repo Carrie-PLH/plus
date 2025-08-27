@@ -1,8 +1,29 @@
 {
+  "name": "patientlead-template",
+  "version": "0.0.0",
+  "private": true,
   "dependencies": {
     "stripe": "^18.4.0"
   },
   "devDependencies": {
-    "@types/stripe": "^8.0.416"
+    "@types/stripe": "^8.0.416",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "style-dictionary": "^5.0.2",
+    "stylelint": "^16.8.0",
+    "stylelint-config-standard": "^39.0.0",
+    "stylelint-declaration-strict-value": "^1.10.11",
+    "tinycolor2": "^1.6.0"
+  },
+  "resolutions": {
+    "tmp": "^0.2.3"
+  },
+  "scripts": {
+    "lint:css": "stylelint \"**/*.css\" --fix",
+    "build:tokens": "style-dictionary build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.css": "stylelint --fix"
   }
 }
