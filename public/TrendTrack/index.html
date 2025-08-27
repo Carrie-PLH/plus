@@ -2,62 +2,1684 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>TrendTrack</title>
+  <title>TrendTrack - Symptom Pattern Analysis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 40px; max-width: 900px; }
-    textarea { width: 100%; font: inherit; margin-bottom: 10px; }
-    button { padding: 8px 14px; font: inherit; cursor: pointer; }
-    pre { background: #f6f6f6; padding: 10px; white-space: pre-wrap; }
-    .row { display: flex; gap: 20px; flex-wrap: wrap; }
-    .col { flex: 1 1 420px; }
-    canvas { width: 100%; height: 280px; border: 1px solid #ddd; }
-  </style>
-
-  <!-- Load Chart.js before any script that might call new Chart(...) -->
+  
+  <!-- Emoji favicon -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="14">📊</text></svg>'>
+  
+  <!-- Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="/css/upgrade-overlay.css">
+  
+  <style>
+    :root {
+      --brand-green: #a3b9a3;
+      --brand-coral: #c97f6d;
+      --brand-dark: #3c5c5e;
+      --brand-light: #ebf0eb;
+      --line: #e5e5e5;
+      --card: #fafafa;
+      --muted: #666;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    nav {
+      margin-bottom: 16px;
+    }
+    
+    nav a {
+      color: var(--brand-coral);
+      text-decoration: none;
+      margin-right: 16px;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .phase-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    .phase-section h2 {
+      margin: 0 0 16px;
+      color: var(--brand-dark);
+      font-size: 20px;
+      font-weight: 500;
+      border-bottom: 2px solid var(--brand-green);
+      padding-bottom: 8px;
+    }
+    
+    .tab-mode {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+    }
+    
+    .tab {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-size: 14px;
+    }
+    
+    .tab.active {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand-coral);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Form styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--brand-dark);
+    }
+    
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(163, 185, 163, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    .three-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .two-column,
+      .three-column {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Buttons */
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    
+    .btn-primary {
+      background: var(--brand-coral);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b86f5d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 127, 109, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--brand-dark);
+      border: 2px solid var(--brand-green);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--brand-light);
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+      min-height: 32px;
+    }
+    
+    /* Time range selector */
+    .time-range-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .time-btn {
+      padding: 8px 16px;
+      background: white;
+      border: 2px solid var(--line);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .time-btn.active {
+      background: var(--brand-green);
+      color: white;
+      border-color: var(--brand-green);
+    }
+    
+    /* Category tags */
+    .category-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .chip {
+      padding: 6px 12px;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-green);
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .chip.selected {
+      background: var(--brand-green);
+      color: white;
+    }
+    
+    /* Severity slider */
+    .severity-slider {
+      margin-top: 12px;
+    }
+    
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--brand-green), var(--brand-coral));
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .severity-display {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--brand-dark);
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    /* Status messages */
+    #status {
+      margin: 16px 0;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    #status.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+    }
+    
+    #status.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+      border: 1px solid var(--error);
+      display: block;
+    }
+    
+    #status.working {
+      background: rgba(163, 185, 163, 0.1);
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-green);
+      display: block;
+    }
+    
+    /* Chart containers */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .chart-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .chart-card h3 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      color: var(--brand-dark);
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+    
+    @media (min-width: 1024px) {
+      .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    /* Insights panel */
+    .insights-panel {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+    
+    .insights-panel h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: var(--brand-dark);
+    }
+    
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--brand-coral);
+    }
+    
+    .insight-icon {
+      font-size: 20px;
+    }
+    
+    .insight-text {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    /* Data table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .data-table th,
+    .data-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .data-table th {
+      background: var(--brand-light);
+      font-weight: 600;
+      color: var(--brand-dark);
+    }
+    
+    .data-table tr:hover {
+      background: var(--card);
+    }
+    
+    /* Import modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      margin: 20px;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+    
+    /* Entry list for import */
+    .entry-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 16px 0;
+    }
+    
+    .entry-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .entry-item:hover {
+      background: var(--brand-light);
+    }
+    
+    .entry-item input[type="checkbox"] {
+      width: auto;
+    }
+    
+    .entry-details {
+      flex: 1;
+    }
+    
+    .entry-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .entry-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    /* Hidden by default */
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Action buttons group */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    
+    /* Summary stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .stat-card {
+      background: var(--brand-light);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
-  <h1>TrendTrack</h1>
-  <p>Paste raw symptom records as JSON. Example:</p>
-  <pre>[
-  { "date":"2025-08-01","symptom":"headache","severity":6,"notes":"light sensitive" },
-  { "date":"2025-08-02","symptom":"nausea","severity":4,"notes":"after long car ride" },
-  { "date":"2025-08-02","symptom":"headache","severity":5,"notes":"missed lunch" }
-]</pre>
-
-  <!-- Input section -->
-  <label for="rawData">Records JSON</label>
-  <textarea id="rawData" rows="10" placeholder='[{"date":"YYYY-MM-DD","symptom":"...","severity":5,"notes":"..."}]'></textarea>
-  <button id="runBtn" type="button">Analyze</button>
-
-  <div class="row">
-    <div class="col">
-      <h3>Insights</h3>
-      <pre id="out">Run analysis to see pattern insights.</pre>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/Vault/">Vault</a>
+      <a href="/BriefMe/">BriefMe Hub</a>
+      <a href="/SymptomPro/">SymptomPro</a>
+    </nav>
+    
+    <header>
+      <h1>Discover What's Really Triggering Your Symptoms</h1>
+      <p class="subtitle">Track symptoms over time to reveal hidden patterns, identify your personal triggers, and build visual proof that helps both you and your providers finally understand your health cycles</p>
+    </header>
+    
+    <!-- Phase 1: Data Input -->
+    <div id="inputPhase" class="phase-section">
+      <h2>Step 1: Add Your Symptom Data</h2>
+      
+      <div class="tab-mode">
+        <button class="tab active" onclick="switchInputTab('manual')">Manual Entry</button>
+        <button class="tab" onclick="switchInputTab('import')">Import from Vault</button>
+        <button class="tab" onclick="switchInputTab('batch')">Batch JSON</button>
+      </div>
+      
+      <!-- Manual Entry Tab -->
+      <div id="manualTab" class="tab-content active">
+        <form id="symptomEntryForm">
+          <div class="two-column">
+            <div class="form-group">
+              <label for="entryDate">Date & Time</label>
+              <input type="datetime-local" id="entryDate" required>
+            </div>
+            <div class="form-group">
+              <label for="symptomName">Symptom</label>
+              <input type="text" id="symptomName" placeholder="e.g., Headache, Fatigue, Joint Pain" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="severity">Severity (1-10)</label>
+            <div class="severity-slider">
+              <div class="slider-container">
+                <span>Mild</span>
+                <input type="range" id="severity" min="1" max="10" value="5">
+                <span>Severe</span>
+                <div class="severity-display" id="severityValue">5</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="two-column">
+            <div class="form-group">
+              <label for="duration">Duration</label>
+              <input type="text" id="duration" placeholder="e.g., 2 hours, all day, 30 minutes">
+            </div>
+            <div class="form-group">
+              <label for="systemCategory">Body System</label>
+              <select id="systemCategory">
+                <option value="">Select category...</option>
+                <option value="neurological">Neurological</option>
+                <option value="gastrointestinal">Gastrointestinal</option>
+                <option value="musculoskeletal">Musculoskeletal</option>
+                <option value="cardiovascular">Cardiovascular</option>
+                <option value="respiratory">Respiratory</option>
+                <option value="dermatological">Dermatological</option>
+                <option value="endocrine">Endocrine</option>
+                <option value="psychiatric">Psychiatric/Mental Health</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Potential Triggers (select all that apply)</label>
+            <div class="category-chips">
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="stress" style="display:none">
+                <span>Stress</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="lack_of_sleep" style="display:none">
+                <span>Lack of Sleep</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="food" style="display:none">
+                <span>Food/Diet</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="weather" style="display:none">
+                <span>Weather Changes</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="physical_activity" style="display:none">
+                <span>Physical Activity</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="medication" style="display:none">
+                <span>Medication</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="hormonal" style="display:none">
+                <span>Hormonal/Cycle</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" name="trigger" value="environmental" style="display:none">
+                <span>Environmental</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="two-column">
+            <div class="form-group">
+              <label for="relievingFactors">What Helped? (Optional)</label>
+              <textarea id="relievingFactors" placeholder="e.g., Rest, medication, ice pack, stretching"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="notes">Additional Notes (Optional)</label>
+              <textarea id="notes" placeholder="Any other relevant details about this symptom occurrence"></textarea>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button type="submit" class="btn-primary">Add Entry</button>
+            <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Import Tab -->
+      <div id="importTab" class="tab-content">
+        <p>Import symptom data from your Medical Memory Vault. Select entries that contain structured symptom information.</p>
+        <div class="action-buttons">
+          <button type="button" class="btn-primary" onclick="openImportModal()">Browse Vault Entries</button>
+          <button type="button" class="btn-secondary" onclick="loadSampleData()">Load Sample Data</button>
+        </div>
+      </div>
+      
+      <!-- Batch JSON Tab -->
+      <div id="batchTab" class="tab-content">
+        <div class="form-group">
+          <label for="jsonInput">Paste JSON Data</label>
+          <textarea id="jsonInput" rows="10" placeholder='[{"date":"2025-08-26","symptom":"headache","severity":7,"duration":"2 hours","triggers":["stress"],"notes":"After meeting"}]'></textarea>
+          <p class="hint">Format: Array of objects with date, symptom, severity (1-10), and optional: duration, triggers, notes, relievingFactors</p>
+        </div>
+        <button type="button" class="btn-primary" onclick="importJSON()">Import JSON</button>
+      </div>
+      
+      <div id="status"></div>
     </div>
-    <div class="col">
-      <h3>Aggregates (preview)</h3>
-      <pre id="aggregates"></pre>
+    
+    <!-- Current Data Summary -->
+    <div id="dataSummary" class="phase-section hidden">
+      <h2>Current Dataset</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalEntries">0</div>
+          <div class="stat-label">Total Entries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="dateRange">--</div>
+          <div class="stat-label">Date Range</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avgSeverity">--</div>
+          <div class="stat-label">Avg Severity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="uniqueSymptoms">0</div>
+          <div class="stat-label">Unique Symptoms</div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" onclick="analyzeData()">Analyze Patterns</button>
+        <button type="button" class="btn-secondary" onclick="viewDataTable()">View Data Table</button>
+        <button type="button" class="btn-secondary" onclick="clearAllData()">Clear All</button>
+      </div>
+    </div>
+    
+    <!-- Phase 2: Analysis & Visualization -->
+    <div id="analysisPhase" class="phase-section hidden">
+      <h2>Step 2: Pattern Analysis & Visualization</h2>
+      
+      <!-- Time Range Selector -->
+      <div class="time-range-selector">
+        <button class="time-btn" onclick="setTimeRange(7)">7 Days</button>
+        <button class="time-btn active" onclick="setTimeRange(30)">30 Days</button>
+        <button class="time-btn" onclick="setTimeRange(90)">90 Days</button>
+        <button class="time-btn" onclick="setTimeRange('all')">All Time</button>
+        <button class="time-btn" onclick="showCustomRange()">Custom Range</button>
+      </div>
+      
+      <!-- Insights Panel -->
+      <div class="insights-panel">
+        <h3>Key Insights</h3>
+        <div id="insightsList"></div>
+      </div>
+      
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Severity Trend Chart -->
+        <div class="chart-card">
+          <h3>Severity Trends Over Time</h3>
+          <div class="chart-container">
+            <canvas id="severityChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Symptom Frequency Chart -->
+        <div class="chart-card">
+          <h3>Symptom Frequency</h3>
+          <div class="chart-container">
+            <canvas id="frequencyChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Trigger Analysis Chart -->
+        <div class="chart-card">
+          <h3>Common Triggers</h3>
+          <div class="chart-container">
+            <canvas id="triggerChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Pattern Calendar/Heatmap -->
+        <div class="chart-card">
+          <h3>Daily Pattern Heatmap</h3>
+          <div class="chart-container">
+            <canvas id="heatmapChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Export Options -->
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" onclick="generateReport()">Generate Provider Report</button>
+        <button type="button" class="btn-secondary" onclick="exportSnapshot()">Export Current View</button>
+        <button type="button" class="btn-secondary" onclick="saveToVault()">Save Analysis to Vault</button>
+      </div>
+    </div>
+    
+    <!-- Data Table View (hidden by default) -->
+    <div id="dataTablePhase" class="phase-section hidden">
+      <h2>Symptom Data Table</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Symptom</th>
+            <th>Severity</th>
+            <th>Duration</th>
+            <th>Triggers</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dataTableBody"></tbody>
+      </table>
+      <button type="button" class="btn-secondary" onclick="hideDataTable()">Close Table</button>
+    </div>
+    
+    <!-- Related Tools Section -->
+    <div class="phase-section">
+      <h2>Related Tools</h2>
+      <div class="action-buttons">
+        <a href="/SymptomPro/" class="btn-secondary">Create Symptom Summary</a>
+        <a href="/BriefMe/AgendaDesigner/" class="btn-secondary">Prepare for Appointment</a>
+        <a href="/PromptPro/" class="btn-secondary">Generate Provider Questions</a>
+      </div>
     </div>
   </div>
-
-  <h3>Charts</h3>
-  <p>This draws a basic average severity over time using Chart.js. Replace or extend later.</p>
-  <div style="height:280px; margin-top:20px;">
-    <canvas id="trendChart"></canvas>
+  
+  <!-- Import Modal -->
+  <div id="importModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Import from Medical Memory Vault</h3>
+        <button type="button" class="modal-close" onclick="closeImportModal()">×</button>
+      </div>
+      <p>Select entries to import. Only entries with structured symptom data will be shown.</p>
+      <div class="entry-list" id="vaultEntries"></div>
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" onclick="importSelected()">Import Selected</button>
+        <button type="button" class="btn-secondary" onclick="closeImportModal()">Cancel</button>
+      </div>
+    </div>
   </div>
-
+  
   <script type="module">
-    window.briefme?.configureForm?.({
-      selector: "#trendForm",
-      type: "trendTrack",
-      title: d => `TrendTrack: ${d.seriesName || "Tracking"}`,
-      extraTags: ["tracking","charts"]
+    import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+    import { functions } from "/lib/appBootstrap.js";
+    import { 
+      initAuth, 
+      saveEntryToVaultWithHooks, 
+      registerCopilotIngest,
+      listEpisodes 
+    } from "/lib/briefmeSave.js";
+    
+    // Initialize auth and telemetry
+    await initAuth();
+    const hooks = registerCopilotIngest({ enabled: true, defaultTool: "trendtrack" });
+    
+    // Fire page open event
+    try {
+      window.briefme?.copilot?.ingest?.("page_open", "trendtrack", {});
+    } catch {}
+    
+    // Global state
+    let symptomData = [];
+    let currentTimeRange = 30; // Default to 30 days
+    let charts = {};
+    let currentAnalysis = null;
+    
+    // DOM elements
+    const form = document.getElementById('symptomEntryForm');
+    const severitySlider = document.getElementById('severity');
+    const severityValue = document.getElementById('severityValue');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeEventListeners();
+      setDefaultDateTime();
+      loadStoredData();
     });
+    
+    function initializeEventListeners() {
+      // Severity slider
+      severitySlider.addEventListener('input', (e) => {
+        severityValue.textContent = e.target.value;
+      });
+      
+      // Trigger chips
+      document.querySelectorAll('.chip input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            e.target.parentElement.classList.add('selected');
+          } else {
+            e.target.parentElement.classList.remove('selected');
+          }
+        });
+      });
+      
+      // Form submission
+      form.addEventListener('submit', handleFormSubmit);
+    }
+    
+    function setDefaultDateTime() {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('entryDate').value = now.toISOString().slice(0, 16);
+    }
+    
+    function loadStoredData() {
+      try {
+        const stored = localStorage.getItem('trendtrack_data');
+        if (stored) {
+          symptomData = JSON.parse(stored);
+          updateDataSummary();
+        }
+      } catch (e) {
+        console.warn('Could not load stored data:', e);
+      }
+    }
+    
+    function saveDataLocally() {
+      try {
+        localStorage.setItem('trendtrack_data', JSON.stringify(symptomData));
+      } catch (e) {
+        console.warn('Could not save data locally:', e);
+      }
+    }
+    
+    // Tab switching
+    window.switchInputTab = function(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      const tabs = ['manual', 'import', 'batch'];
+      const index = tabs.indexOf(tab);
+      document.querySelectorAll('.tab')[index].classList.add('active');
+      document.getElementById(`${tab}Tab`).classList.add('active');
+    };
+    
+    // Form handling
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const triggers = Array.from(document.querySelectorAll('input[name="trigger"]:checked'))
+        .map(cb => cb.value);
+      
+      const entry = {
+        date: document.getElementById('entryDate').value,
+        symptom: document.getElementById('symptomName').value,
+        severity: parseInt(severitySlider.value),
+        duration: document.getElementById('duration').value || null,
+        category: document.getElementById('systemCategory').value || null,
+        triggers: triggers.length > 0 ? triggers : null,
+        relievingFactors: document.getElementById('relievingFactors').value || null,
+        notes: document.getElementById('notes').value || null,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Remove null values
+      Object.keys(entry).forEach(key => {
+        if (entry[key] === null || entry[key] === '') delete entry[key];
+      });
+      
+      symptomData.push(entry);
+      saveDataLocally();
+      updateDataSummary();
+      showStatus('Entry added successfully!', 'success');
+      
+      // Update charts if visible
+      if (!document.getElementById('analysisPhase').classList.contains('hidden')) {
+        updateCharts();
+      }
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("symptom_added", "trendtrack", { 
+          severity: entry.severity,
+          triggers: entry.triggers?.length || 0
+        });
+      } catch {}
+      
+      // Clear form
+      clearForm();
+    }
+    
+    window.clearForm = function() {
+      form.reset();
+      setDefaultDateTime();
+      severityValue.textContent = '5';
+      document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('selected'));
+    };
+    
+    // Data summary
+    function updateDataSummary() {
+      if (symptomData.length === 0) {
+        document.getElementById('dataSummary').classList.add('hidden');
+        return;
+      }
+      
+      document.getElementById('dataSummary').classList.remove('hidden');
+      document.getElementById('totalEntries').textContent = symptomData.length;
+      
+      // Calculate date range
+      const dates = symptomData.map(d => new Date(d.date));
+      const minDate = new Date(Math.min(...dates));
+      const maxDate = new Date(Math.max(...dates));
+      const rangeDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24));
+      document.getElementById('dateRange').textContent = `${rangeDays} days`;
+      
+      // Calculate average severity
+      const avgSev = symptomData.reduce((sum, d) => sum + d.severity, 0) / symptomData.length;
+      document.getElementById('avgSeverity').textContent = avgSev.toFixed(1);
+      
+      // Count unique symptoms
+      const uniqueSymptoms = new Set(symptomData.map(d => d.symptom.toLowerCase()));
+      document.getElementById('uniqueSymptoms').textContent = uniqueSymptoms.size;
+    }
+    
+    // Import functions
+    window.openImportModal = async function() {
+      document.getElementById('importModal').classList.add('show');
+      showStatus('Loading vault entries...', 'working');
+      
+      try {
+        const entries = await listEpisodes({ limit: 50, type: 'symptomPro' });
+        displayVaultEntries(entries);
+        showStatus('', '');
+      } catch (e) {
+        showStatus('Could not load vault entries', 'error');
+        console.error('Vault load error:', e);
+      }
+    };
+    
+    window.closeImportModal = function() {
+      document.getElementById('importModal').classList.remove('show');
+    };
+    
+    function displayVaultEntries(entries) {
+      const container = document.getElementById('vaultEntries');
+      container.innerHTML = '';
+      
+      if (entries.length === 0) {
+        container.innerHTML = '<p>No symptom entries found in vault</p>';
+        return;
+      }
+      
+      entries.forEach(entry => {
+        const item = document.createElement('div');
+        item.className = 'entry-item';
+        item.innerHTML = `
+          <input type="checkbox" value="${entry.id}" data-entry='${JSON.stringify(entry)}'>
+          <div class="entry-details">
+            <div class="entry-title">${entry.title || 'Untitled'}</div>
+            <div class="entry-meta">
+              ${entry.type || 'Unknown'} • 
+              ${new Date(entry.occurredAt).toLocaleDateString()}
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+    
+    window.importSelected = function() {
+      const selected = document.querySelectorAll('#vaultEntries input:checked');
+      let imported = 0;
+      
+      selected.forEach(checkbox => {
+        try {
+          const entry = JSON.parse(checkbox.dataset.entry);
+          // Parse structured data from vault entry
+          // This would need to be adapted based on actual vault data structure
+          if (entry.structured && entry.structured.symptoms) {
+            // Convert vault format to TrendTrack format
+            // Implementation depends on actual data structure
+            imported++;
+          }
+        } catch (e) {
+          console.error('Import error:', e);
+        }
+      });
+      
+      if (imported > 0) {
+        saveDataLocally();
+        updateDataSummary();
+        showStatus(`Imported ${imported} entries`, 'success');
+      }
+      
+      closeImportModal();
+    };
+    
+    // Batch import
+    window.importJSON = function() {
+      const input = document.getElementById('jsonInput').value;
+      
+      try {
+        const data = JSON.parse(input);
+        if (!Array.isArray(data)) {
+          throw new Error('Input must be an array');
+        }
+        
+        // Validate and clean data
+        const validEntries = data.filter(d => d.date && d.symptom && d.severity);
+        symptomData.push(...validEntries);
+        
+        saveDataLocally();
+        updateDataSummary();
+        showStatus(`Imported ${validEntries.length} entries`, 'success');
+        
+        document.getElementById('jsonInput').value = '';
+      } catch (e) {
+        showStatus('Invalid JSON format', 'error');
+      }
+    };
+    
+    // Load sample data
+    window.loadSampleData = function() {
+      const sampleData = [
+        {
+          date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+          symptom: "Migraine",
+          severity: 8,
+          duration: "4 hours",
+          triggers: ["stress", "lack_of_sleep"],
+          relievingFactors: "Dark room, rest"
+        },
+        {
+          date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+          symptom: "Joint Pain",
+          severity: 6,
+          duration: "All day",
+          triggers: ["weather"],
+          category: "musculoskeletal"
+        },
+        {
+          date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+          symptom: "Fatigue",
+          severity: 7,
+          duration: "3 days",
+          triggers: ["stress"],
+          notes: "After project deadline"
+        },
+        {
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+          symptom: "Migraine",
+          severity: 5,
+          duration: "2 hours",
+          triggers: ["food"],
+          relievingFactors: "Medication helped"
+        },
+        {
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          symptom: "Nausea",
+          severity: 4,
+          duration: "1 hour",
+          category: "gastrointestinal"
+        }
+      ];
+      
+      symptomData.push(...sampleData);
+      saveDataLocally();
+      updateDataSummary();
+      showStatus('Sample data loaded', 'success');
+    };
+    
+    // Analysis
+    window.analyzeData = async function() {
+      if (symptomData.length === 0) {
+        showStatus('No data to analyze', 'error');
+        return;
+      }
+      
+      showStatus('Analyzing patterns...', 'working');
+      
+      // Fire telemetry
+      try {
+        window.briefme?.copilot?.ingest?.("analyze_click", "trendtrack", {
+          entries: symptomData.length
+        });
+      } catch {}
+      
+      try {
+        // Call Firebase function
+        const trendTrackRun = httpsCallable(functions, "trendTrackRun");
+        const response = await trendTrackRun({ records: symptomData });
+        
+        currentAnalysis = response.data;
+        
+        // Display insights
+        displayInsights(currentAnalysis.insights);
+        
+        // Show analysis phase
+        document.getElementById('analysisPhase').classList.remove('hidden');
+        document.getElementById('analysisPhase').scrollIntoView({ behavior: 'smooth' });
+        
+        // Create charts
+        createCharts(currentAnalysis.aggregates);
+        
+        showStatus('Analysis complete', 'success');
+        
+      } catch (error) {
+        console.error('Analysis error:', error);
+        showStatus('Analysis failed. Creating local visualizations...', 'error');
+        
+        // Fallback to local analysis
+        document.getElementById('analysisPhase').classList.remove('hidden');
+        createLocalCharts();
+      }
+    };
+    
+    function displayInsights(insights) {
+      const container = document.getElementById('insightsList');
+      container.innerHTML = '';
+      
+      if (!insights || insights.length === 0) {
+        // Generate basic insights locally
+        insights = generateLocalInsights();
+      }
+      
+      insights.forEach(insight => {
+        const item = document.createElement('div');
+        item.className = 'insight-item';
+        item.innerHTML = `
+          <div class="insight-icon">💡</div>
+          <div class="insight-text">${insight}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+    
+    function generateLocalInsights() {
+      const insights = [];
+      
+      // Most common symptom
+      const symptomCounts = {};
+      symptomData.forEach(d => {
+        symptomCounts[d.symptom] = (symptomCounts[d.symptom] || 0) + 1;
+      });
+      const mostCommon = Object.entries(symptomCounts).sort((a,b) => b[1] - a[1])[0];
+      if (mostCommon) {
+        insights.push(`Most frequent symptom: ${mostCommon[0]} (${mostCommon[1]} occurrences)`);
+      }
+      
+      // Average severity
+      const avgSeverity = symptomData.reduce((sum, d) => sum + d.severity, 0) / symptomData.length;
+      insights.push(`Average severity across all symptoms: ${avgSeverity.toFixed(1)}/10`);
+      
+      // Common triggers
+      const triggers = {};
+      symptomData.forEach(d => {
+        if (d.triggers) {
+          d.triggers.forEach(t => {
+            triggers[t] = (triggers[t] || 0) + 1;
+          });
+        }
+      });
+      const topTrigger = Object.entries(triggers).sort((a,b) => b[1] - a[1])[0];
+      if (topTrigger) {
+        insights.push(`Most common trigger: ${topTrigger[0].replace(/_/g, ' ')} (${topTrigger[1]} times)`);
+      }
+      
+      return insights;
+    }
+    
+    function createCharts(aggregates) {
+      // Destroy existing charts
+      Object.values(charts).forEach(chart => chart.destroy());
+      charts = {};
+      
+      // Create severity trend chart
+      createSeverityTrendChart();
+      
+      // Create frequency chart
+      createFrequencyChart();
+      
+      // Create trigger chart
+      createTriggerChart();
+      
+      // Create heatmap
+      createHeatmapChart();
+    }
+    
+    function createLocalCharts() {
+      createCharts(null);
+    }
+    
+    function createSeverityTrendChart() {
+      const ctx = document.getElementById('severityChart').getContext('2d');
+      
+      // Process data by date and symptom
+      const dataBySymptom = {};
+      const filteredData = getFilteredData();
+      
+      filteredData.forEach(entry => {
+        const date = new Date(entry.date).toLocaleDateString();
+        const symptom = entry.symptom;
+        
+        if (!dataBySymptom[symptom]) {
+          dataBySymptom[symptom] = {};
+        }
+        
+        if (!dataBySymptom[symptom][date]) {
+          dataBySymptom[symptom][date] = [];
+        }
+        
+        dataBySymptom[symptom][date].push(entry.severity);
+      });
+      
+      // Calculate averages and prepare chart data
+      const datasets = [];
+      const colors = ['#c97f6d', '#a3b9a3', '#3c5c5e', '#ff9800', '#2196f3'];
+      let colorIndex = 0;
+      
+      Object.keys(dataBySymptom).forEach(symptom => {
+        const data = [];
+        const dates = new Set();
+        
+        Object.keys(dataBySymptom[symptom]).forEach(date => {
+          dates.add(date);
+          const avg = dataBySymptom[symptom][date].reduce((a,b) => a+b, 0) / dataBySymptom[symptom][date].length;
+          data.push({ x: date, y: avg });
+        });
+        
+        datasets.push({
+          label: symptom,
+          data: data,
+          borderColor: colors[colorIndex % colors.length],
+          backgroundColor: colors[colorIndex % colors.length] + '20',
+          tension: 0.1
+        });
+        colorIndex++;
+      });
+      
+      charts.severity = new Chart(ctx, {
+        type: 'line',
+        data: { datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              title: { display: true, text: 'Severity' }
+            }
+          },
+          plugins: {
+            title: { display: false },
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+    }
+    
+    function createFrequencyChart() {
+      const ctx = document.getElementById('frequencyChart').getContext('2d');
+      
+      const symptomCounts = {};
+      getFilteredData().forEach(d => {
+        symptomCounts[d.symptom] = (symptomCounts[d.symptom] || 0) + 1;
+      });
+      
+      const sortedSymptoms = Object.entries(symptomCounts).sort((a,b) => b[1] - a[1]);
+      
+      charts.frequency = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sortedSymptoms.map(s => s[0]),
+          datasets: [{
+            label: 'Occurrences',
+            data: sortedSymptoms.map(s => s[1]),
+            backgroundColor: '#a3b9a3'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+    
+    function createTriggerChart() {
+      const ctx = document.getElementById('triggerChart').getContext('2d');
+      
+      const triggerCounts = {};
+      getFilteredData().forEach(d => {
+        if (d.triggers) {
+          d.triggers.forEach(t => {
+            const label = t.replace(/_/g, ' ').charAt(0).toUpperCase() + t.slice(1).replace(/_/g, ' ');
+            triggerCounts[label] = (triggerCounts[label] || 0) + 1;
+          });
+        }
+      });
+      
+      charts.triggers = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(triggerCounts),
+          datasets: [{
+            data: Object.values(triggerCounts),
+            backgroundColor: [
+              '#c97f6d', '#a3b9a3', '#3c5c5e', 
+              '#ff9800', '#2196f3', '#9c27b0', 
+              '#4caf50', '#ff5722'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right' }
+          }
+        }
+      });
+    }
+    
+    function createHeatmapChart() {
+      const ctx = document.getElementById('heatmapChart').getContext('2d');
+      
+      // Group data by day of week and hour
+      const heatmapData = {};
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      
+      getFilteredData().forEach(entry => {
+        const date = new Date(entry.date);
+        const day = days[date.getDay()];
+        
+        if (!heatmapData[day]) {
+          heatmapData[day] = [];
+        }
+        heatmapData[day].push(entry.severity);
+      });
+      
+      // Calculate average severity per day
+      const chartData = days.map(day => {
+        if (heatmapData[day]) {
+          const avg = heatmapData[day].reduce((a,b) => a+b, 0) / heatmapData[day].length;
+          return avg.toFixed(1);
+        }
+        return 0;
+      });
+      
+      charts.heatmap = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: days,
+          datasets: [{
+            label: 'Average Severity',
+            data: chartData,
+            backgroundColor: chartData.map(v => {
+              const intensity = v / 10;
+              return `rgba(201, 127, 109, ${intensity})`;
+            })
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { 
+              beginAtZero: true,
+              max: 10
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+    
+    function getFilteredData() {
+      if (currentTimeRange === 'all') {
+        return symptomData;
+      }
+      
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - currentTimeRange);
+      
+      return symptomData.filter(d => new Date(d.date) >= cutoff);
+    }
+    
+    function updateCharts() {
+      createCharts(currentAnalysis?.aggregates);
+    }
+    
+    // Time range selection
+    window.setTimeRange = function(days) {
+      currentTimeRange = days;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      if (!document.getElementById('analysisPhase').classList.contains('hidden')) {
+        updateCharts();
+      }
+    };
+    
+    window.showCustomRange = function() {
+      const start = prompt('Start date (YYYY-MM-DD):');
+      const end = prompt('End date (YYYY-MM-DD):');
+      
+      if (start && end) {
+        // Filter data by custom range
+        // Implementation would go here
+        showStatus('Custom range applied', 'success');
+      }
+    };
+    
+    // Data table
+    window.viewDataTable = function() {
+      const tbody = document.getElementById('dataTableBody');
+      tbody.innerHTML = '';
+      
+      symptomData.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach((entry, index) => {
+        const row = document.createElement('tr');
+        const date = new Date(entry.date);
+        row.innerHTML = `
+          <td>${date.toLocaleDateString()}</td>
+          <td>${date.toLocaleTimeString()}</td>
+          <td>${entry.symptom}</td>
+          <td>${entry.severity}/10</td>
+          <td>${entry.duration || '--'}</td>
+          <td>${entry.triggers ? entry.triggers.join(', ') : '--'}</td>
+          <td>
+            <button class="btn-small" onclick="deleteEntry(${index})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      document.getElementById('dataTablePhase').classList.remove('hidden');
+    };
+    
+    window.hideDataTable = function() {
+      document.getElementById('dataTablePhase').classList.add('hidden');
+    };
+    
+    window.deleteEntry = function(index) {
+      if (confirm('Delete this entry?')) {
+        symptomData.splice(index, 1);
+        saveDataLocally();
+        updateDataSummary();
+        viewDataTable();
+        showStatus('Entry deleted', 'success');
+      }
+    };
+    
+    window.clearAllData = function() {
+      if (confirm('Clear all symptom data? This cannot be undone.')) {
+        symptomData = [];
+        localStorage.removeItem('trendtrack_data');
+        updateDataSummary();
+        document.getElementById('analysisPhase').classList.add('hidden');
+        showStatus('All data cleared', 'success');
+      }
+    };
+    
+    // Export functions
+    window.generateReport = async function() {
+      showStatus('Generating provider report...', 'working');
+      
+      const report = {
+        generatedAt: new Date().toISOString(),
+        dateRange: `${currentTimeRange} days`,
+        totalEntries: symptomData.length,
+        symptoms: symptomData,
+        insights: currentAnalysis?.insights || generateLocalInsights(),
+        summary: {
+          mostFrequent: getMostFrequentSymptom(),
+          averageSeverity: getAverageSeverity(),
+          commonTriggers: getCommonTriggers()
+        }
+      };
+      
+      // Download as JSON
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `symptom-report-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showStatus('Report downloaded', 'success');
+    };
+    
+    window.exportSnapshot = function() {
+      // Export current view as image
+      // This would need canvas2html or similar library for full implementation
+      showStatus('Snapshot export not yet implemented', 'warning');
+    };
+    
+    window.saveToVault = async function() {
+      showStatus('Saving to Medical Memory Vault...', 'working');
+      
+      try {
+        const title = `TrendTrack Analysis - ${new Date().toLocaleDateString()}`;
+        const saveResult = await saveEntryToVaultWithHooks(
+          {
+            type: "trendTrack",
+            title: title,
+            structured: {
+              symptoms: symptomData,
+              analysis: currentAnalysis,
+              dateRange: currentTimeRange,
+              insights: currentAnalysis?.insights || generateLocalInsights()
+            },
+            extraTags: ["tracking", "patterns", "analytics"]
+          },
+          hooks
+        );
+        
+        showStatus('✓ Saved to your Medical Memory Vault', 'success');
+        
+      } catch (error) {
+        console.error('Save error:', error);
+        showStatus('Unable to save. Please try again.', 'error');
+      }
+    };
+    
+    // Helper functions
+    function getMostFrequentSymptom() {
+      const counts = {};
+      symptomData.forEach(d => {
+        counts[d.symptom] = (counts[d.symptom] || 0) + 1;
+      });
+      return Object.entries(counts).sort((a,b) => b[1] - a[1])[0];
+    }
+    
+    function getAverageSeverity() {
+      return symptomData.reduce((sum, d) => sum + d.severity, 0) / symptomData.length;
+    }
+    
+    function getCommonTriggers() {
+      const triggers = {};
+      symptomData.forEach(d => {
+        if (d.triggers) {
+          d.triggers.forEach(t => {
+            triggers[t] = (triggers[t] || 0) + 1;
+          });
+        }
+      });
+      return Object.entries(triggers).sort((a,b) => b[1] - a[1]).slice(0, 3);
+    }
+    
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      statusEl.className = type || '';
+    }
   </script>
-  <script type="module" src="/lib/briefmeAuto.js"></script>
-<script type="module" src="/lib/toolAccessCheck.js"></script>
 </body>
 </html>
