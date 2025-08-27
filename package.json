@@ -24,6 +24,6 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.css": "npx stylelint --fix"
-  }
+  "**/*.css": "npx stylelint --fix"
+}
 }
