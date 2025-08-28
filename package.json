@@ -6,20 +6,30 @@
     "stripe": "^18.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
     "@types/stripe": "^8.0.416",
+    "autoprefixer": "^10.4.16",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "postcss": "^8.4.31",
     "style-dictionary": "^5.0.2",
     "stylelint": "^16.8.0",
     "stylelint-config-standard": "^39.0.0",
+    "stylelint-declaration-strict-value": "^1.10.11",
+    "tailwindcss": "^4.1.12",
     "tinycolor2": "^1.6.0"
   },
   "scripts": {
+    "prepare": "husky",
     "lint:css": "stylelint \"**/*.css\" --fix",
     "build:tokens": "style-dictionary build --config style-dictionary.config.js",
-    "prepare": "husky"
+    "build:tw": "tailwindcss -i src/tailwind.css -o public/dist/app.css -m",
+    "build:css": "npm run build:tokens && npm run build:tw",
+    "watch:tw": "tailwindcss -i src/tailwind.css -o public/dist/app.css -w",
+    "serve": "firebase serve --only hosting --project black-monitor-469420-h9",
+    "deploy": "firebase deploy --only hosting --project black-monitor-469420-h9 --non-interactive"
   },
   "lint-staged": {
-  "**/*.css": "stylelint --fix --allow-empty-input"
-}
+    "**/*.css": "stylelint --fix"
+  }
 }

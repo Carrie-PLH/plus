@@ -1,0 +1,34 @@
+/* Bring your generated CSS variables in first */
+@import url("../dist/brand.css");
+
+/* Tailwind v4 core (base, components, utilities) */
+@import url("tailwindcss");
+
+/* Map your brand CSS variables to Tailwind color names via @theme
+   so you can use utilities like bg-softsage, text-warmclay, etc. */
+@theme {
+  /* Base brand colors (from your CSS variables) */
+  --color-softsage: var(--primary-green);      /* #a3b9a3 */
+  --color-warmclay: var(--primary-coral);      /* #c97f6d */
+  --color-pineygreen: var(--dark-accent);      /* #3c5c5e */
+  --color-mint: var(--light-accent);           /* #ebf0eb */
+  --color-lightpink: var(--light-pink);        /* #ecd1cb */
+  --color-dustyteal: var(--dusty-teal);        /* #669999 */
+  --color-mossygreen: var(--mossy-green);      /* #687744 */
+  --color-terracotta: var(--terra-cotta);      /* #c2552a */
+
+  /* Semantic aliases (optional) */
+  --color-info: var(--dusty-teal);
+  --color-success: var(--mossy-green);
+  --color-warning: var(--terra-cotta);
+}
+
+/* (Optional) a couple of example utilities using your theme colors
+   Remove if you don't want extra CSS here. */
+.btn-brand {
+  @apply px-4 py-2 rounded-lg text-white bg-softsage hover:bg-pineygreen transition;
+}
+
+.card-brand {
+  @apply border border-mint/60 shadow-sm;
+}

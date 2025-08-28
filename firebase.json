@@ -1,16 +1,26 @@
 {
   "hosting": {
     "public": "public",
-    "ignore": ["**/.*", "**/node_modules/**"],
-    "rewrites": [
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "headers": [
       {
-        "source": "/copilot/ingest",
-        "function": "copilotIngest"
+        "source": "/dist/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        ]
       },
       {
-        "source": "/vault/save",
-        "function": "vaultSave"
+        "source": "/**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
       }
+    ],
+    "rewrites": [
+      { "source": "/copilot/ingest", "function": "copilotIngest" },
+      { "source": "/vault/save", "function": "vaultSave" }
     ]
   },
   "functions": {
