@@ -12,18 +12,14 @@
     "style-dictionary": "^5.0.2",
     "stylelint": "^16.8.0",
     "stylelint-config-standard": "^39.0.0",
-    "stylelint-declaration-strict-value": "^1.10.11",
     "tinycolor2": "^1.6.0"
-  },
-  "resolutions": {
-    "tmp": "^0.2.3"
   },
   "scripts": {
     "lint:css": "stylelint \"**/*.css\" --fix",
-    "build:tokens": "style-dictionary build",
+    "build:tokens": "style-dictionary build --config style-dictionary.config.js",
     "prepare": "husky"
   },
   "lint-staged": {
-  "**/*.css": "npx stylelint --fix"
+  "**/*.css": "stylelint --fix --allow-empty-input"
 }
 }

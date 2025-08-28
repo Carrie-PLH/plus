@@ -1,0 +1,12 @@
+{
+  "color": {
+    "soft-sage": { "value": "#a3b9a3" },
+    "warm-clay": { "value": "#c97f6d" },
+    "piney-green": { "value": "#3c5c5e" },
+    "lightest-mint": { "value": "#ebf0eb" },
+    "light-pink": { "value": "#ecd1cb" },
+    "dusty-teal": { "value": "#669999" },
+    "mossy-green": { "value": "#687744" },
+    "muted-terra-cotta": { "value": "#c2552a" }
+  }
+}

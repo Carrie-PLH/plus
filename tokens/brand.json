@@ -1,0 +1,14 @@
+{
+  "brand": {
+    "softSage":   { "value": "#a3b9a3" },
+    "warmClay":   { "value": "#c97f6d" },
+    "pineyGreen": { "value": "#3c5c5e" },
+    "lightestMint": { "value": "#ebf0eb" },
+    "lightPink":  { "value": "#ecd1cb" }
+  },
+  "accents": {
+    "dustyTeal":   { "value": "#669999" },
+    "mossyGreen":  { "value": "#687744" },
+    "mutedTerraCotta": { "value": "#c2552a" }
+  }
+}
