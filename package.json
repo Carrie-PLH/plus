@@ -6,7 +6,6 @@
     "stripe": "^18.4.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.12",
     "@types/stripe": "^8.0.416",
     "autoprefixer": "^10.4.16",
     "husky": "^9.1.7",
@@ -15,19 +14,17 @@
     "style-dictionary": "^5.0.2",
     "stylelint": "^16.8.0",
     "stylelint-config-standard": "^39.0.0",
-    "stylelint-declaration-strict-value": "^1.10.11",
-    "tailwindcss": "^4.1.12",
+    "tailwindcss": "^3.4.13",
     "tinycolor2": "^1.6.0"
   },
   "scripts": {
     "prepare": "husky",
     "lint:css": "stylelint \"**/*.css\" --fix",
     "build:tokens": "style-dictionary build --config style-dictionary.config.js",
-    "build:tw": "tailwindcss -i src/tailwind.css -o public/dist/app.css -m",
+    "build:tw": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -i src/tailwind.css -o public/dist/app.css -m",
     "build:css": "npm run build:tokens && npm run build:tw",
-    "watch:tw": "tailwindcss -i src/tailwind.css -o public/dist/app.css -w",
-    "serve": "firebase serve --only hosting --project black-monitor-469420-h9",
-    "deploy": "firebase deploy --only hosting --project black-monitor-469420-h9 --non-interactive"
+    "watch:tw": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -i src/tailwind.css -o public/dist/app.css -w",
+    "deploy": "npx firebase-tools@14.15.0 deploy --only hosting --project black-monitor-469420-h9 --non-interactive"
   },
   "lint-staged": {
     "**/*.css": "stylelint --fix"
