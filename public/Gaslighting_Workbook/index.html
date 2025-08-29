@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognize Medical Gaslighting - PatientLead Health</title>
+    
+    <!-- Roboto Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Recognize Medical Gaslighting",
+      "description": "Learn to identify patterns of medical dismissal and distinguish them from legitimate clinical uncertainty.",
+      "author": {
+        "@type": "Organization",
+        "name": "PatientLead Health"
+      }
+    }
+    </script>
+    
+    <style>
+:root {
+    /* Primary Colors */
+    --primary: #3c5c5e;        /* Teal - nav, headings, buttons */
+    --primary-dark: #2f4748;   /* Teal hover state */
+    
+    /* Accent Colors */
+    --coral: #b85746;          /* "What it looks like" */
+    --coral-dark: #a24a3c;     /* Coral hover */
+    --coral-bg: rgba(184, 87, 70, 0.1);  /* 10% opacity for backgrounds */
+    
+    --rust: #c2552a;           /* Warnings, alerts */
+    --rust-dark: #9e4421;      /* Rust hover */
+    --rust-bg: rgba(194, 85, 42, 0.1);
+    
+    /* Secondary Colors */
+    --olive: #58653a;          /* "How to respond", success */
+    --olive-dark: #4a5330;     /* Olive hover */
+    --olive-bg: rgba(88, 101, 58, 0.1);
+    
+    /* Supporting Colors */
+    --teal-light: #4d7777;     /* Mobile nav, secondary actions */
+    --teal-lighter: #3e5f5f;   /* Hover states */
+    
+    /* Neutrals */
+    --light: #ebf0eb;          /* Light backgrounds */
+    --white: #ffffff;
+    --text: #2a3f40;           /* Main text color */
+    --text-light: #4b5563;     /* Secondary text */
+    --border: #d4ddd4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: #ffffff;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 1000;
+    border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Layout */
+.page-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+}
+
+/* Sticky Sidebar */
+.sidebar-nav {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.sidebar-nav h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-nav a {
+    color: var(--text);
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.sidebar-nav a:hover {
+    background: var(--light);
+    color: var(--primary-dark);
+    transform: translateX(4px);
+}
+
+.sidebar-nav a.active {
+    background: linear-gradient(to right, rgba(60, 92, 94, 0.08), rgba(60, 92, 94, 0.04));
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background: var(--primary);
+    border-radius: 0 3px 3px 0;
+}
+
+/* Main Content */
+main {
+    min-width: 0;
+}
+
+/* Section Intro */
+.section-intro {
+    background: linear-gradient(135deg, var(--light) 0%, #e0e8e0 100%);
+    padding: 2.5rem;
+    border-radius: 16px;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .section-intro {
+        background: var(--light);
+    }
+}
+
+.section-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--olive));
+}
+
+.section-intro h1 {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.section-intro .lead {
+    font-size: 1.125rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.what-youll-learn {
+    background: white;
+    padding: 1.75rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.what-youll-learn h2 {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.what-youll-learn ul {
+    list-style: none;
+    padding: 0;
+}
+
+.what-youll-learn li {
+    padding-left: 2rem;
+    position: relative;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.what-youll-learn li::before {
+    content: '→';
+    position: absolute;
+    left: 0.5rem;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* Label chips */
+.label-chip {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(60, 92, 94, 0.1);
+    color: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+/* Enhanced Visual Callout Cards */
+.callout-card {
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .callout-card {
+        transition: none;
+    }
+}
+
+.callout-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+}
+
+/* "What it looks like" cards - Coral */
+.callout-card.looks-like {
+    background: var(--coral-bg);
+    border: 2px solid var(--coral);
+}
+
+.callout-card.looks-like:hover {
+    transform: translateX(2px);
+}
+
+.callout-card.looks-like::before {
+    background: var(--coral);
+}
+
+.callout-card.looks-like h4 {
+    color: var(--text);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.callout-card.looks-like .label-chip {
+    background: var(--coral);
+    color: white;
+}
+
+/* "How to respond" cards - Olive */
+.callout-card.how-to {
+    background: var(--olive-bg);
+    border: 2px solid var(--olive);
+}
+
+.callout-card.how-to:hover {
+    transform: translateX(2px);
+}
+
+.callout-card.how-to::before {
+    background: var(--olive);
+}
+
+.callout-card.how-to h4 {
+    color: var(--text);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.callout-card.how-to .label-chip {
+    background: var(--olive);
+    color: white;
+}
+
+.callout-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.callout-card li {
+    padding-left: 1.5rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.callout-card li::before {
+    content: '•';
+    position: absolute;
+    left: 0.5rem;
+    font-weight: bold;
+}
+
+/* Expandable Sections */
+.expandable {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .expandable {
+        transition: none;
+    }
+}
+
+.expandable:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 6px rgba(60, 92, 94, 0.1);
+}
+
+.expandable-header {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--light);
+    transition: background 0.2s;
+}
+
+.expandable-header:hover {
+    background: #e0e8e0;
+}
+
+.expandable-header:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: -3px;
+}
+
+.expandable-header h3 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.expand-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    color: var(--text);
+    font-size: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.expandable.open .expand-icon {
+    transform: rotate(45deg);
+    background: var(--primary);
+    color: white;
+}
+
+.expandable-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .expandable-content {
+        transition: none;
+    }
+}
+
+.expandable.open .expandable-content {
+    max-height: 2000px;
+}
+
+.expandable-inner {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+/* Learn More Expandables */
+.learn-more {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 2px dotted var(--border);
+}
+
+.learn-more-toggle {
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: none;
+    background: var(--light);
+    border: 1px solid var(--primary);
+    font-size: 0.95rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.learn-more-toggle:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.learn-more-content {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: var(--light);
+    border-radius: 8px;
+    border-left: 3px solid var(--teal-light);
+    display: none;
+}
+
+.learn-more-content.show {
+    display: block;
+}
+
+/* Context Boxes */
+.context-box {
+    background: linear-gradient(135deg, rgba(77, 119, 119, 0.05), rgba(77, 119, 119, 0.1));
+    border-left: 4px solid var(--teal-light);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.context-box p {
+    color: var(--text);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Micro CTAs */
+.micro-cta {
+    background: var(--coral-bg);
+    border: 2px solid var(--coral);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.micro-cta p {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.micro-cta a {
+    background: var(--coral);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.micro-cta a:hover {
+    background: var(--coral-dark);
+    transform: translateY(-1px);
+}
+
+/* Interactive Checklist */
+.checklist-section {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.checklist-intro {
+    background: linear-gradient(135deg, rgba(77, 119, 119, 0.05), rgba(77, 119, 119, 0.1));
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border-left: 6px solid var(--teal-light);
+}
+
+.checklist-intro p {
+    margin: 0;
+    color: var(--text);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 500;
+}
+
+.checklist-intro p strong {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.checklist-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.75rem;
+    padding: 1rem;
+    background: var(--light);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.checklist-controls #checklist-count {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.checklist-controls button {
+    padding: 0.6rem 1.25rem;
+    border: 2px solid var(--rust);
+    background: white;
+    color: var(--rust);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+
+.checklist-controls button:hover {
+    background: var(--rust);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: var(--light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checkbox-item:hover {
+    background: #e0e8e0;
+    transform: translateX(4px);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 1rem;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.checkbox-item span {
+    flex: 1;
+    color: var(--text);
+}
+
+.checkbox-item.checked {
+    background: var(--rust-bg);
+    border-left: 3px solid var(--rust);
+}
+
+.checklist-results {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(60, 92, 94, 0.05), rgba(88, 101, 58, 0.05));
+    border-radius: 8px;
+    display: none;
+    border: 1px solid var(--border);
+}
+
+.checklist-results.show {
+    display: block;
+}
+
+.checklist-results h3 {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.toast.show {
+    display: flex;
+}
+
+.toast button {
+    background: white;
+    color: var(--primary);
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Back to Top */
+.back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(60, 92, 94, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 100;
+    font-size: 1.25rem;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    background: var(--primary-dark);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(60, 92, 94, 0.4);
+}
+
+/* Mobile Floating TOC */
+.mobile-toc {
+    display: none;
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+    z-index: 99;
+}
+
+.mobile-toc-toggle {
+    width: 56px;
+    height: 56px;
+    background: var(--teal-light);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 12px rgba(77, 119, 119, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.mobile-toc-toggle:hover {
+    background: var(--teal-lighter);
+}
+
+.mobile-toc-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 250px;
+    display: none;
+}
+
+.mobile-toc.open .mobile-toc-menu {
+    display: block;
+}
+
+.mobile-toc-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mobile-toc-menu a {
+    display: block;
+    padding: 0.5rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.mobile-toc-menu a:hover {
+    background: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .page-layout {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .sidebar-nav {
+        display: none;
+    }
+    
+    .mobile-toc {
+        display: block;
+    }
+    
+    .section-intro {
+        padding: 1.5rem;
+    }
+    
+    .section-intro h1 {
+        font-size: 1.75rem;
+    }
+    
+    .micro-cta {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .micro-cta a {
+        margin-top: 1rem;
+        width: 100%;
+    }
+}
+
+/* Focus styles */
+button:focus,
+a:focus,
+input:focus {
+    outline: 3px solid var(--teal-light);
+    outline-offset: 2px;
+}
+
+.expandable-header:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: -3px;
+}
+
+.checkbox-item input[type="checkbox"]:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Print styles */
+@media print {
+    header, nav, .sidebar-nav, .mobile-toc, footer, .micro-cta, .back-to-top {
+        display: none !important;
+    }
+    
+    .expandable-content {
+        max-height: none !important;
+        display: block !important;
+    }
+    
+    .callout-card {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+    
+    .section-intro, .context-box, .checklist-intro {
+        background: white !important;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Risk Grid */
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.risk-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.risk-card:hover {
+    border-color: var(--teal-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.risk-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light);
+}
+
+.risk-icon {
+    font-size: 1.5rem;
+}
+
+.risk-card h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.risk-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.risk-card li {
+    padding: 0.5rem 0;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.risk-card strong {
+    color: var(--coral);
+    font-weight: 600;
+}
+
+/* Impact Assessment */
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.impact-category {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.impact-category h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid white;
+}
+
+.impact-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.impact-item:hover {
+    transform: translateX(4px);
+}
+
+.impact-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.75rem;
+    accent-color: var(--primary);
+}
+
+.download-btn {
+    background: var(--olive);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1.5rem;
+}
+
+.download-btn:hover {
+    background: var(--olive-dark);
+    transform: translateY(-2px);
+}
+
+.impact-summary {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border: 2px solid var(--olive);
+    border-radius: 12px;
+}
+
+.summary-text {
+    background: var(--light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    font-family: monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+}
+    </style>
+</head>
+<body>
+    <!-- Skip to content -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="page-layout">
+        <!-- Sticky Sidebar Navigation -->
+        <nav class="sidebar-nav" role="navigation" aria-label="On this page">
+            <h3>Navigate This Page</h3>
+            <ul>
+                <li><a href="#overview" class="active">Overview</a></li>
+                <li><a href="#patterns">Common Patterns</a></li>
+                <li><a href="#who-at-risk">Who's Most at Risk</a></li>
+                <li><a href="#red-flags">Red Flags Checklist</a></li>
+                <li><a href="#impact-assessment">Impact Assessment</a></li>
+                <li><a href="#examples">Real Examples</a></li>
+                <li><a href="#assessment">Self-Assessment</a></li>
+                <li><a href="#next-steps">Next Steps</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main id="main-content" role="main">
+            <!-- Section Introduction -->
+            <div class="section-intro">
+                <h1>Recognize Medical Gaslighting</h1>
+                <p class="lead">Learn to identify patterns of medical dismissal and distinguish them from legitimate clinical uncertainty.</p>
+                
+                <div class="what-youll-learn">
+                    <h2>What You'll Learn Here</h2>
+                    <ul>
+                        <li>How to identify systematic patterns of dismissal vs. normal medical uncertainty</li>
+                        <li>Red flags that indicate medical gaslighting is occurring</li>
+                        <li>Tools to assess your healthcare experiences objectively</li>
+                        <li>Strategies for evaluating provider quality and respect</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Common Patterns Section -->
+            <section id="patterns">
+                <h2>Common Patterns of Medical Gaslighting</h2>
+                
+                <div class="context-box">
+                    <p>These patterns help you distinguish between normal medical processes and dismissive behavior. Click each section to explore warning signs and response strategies.</p>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="symptom-panel">
+                        <h3>Symptom Dismissal Without Investigation</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content" id="symptom-panel">
+                        <div class="expandable-inner">
+                            <p>Providers may dismiss symptoms without conducting appropriate tests or examinations. This differs from clinical uncertainty where providers acknowledge limitations while still investigating.</p>
+                            
+                            <div class="callout-card looks-like">
+                                <span class="label-chip">EXAMPLE</span>
+                                <h4>What it looks like</h4>
+                                <ul>
+                                    <li>"You're too young to have that condition"</li>
+                                    <li>"It's probably just stress"</li>
+                                    <li>"Let's wait and see" without follow-up plans</li>
+                                    <li>Refusing tests because "they'll probably be normal"</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="callout-card how-to">
+                                <span class="label-chip">RESPONSE</span>
+                                <h4>How to respond</h4>
+                                <ul>
+                                    <li>Ask: "What specific criteria would warrant testing?"</li>
+                                    <li>Request: "Please document in my chart that you're declining to test"</li>
+                                    <li>Assert: "I need a concrete plan for addressing these symptoms"</li>
+                                    <li>Seek a second opinion if dismissal continues</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="learn-more">
+                                <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false" aria-controls="symptom-more">Learn more about this pattern</button>
+                                <div class="learn-more-content" id="symptom-more">
+                                    <p><strong>Research shows:</strong> Women wait an average of 4 years longer than men for diagnosis of the same conditions. Age-based dismissal affects both young adults ("too young") and older adults ("normal aging") disproportionately.</p>
+                                    <p><strong>Documentation tip:</strong> Keep a symptom diary with dates, severity (1-10 scale), and impact on daily activities. This objective data helps counter dismissive attitudes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="psych-panel">
+                        <h3>Psychological Attribution Without Evidence</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content" id="psych-panel">
+                        <div class="expandable-inner">
+                            <p>Physical symptoms are attributed to mental health without ruling out physical causes first.</p>
+                            
+                            <div class="callout-card looks-like">
+                                <span class="label-chip">EXAMPLE</span>
+                                <h4>What it looks like</h4>
+                                <ul>
+                                    <li>"Have you considered therapy?"</li>
+                                    <li>"This sounds like anxiety"</li>
+                                    <li>"Are you under a lot of stress?"</li>
+                                    <li>Prescribing antidepressants for unexplained physical symptoms</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="callout-card how-to">
+                                <span class="label-chip">RESPONSE</span>
+                                <h4>How to respond</h4>
+                                <ul>
+                                    <li>"I'm open to exploring all causes, but let's rule out physical ones first"</li>
+                                    <li>"What tests would help differentiate between physical and psychological causes?"</li>
+                                    <li>"My mental health is managed - these symptoms are new and physical"</li>
+                                    <li>Document the timeline showing symptoms preceded any stress</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="micro-cta">
+                                <p>Want help drafting this into your portal message?</p>
+                                <a href="/tools/scripts.html#psychological">View Response Scripts</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="demo-panel">
+                        <h3>Minimization Based on Demographics</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content" id="demo-panel">
+                        <div class="expandable-inner">
+                            <p>Symptoms are dismissed based on age, gender, weight, race, or other demographic factors rather than clinical evidence.</p>
+                            
+                            <div class="callout-card looks-like">
+                                <span class="label-chip">EXAMPLE</span>
+                                <h4>What it looks like</h4>
+                                <ul>
+                                    <li>"Women tend to be more sensitive to pain"</li>
+                                    <li>"This would improve if you lost weight"</li>
+                                    <li>"People your age don't get this condition"</li>
+                                    <li>"Your culture tends to express symptoms differently"</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="callout-card how-to">
+                                <span class="label-chip">RESPONSE</span>
+                                <h4>How to respond</h4>
+                                <ul>
+                                    <li>"Let's focus on my specific symptoms rather than generalizations"</li>
+                                    <li>"What would you recommend if I were [different demographic]?"</li>
+                                    <li>"Please evaluate my symptoms based on clinical evidence"</li>
+                                    <li>Request specific data supporting demographic-based dismissal</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Who's at Risk section -->
+<section id="who-at-risk">
+    <h2>Who's Most At Risk</h2>
+    
+    <div class="context-box">
+        <p>Research shows certain groups face disproportionate medical dismissal. Understanding these patterns helps validate your experiences and advocate more effectively.</p>
+    </div>
+    
+    <div class="risk-grid">
+        <div class="risk-card">
+            <div class="risk-header">
+                <span class="risk-icon">♀</span>
+                <h3>Women</h3>
+            </div>
+            <ul>
+                <li><strong>4+ years</strong> longer to diagnose endometriosis</li>
+                <li><strong>50% less</strong> likely to receive pain medication</li>
+                <li>Heart attack symptoms dismissed as anxiety</li>
+            </ul>
+        </div>
+        
+        <div class="risk-card">
+            <div class="risk-header">
+                <span class="risk-icon">🌍</span>
+                <h3>People of Color</h3>
+            </div>
+            <ul>
+                <li>Pain systematically underassessed</li>
+                <li><strong>2x longer</strong> ER wait times</li>
+                <li>Maternal mortality <strong>3x higher</strong> for Black women</li>
+            </ul>
+        </div>
+        
+        <div class="risk-card">
+            <div class="risk-header">
+                <span class="risk-icon">🏳️‍🌈</span>
+                <h3>LGBTQ+ Individuals</h3>
+            </div>
+            <ul>
+                <li><strong>1 in 5</strong> experience discrimination</li>
+                <li>Trans patients denied appropriate care</li>
+                <li>Mental health blamed for physical symptoms</li>
+            </ul>
+        </div>
+        
+        <div class="risk-card">
+            <div class="risk-header">
+                <span class="risk-icon">♿</span>
+                <h3>Chronic Illness/Disability</h3>
+            </div>
+            <ul>
+                <li>Invisible disabilities dismissed</li>
+                <li>New symptoms attributed to existing conditions</li>
+                <li>Labeled as "drug-seeking" for pain management</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="callout-card how-to">
+        <h4>If you're in multiple groups</h4>
+        <p>Intersectional identities face compounded discrimination. For example, Black women with chronic pain face racism, sexism, AND chronic illness stigma. Document patterns specific to your identities to strengthen your advocacy.</p>
+    </div>
+</section>
+            
+            <!-- Red Flags Checklist -->
+            <section id="red-flags" class="checklist-section">
+                <h2 id="rf-title">Red Flags Checklist</h2>
+                
+                <div class="checklist-intro">
+                    <p id="rf-intro"><strong>Reflect on your recent healthcare visits.</strong> Check any red flags you've noticed. This tool helps you identify patterns objectively. Your selections are saved privately on your device.</p>
+                </div>
+                
+                <div role="group" aria-labelledby="rf-title" aria-describedby="rf-intro">
+                    <div class="checklist-controls">
+                        <span id="checklist-count">0 items checked</span>
+                        <button onclick="clearChecklistWithUndo()" aria-label="Clear all checkboxes">Clear All</button>
+                    </div>
+                    
+                    <form role="form" aria-label="Medical gaslighting red flags checklist">
+                        <fieldset>
+                            <legend class="sr-only">Red flags in your healthcare experiences</legend>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interrupting" onchange="updateChecklist()">
+                                <span>Provider interrupts or doesn't let you finish describing symptoms</span>
+                            </label>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="body-language" onchange="updateChecklist()">
+                                <span>Dismissive body language (eye rolling, sighing, checking clock repeatedly)</span>
+                            </label>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="test-refusal" onchange="updateChecklist()">
+                                <span>Refuses reasonable requests for tests or referrals without explanation</span>
+                            </label>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="appearance" onchange="updateChecklist()">
+                                <span>Makes assumptions based on appearance ("you look fine")</span>
+                            </label>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="minimizing" onchange="updateChecklist()">
+                                <span>Minimizes symptom severity or questions if you're exaggerating</span>
+                            </label>
+                            
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defensive" onchange="updateChecklist()">
+                                <span>Becomes defensive or hostile when you ask questions</span>
+                            </label>
+                        </fieldset>
+                    </form>
+                </div>
+                
+                <div class="checklist-results" id="checklist-results">
+                    <h3>Your Pattern Assessment</h3>
+                    <p id="results-text"></p>
+                </div>
+                
+                <div class="micro-cta">
+                    <p>Need help preparing for your next appointment?</p>
+                    <a href="/tools/scripts.html">View Response Scripts</a>
+                </div>
+            </section>
+            
+            <!-- Examples Section -->
+            <section id="examples">
+                <h2>Real Examples & FAQs</h2>
+                
+                <script type="application/ld+json">
+                {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [{
+                    "@type": "Question",
+                    "name": "Is it gaslighting if my doctor says my tests are normal?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Not necessarily. The key difference is how they respond to normal results. Appropriate responses acknowledge that normal tests don't mean symptoms aren't real and suggest next steps. Gaslighting responses dismiss symptoms entirely based on normal tests."
+                    }
+                  },{
+                    "@type": "Question",
+                    "name": "How do I know if I should find a new provider?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Consider finding a new provider if you experience multiple red flags consistently, including continued dismissal after clear communication, feeling worse after appointments, refusal to document concerns, and loss of trust in their medical judgment."
+                    }
+                  }]
+                }
+                </script>
+                
+                <div class="context-box">
+                    <p>These anonymized examples from real patients help illustrate the difference between appropriate medical care and gaslighting. Click to expand each scenario.</p>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="faq1-panel">
+                        <h3>Q: Is it gaslighting if my doctor says my tests are normal?</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content" id="faq1-panel">
+                        <div class="expandable-inner">
+                            <p><strong>Not necessarily.</strong> The key difference is how they respond to normal results:</p>
+                            
+                            <div class="callout-card how-to">
+                                <span class="label-chip">APPROPRIATE</span>
+                                <h4>Appropriate Response</h4>
+                                <ul>
+                                    <li>"These tests are normal, which rules out X. Let's investigate other possibilities."</li>
+                                    <li>"Normal results don't mean your symptoms aren't real. Let's try a different approach."</li>
+                                    <li>"Sometimes this condition doesn't show on standard tests. Here are our next steps."</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="callout-card looks-like">
+                                <span class="label-chip">GASLIGHTING</span>
+                                <h4>Gaslighting Response</h4>
+                                <ul>
+                                    <li>"Your tests are normal, so nothing's wrong with you."</li>
+                                    <li>"If the tests are normal, it must be in your head."</li>
+                                    <li>"There's nothing more I can do if your tests are fine."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add as new expandable in Examples section -->
+<div class="expandable">
+    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false">
+        <h3>What Does GOOD Medical Care Look Like?</h3>
+        <span class="expand-icon" aria-hidden="true">+</span>
+    </div>
+    <div class="expandable-content">
+        <div class="expandable-inner">
+            <p>It's important to recognize quality care so you know what to expect and seek:</p>
+            
+            <div class="callout-card how-to">
+                <h4>Green Flags - Signs of a Good Provider</h4>
+                <ul>
+                    <li>✓ Lets you finish describing symptoms without interrupting</li>
+                    <li>✓ Says "I don't know" when uncertain (rather than dismissing)</li>
+                    <li>✓ Explains their reasoning and next steps clearly</li>
+                    <li>✓ Validates that your symptoms are real and concerning</li>
+                    <li>✓ Offers referrals when outside their expertise</li>
+                    <li>✓ Documents your concerns in your chart</li>
+                    <li>✓ Respects your expertise about your own body</li>
+                    <li>✓ Responds professionally to questions</li>
+                </ul>
+            </div>
+            
+            <p><strong>Remember:</strong> You deserve providers who meet these standards. If your current provider doesn't, it's okay to seek care elsewhere.</p>
+        </div>
+    </div>
+</div>
+
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="faq2-panel">
+                        <h3>Q: How do I know if I should find a new provider?</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content" id="faq2-panel">
+                        <div class="expandable-inner">
+                            <p>Consider finding a new provider if you experience multiple red flags consistently:</p>
+                            
+                            <ul style="line-height: 1.8;">
+                                <li>You've tried communicating your concerns clearly multiple times</li>
+                                <li>The provider continues to dismiss or minimize your symptoms</li>
+                                <li>You feel worse (emotionally or physically) after appointments</li>
+                                <li>They refuse to document your concerns or their decisions</li>
+                                <li>You've lost trust in their medical judgment</li>
+                            </ul>
+                            
+                            <div class="micro-cta">
+                                <p>Ready to evaluate your current providers?</p>
+                                <a href="/tools/provider-comparison.html">Use Our Comparison Tool</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add after Red Flags Checklist section -->
+<section id="impact-assessment" class="checklist-section">
+    <h2>Impact Assessment</h2>
+    
+    <div class="checklist-intro">
+        <p><strong>Beyond red flags:</strong> How is medical gaslighting affecting your life? This assessment helps you articulate the real-world impact when advocating for better care.</p>
+    </div>
+    
+    <div class="impact-grid">
+        <div class="impact-category">
+            <h3>🏥 Healthcare Impact</h3>
+            <label class="impact-item">
+                <input type="checkbox" name="delayed-diagnosis">
+                <span>Delayed diagnosis or treatment</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="inadequate-pain">
+                <span>Inadequate pain management</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="avoiding-care">
+                <span>Avoiding necessary medical care</span>
+            </label>
+        </div>
+        
+        <div class="impact-category">
+            <h3>🧠 Psychological Impact</h3>
+            <label class="impact-item">
+                <input type="checkbox" name="self-doubt">
+                <span>Doubting my own symptoms</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="anxiety">
+                <span>Anxiety before appointments</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="depression">
+                <span>Depression or hopelessness</span>
+            </label>
+        </div>
+        
+        <div class="impact-category">
+            <h3>💼 Life Impact</h3>
+            <label class="impact-item">
+                <input type="checkbox" name="work">
+                <span>Missing work/school</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="relationships">
+                <span>Relationship strain</span>
+            </label>
+            <label class="impact-item">
+                <input type="checkbox" name="financial">
+                <span>Financial burden from multiple visits</span>
+            </label>
+        </div>
+    </div>
+    
+    <button class="download-btn" onclick="generateImpactSummary()">
+        📄 Generate Impact Summary
+    </button>
+    
+    <div id="impact-summary" class="impact-summary" style="display: none;">
+        <h3>Your Impact Summary</h3>
+        <p class="summary-intro">Copy this summary to share with providers, support systems, or for your records:</p>
+        <div id="summary-text" class="summary-text"></div>
+        <button onclick="copySummary()">Copy to Clipboard</button>
+    </div>
+</section>
+            
+            <!-- Next Steps -->
+            <section id="next-steps">
+                <h2>Your Next Steps</h2>
+                
+                <div class="context-box">
+                    <p>Based on what you've learned about recognizing medical gaslighting, here are concrete actions you can take today:</p>
+                </div>
+                
+                <ol style="padding-left: 1.5rem; margin-top: 1.5rem; line-height: 1.8;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Document your experiences</strong> - Start keeping records of dismissive encounters
+                    </li>
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Prepare for appointments</strong> - Use our templates to organize your concerns
+                    </li>
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Practice responses</strong> - Review scripts for common dismissive situations
+                    </li>
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Build your support network</strong> - Connect with others who understand
+                    </li>
+                </ol>
+                
+                <div class="micro-cta">
+                    <p>Ready to develop your response strategy?</p>
+                    <a href="/respond.html">Continue to Response Strategies</a>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Toast notification for undo -->
+    <div class="toast" id="toast">
+        <span>Checklist cleared</span>
+        <button onclick="undoClear()">Undo</button>
+    </div>
+    
+    <!-- Mobile Floating TOC -->
+    <div class="mobile-toc" id="mobile-toc">
+        <button class="mobile-toc-toggle" onclick="toggleMobileTOC()" aria-label="Toggle navigation menu">
+            ☰
+        </button>
+        <nav class="mobile-toc-menu" role="navigation">
+            <h3 style="font-size: 0.875rem; margin-bottom: 1rem; color: #6b7280;">Jump to Section</h3>
+            <ul>
+                <li><a href="#overview" onclick="toggleMobileTOC()">Overview</a></li>
+                <li><a href="#patterns" onclick="toggleMobileTOC()">Common Patterns</a></li>
+			    <li><a href="#who-at-risk" onclick="toggleMobileTOC()">Who's at Risk</a></li>
+                <li><a href="#red-flags" onclick="toggleMobileTOC()">Red Flags</a></li>
+                <li><a href="#impact-assessment" onclick="toggleMobileTOC()">Impact Assessment</a></li>
+                <li><a href="#examples" onclick="toggleMobileTOC()">Examples</a></li>
+                <li><a href="#next-steps" onclick="toggleMobileTOC()">Next Steps</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Back to Top -->
+    <a href="#main-content" class="back-to-top" aria-label="Back to top">↑</a>
+    
+    <script>
+        // Versioned localStorage key
+        const CHECKLIST_KEY = 'plh-gaslighting-checklist-v2';
+        const VERSION_KEY = 'plh-gaslighting-version';
+        const CURRENT_VERSION = '2';
+        
+        // Check version and notify if reset needed
+        function checkVersion() {
+            const savedVersion = localStorage.getItem(VERSION_KEY);
+            if (savedVersion && savedVersion !== CURRENT_VERSION) {
+                localStorage.removeItem(CHECKLIST_KEY);
+                localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
+                showToast('Checklist updated. Previous selections reset.', 3000);
+            } else if (!savedVersion) {
+                localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
+            }
+        }
+        
+        // Expandable sections
+        document.querySelectorAll('.expandable-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const expandable = this.parentElement;
+                const isOpen = expandable.classList.contains('open');
+                const panelId = this.getAttribute('aria-controls');
+                
+                expandable.classList.toggle('open');
+                this.setAttribute('aria-expanded', !isOpen);
+                
+                // Use hidden attribute for better accessibility
+                const panel = document.getElementById(panelId);
+                if (panel) {
+                    if (!isOpen) {
+                        panel.removeAttribute('hidden');
+                    } else {
+                        panel.setAttribute('hidden', '');
+                    }
+                }
+            });
+            
+            header.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+        
+        // Learn more toggles
+        function toggleLearnMore(button) {
+            const content = button.nextElementSibling;
+            const isOpen = content.classList.contains('show');
+            
+            content.classList.toggle('show');
+            button.textContent = isOpen ? 'Learn more about this pattern' : 'Show less';
+            button.setAttribute('aria-expanded', !isOpen);
+        }
+        
+        // Toast notification
+        function showToast(message, duration, onUndo) {
+            const toast = document.getElementById('toast');
+            const toastText = toast.querySelector('span');
+            const undoBtn = toast.querySelector('button');
+            
+            toastText.textContent = message;
+            
+            if (onUndo) {
+                undoBtn.style.display = 'block';
+                window.undoCallback = onUndo;
+            } else {
+                undoBtn.style.display = 'none';
+            }
+            
+            toast.classList.add('show');
+            
+            if (window.toastTimeout) {
+                clearTimeout(window.toastTimeout);
+            }
+            
+            window.toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                window.undoCallback = null;
+            }, duration);
+        }
+        
+        function undoClear() {
+            if (window.undoCallback) {
+                window.undoCallback();
+                const toast = document.getElementById('toast');
+                toast.classList.remove('show');
+                clearTimeout(window.toastTimeout);
+            }
+        }
+        
+        // Undo functionality for clear
+        let savedState = null;
+        
+        function clearChecklistWithUndo() {
+            if (confirm('Clear all checked items? This cannot be undone after 5 seconds.')) {
+                // Save current state
+                const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+                savedState = {};
+                checkboxes.forEach(checkbox => {
+                    savedState[checkbox.name] = checkbox.checked;
+                });
+                
+                // Clear all
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                localStorage.removeItem(CHECKLIST_KEY);
+                updateChecklist();
+                
+                // Show toast with undo
+                showToast('Checklist cleared', 5000, () => {
+                    // Restore state
+                    Object.keys(savedState).forEach(name => {
+                        const checkbox = document.querySelector(`input[name="${name}"]`);
+                        if (checkbox) {
+                            checkbox.checked = savedState[name];
+                        }
+                    });
+                    updateChecklist();
+                    showToast('Checklist restored', 2000);
+                });
+            }
+        }
+        
+        // Checklist functionality with localStorage
+        function updateChecklist() {
+            const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+            const checkedCount = document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked').length;
+            
+            // Update count
+            document.getElementById('checklist-count').textContent = `${checkedCount} items checked`;
+            
+            // Update visual state
+            checkboxes.forEach(checkbox => {
+                const item = checkbox.parentElement;
+                if (checkbox.checked) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+            
+            // Save to localStorage with version
+            const checkedItems = {};
+            checkboxes.forEach(checkbox => {
+                checkedItems[checkbox.name] = checkbox.checked;
+            });
+            localStorage.setItem(CHECKLIST_KEY, JSON.stringify(checkedItems));
+            
+            // Update results
+            const resultsDiv = document.getElementById('checklist-results');
+            const resultsText = document.getElementById('results-text');
+            
+            if (checkedCount > 0) {
+                resultsDiv.classList.add('show');
+                
+                if (checkedCount <= 2) {
+                    resultsText.innerHTML = `You've identified ${checkedCount} concerning patterns. While these may be isolated incidents, it's worth documenting these experiences and preparing advocacy strategies for future appointments.`;
+                } else if (checkedCount <= 4) {
+                    resultsText.innerHTML = `You've identified ${checkedCount} red flags, suggesting a pattern of dismissive behavior. Consider using our response scripts and documentation tools, and evaluate whether this provider meets your healthcare needs.`;
+                } else {
+                    resultsText.innerHTML = `You've identified ${checkedCount} significant red flags. This pattern strongly suggests medical gaslighting. We recommend seeking a new provider, documenting all interactions, and considering a formal complaint. <a href="/resources.html#support">Find support resources here</a>.`;
+                }
+            } else {
+                resultsDiv.classList.remove('show');
+            }
+        }
+        
+        // Impact Summary Generator
+function generateImpactSummary() {
+    const impacts = {
+        healthcare: [],
+        psychological: [],
+        life: []
+    };
+    
+    // Collect checked impacts
+    document.querySelectorAll('.impact-category').forEach(category => {
+        const categoryName = category.querySelector('h3').textContent;
+        category.querySelectorAll('input:checked').forEach(input => {
+            const impact = input.nextElementSibling.textContent;
+            
+            if (categoryName.includes('Healthcare')) {
+                impacts.healthcare.push(impact);
+            } else if (categoryName.includes('Psychological')) {
+                impacts.psychological.push(impact);
+            } else if (categoryName.includes('Life')) {
+                impacts.life.push(impact);
+            }
+        });
+    });
+    
+    // Generate summary text
+    let summary = `MEDICAL GASLIGHTING IMPACT SUMMARY\n`;
+    summary += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+    
+    if (impacts.healthcare.length) {
+        summary += `Healthcare Impact:\n`;
+        impacts.healthcare.forEach(i => summary += `• ${i}\n`);
+        summary += `\n`;
+    }
+    
+    if (impacts.psychological.length) {
+        summary += `Psychological Impact:\n`;
+        impacts.psychological.forEach(i => summary += `• ${i}\n`);
+        summary += `\n`;
+    }
+    
+    if (impacts.life.length) {
+        summary += `Life/Functional Impact:\n`;
+        impacts.life.forEach(i => summary += `• ${i}\n`);
+        summary += `\n`;
+    }
+    
+    summary += `\nThis summary documents how medical dismissal has affected my health and wellbeing. I am seeking healthcare providers who will take these impacts seriously and work collaboratively toward solutions.`;
+    
+    // Display summary
+    document.getElementById('summary-text').textContent = summary;
+    document.getElementById('impact-summary').style.display = 'block';
+    
+    // Smooth scroll to summary
+    document.getElementById('impact-summary').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copySummary() {
+    const summaryText = document.getElementById('summary-text').textContent;
+    navigator.clipboard.writeText(summaryText).then(() => {
+        showToast('Summary copied to clipboard!', 2000);
+    });
+}
+        
+        // Load saved checklist state
+        function loadChecklist() {
+            checkVersion();
+            const saved = localStorage.getItem(CHECKLIST_KEY);
+            if (saved) {
+                const checkedItems = JSON.parse(saved);
+                Object.keys(checkedItems).forEach(name => {
+                    const checkbox = document.querySelector(`input[name="${name}"]`);
+                    if (checkbox) {
+                        checkbox.checked = checkedItems[name];
+                    }
+                });
+                updateChecklist();
+            }
+        }
+        
+        // Mobile TOC toggle
+        function toggleMobileTOC() {
+            const mobileTOC = document.getElementById('mobile-toc');
+            mobileTOC.classList.toggle('open');
+        }
+        
+        // Active section highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-nav a, .mobile-toc-menu a');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Back to top visibility
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChecklist();
+        });
+    </script>
+</body>
+</html>

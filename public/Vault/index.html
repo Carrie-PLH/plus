@@ -5,24 +5,42 @@
   <title>Medical Memory Vault</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --line:#e5e5e5; --card:#fafafa; --muted:#666; }
-    * { box-sizing: border-box; }
-    body { font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:40px auto; max-width:980px; padding:0 20px; color:#222; }
-    h1 { margin:0 0 6px; }
-    .hint { font-size:13px; color:var(--muted); margin:0 0 18px; }
-    nav { margin-bottom:16px; }
-    nav a { margin-right:10px; color:#0a66c2; text-decoration:none; }
-    .panel { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:14px; }
-    input[type="text"], select { width:100%; padding:8px; border:1px solid #cfcfcf; border-radius:6px; font:inherit; }
-    button { padding:10px 14px; border:none; border-radius:8px; font:inherit; cursor:pointer; }
-    .btn-primary { background:#0a66c2; color:#fff; }
-    .btn-secondary { background:#eee; color:#111; border:1px solid #cfcfcf; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
-    .list { display:flex; flex-direction:column; gap:10px; }
-    .card { border:1px solid var(--line); background:var(--card); border-radius:12px; padding:12px; }
-    .meta { font-size:12px; color:var(--muted); margin-top:4px; }
-    pre { white-space:pre-wrap; margin:6px 0 0; }
-  </style>
+    :root {
+    /* Main Brand Colors */
+    --soft-sage: #a3b9a3;
+    --warm-clay: #c97f6d;
+    --piney-green: #3c5c5e;
+    
+    /* Light Colors */
+    --lightest-mint: #ebf0eb;
+    --light-pink: #ecd1cb;
+    
+    /* Accent Colors */
+    --dusty-teal: #669999;
+    --mossy-green: #687744;
+    --muted-terra-cotta: #c2552a;
+    
+    /* Legacy naming for compatibility */
+    --primary-green: #3c5c5e;  /* Piney green - CORRECTED */
+    --primary-coral: #c97f6d;  /* Warm clay - CORRECTED */
+    --dark: #3c5c5e;           /* Piney green - CORRECTED */
+    --light-mint: #ebf0eb;     /* Lightest mint - CORRECTED */
+    
+    /* Neutral Colors */
+    --border-light: #e5e7eb;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+    
+    /* Semantic colors harmonized with brand */
+    --success: #687744;      /* Mossy green - CORRECTED */
+    --success-light: #e8eee2;
+    --warning: #c97f6d;      /* Warm clay - CORRECTED */
+    --warning-light: #f7ede9;
+    --error: #c2552a;        /* Muted terra cotta - CORRECTED */
+    --error-light: #f9e8e2;
+    --info: #669999;         /* Dusty teal - CORRECTED */
+    --info-light: #e7f2f2;
+}
 </head>
 <body>
   <h1>Medical Memory Vault</h1>

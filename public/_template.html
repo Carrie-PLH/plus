@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Versioned assets to bypass long-lived caches -->
+  <link rel="stylesheet" href="/dist/app.css?v=20250828a">
+  <link rel="stylesheet" href="/dist/brand.css?v=20250828a">
+</head>
+<body class="font-primary bg-lightest-mint text-dark">
+  <!-- Shared header -->
+  <div data-include="header"></div>
+
+  <!-- Tool-specific content goes inside <main> -->
+  <main class="container" style="max-width:1100px;margin:0 auto;padding:2rem 1rem;">
+    <!-- Page content -->
+  </main>
+
+  <!-- Shared footer -->
+  <div data-include="footer"></div>
+
+  <!-- Loader with the same version to bust caches -->
+  <script src="/js/include-partials.js?v=20250828a" defer></script>
+</body>
+</html>

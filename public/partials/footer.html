@@ -1,0 +1,14 @@
+<footer class="bg-light-mint border-t border-medium mt-12">
+  <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-dark">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p>&copy; <span id="pl-year"></span> PatientLead Health LLC. All rights reserved.</p>
+      <nav class="flex gap-4">
+        <a href="/refund_policy/" class="hover:underline">Refund policy</a>
+        <a href="/usage/" class="hover:underline">Usage</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    document.getElementById('pl-year')?.append(new Date().getFullYear());
+  </script>
+</footer>
