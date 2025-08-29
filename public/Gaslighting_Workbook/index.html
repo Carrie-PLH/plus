@@ -649,6 +649,143 @@ main {
     font-weight: 600;
 }
 
+/* Risk Grid */
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.risk-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.risk-card:hover {
+    border-color: var(--teal-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.risk-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light);
+}
+
+.risk-icon {
+    font-size: 1.5rem;
+}
+
+.risk-card h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.risk-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.risk-card li {
+    padding: 0.5rem 0;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.risk-card strong {
+    color: var(--coral);
+    font-weight: 600;
+}
+
+/* Impact Assessment */
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.impact-category {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.impact-category h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid white;
+}
+
+.impact-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.impact-item:hover {
+    transform: translateX(4px);
+}
+
+.impact-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.75rem;
+    accent-color: var(--primary);
+}
+
+.download-btn {
+    background: var(--olive);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1.5rem;
+}
+
+.download-btn:hover {
+    background: var(--olive-dark);
+    transform: translateY(-2px);
+}
+
+.impact-summary {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border: 2px solid var(--olive);
+    border-radius: 12px;
+}
+
+.summary-text {
+    background: var(--light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    font-family: monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
 /* Toast notification */
 .toast {
     position: fixed;
@@ -862,143 +999,6 @@ input:focus {
         background: white !important;
         border: 1px solid #ddd !important;
     }
-
-    /* Risk Grid */
-.risk-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
-}
-
-.risk-card {
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: all 0.2s;
-}
-
-.risk-card:hover {
-    border-color: var(--teal-light);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.risk-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--light);
-}
-
-.risk-icon {
-    font-size: 1.5rem;
-}
-
-.risk-card h3 {
-    color: var(--primary);
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-.risk-card ul {
-    list-style: none;
-    padding: 0;
-}
-
-.risk-card li {
-    padding: 0.5rem 0;
-    color: var(--text);
-    font-size: 0.95rem;
-}
-
-.risk-card strong {
-    color: var(--coral);
-    font-weight: 600;
-}
-
-/* Impact Assessment */
-.impact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin: 2rem 0;
-}
-
-.impact-category {
-    background: var(--light);
-    border-radius: 12px;
-    padding: 1.5rem;
-}
-
-.impact-category h3 {
-    color: var(--primary);
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid white;
-}
-
-.impact-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.impact-item:hover {
-    transform: translateX(4px);
-}
-
-.impact-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-right: 0.75rem;
-    accent-color: var(--primary);
-}
-
-.download-btn {
-    background: var(--olive);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 1.5rem;
-}
-
-.download-btn:hover {
-    background: var(--olive-dark);
-    transform: translateY(-2px);
-}
-
-.impact-summary {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: white;
-    border: 2px solid var(--olive);
-    border-radius: 12px;
-}
-
-.summary-text {
-    background: var(--light);
-    padding: 1rem;
-    border-radius: 6px;
-    margin: 1rem 0;
-    font-family: monospace;
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
 }
     </style>
 </head>
@@ -1017,7 +1017,6 @@ input:focus {
                 <li><a href="#red-flags">Red Flags Checklist</a></li>
                 <li><a href="#impact-assessment">Impact Assessment</a></li>
                 <li><a href="#examples">Real Examples</a></li>
-                <li><a href="#assessment">Self-Assessment</a></li>
                 <li><a href="#next-steps">Next Steps</a></li>
             </ul>
         </nav>
@@ -1165,68 +1164,68 @@ input:focus {
             </section>
 
             <!-- Who's at Risk section -->
-<section id="who-at-risk">
-    <h2>Who's Most At Risk</h2>
-    
-    <div class="context-box">
-        <p>Research shows certain groups face disproportionate medical dismissal. Understanding these patterns helps validate your experiences and advocate more effectively.</p>
-    </div>
-    
-    <div class="risk-grid">
-        <div class="risk-card">
-            <div class="risk-header">
-                <span class="risk-icon">♀</span>
-                <h3>Women</h3>
-            </div>
-            <ul>
-                <li><strong>4+ years</strong> longer to diagnose endometriosis</li>
-                <li><strong>50% less</strong> likely to receive pain medication</li>
-                <li>Heart attack symptoms dismissed as anxiety</li>
-            </ul>
-        </div>
-        
-        <div class="risk-card">
-            <div class="risk-header">
-                <span class="risk-icon">🌍</span>
-                <h3>People of Color</h3>
-            </div>
-            <ul>
-                <li>Pain systematically underassessed</li>
-                <li><strong>2x longer</strong> ER wait times</li>
-                <li>Maternal mortality <strong>3x higher</strong> for Black women</li>
-            </ul>
-        </div>
-        
-        <div class="risk-card">
-            <div class="risk-header">
-                <span class="risk-icon">🏳️‍🌈</span>
-                <h3>LGBTQ+ Individuals</h3>
-            </div>
-            <ul>
-                <li><strong>1 in 5</strong> experience discrimination</li>
-                <li>Trans patients denied appropriate care</li>
-                <li>Mental health blamed for physical symptoms</li>
-            </ul>
-        </div>
-        
-        <div class="risk-card">
-            <div class="risk-header">
-                <span class="risk-icon">♿</span>
-                <h3>Chronic Illness/Disability</h3>
-            </div>
-            <ul>
-                <li>Invisible disabilities dismissed</li>
-                <li>New symptoms attributed to existing conditions</li>
-                <li>Labeled as "drug-seeking" for pain management</li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="callout-card how-to">
-        <h4>If you're in multiple groups</h4>
-        <p>Intersectional identities face compounded discrimination. For example, Black women with chronic pain face racism, sexism, AND chronic illness stigma. Document patterns specific to your identities to strengthen your advocacy.</p>
-    </div>
-</section>
+            <section id="who-at-risk">
+                <h2>Who's Most At Risk</h2>
+                
+                <div class="context-box">
+                    <p>Research shows certain groups face disproportionate medical dismissal. Understanding these patterns helps validate your experiences and advocate more effectively.</p>
+                </div>
+                
+                <div class="risk-grid">
+                    <div class="risk-card">
+                        <div class="risk-header">
+                            <span class="risk-icon">♀</span>
+                            <h3>Women</h3>
+                        </div>
+                        <ul>
+                            <li><strong>4+ years</strong> longer to diagnose endometriosis</li>
+                            <li><strong>50% less</strong> likely to receive pain medication</li>
+                            <li>Heart attack symptoms dismissed as anxiety</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="risk-card">
+                        <div class="risk-header">
+                            <span class="risk-icon">🌍</span>
+                            <h3>People of Color</h3>
+                        </div>
+                        <ul>
+                            <li>Pain systematically underassessed</li>
+                            <li><strong>2x longer</strong> ER wait times</li>
+                            <li>Maternal mortality <strong>3x higher</strong> for Black women</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="risk-card">
+                        <div class="risk-header">
+                            <span class="risk-icon">🏳️‍🌈</span>
+                            <h3>LGBTQ+ Individuals</h3>
+                        </div>
+                        <ul>
+                            <li><strong>1 in 5</strong> experience discrimination</li>
+                            <li>Trans patients denied appropriate care</li>
+                            <li>Mental health blamed for physical symptoms</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="risk-card">
+                        <div class="risk-header">
+                            <span class="risk-icon">♿</span>
+                            <h3>Chronic Illness/Disability</h3>
+                        </div>
+                        <ul>
+                            <li>Invisible disabilities dismissed</li>
+                            <li>New symptoms attributed to existing conditions</li>
+                            <li>Labeled as "drug-seeking" for pain management</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="callout-card how-to">
+                    <h4>If you're in multiple groups</h4>
+                    <p>Intersectional identities face compounded discrimination. For example, Black women with chronic pain face racism, sexism, AND chronic illness stigma. Document patterns specific to your identities to strengthen your advocacy.</p>
+                </div>
+            </section>
             
             <!-- Red Flags Checklist -->
             <section id="red-flags" class="checklist-section">
@@ -1287,6 +1286,76 @@ input:focus {
                 <div class="micro-cta">
                     <p>Need help preparing for your next appointment?</p>
                     <a href="/tools/scripts.html">View Response Scripts</a>
+                </div>
+            </section>
+            
+            <!-- Impact Assessment section -->
+            <section id="impact-assessment" class="checklist-section">
+                <h2>Impact Assessment</h2>
+                
+                <div class="checklist-intro">
+                    <p><strong>Beyond red flags:</strong> How is medical gaslighting affecting your life? This assessment helps you articulate the real-world impact when advocating for better care.</p>
+                </div>
+                
+                <div class="impact-grid">
+                    <div class="impact-category">
+                        <h3>🏥 Healthcare Impact</h3>
+                        <label class="impact-item">
+                            <input type="checkbox" name="delayed-diagnosis">
+                            <span>Delayed diagnosis or treatment</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="inadequate-pain">
+                            <span>Inadequate pain management</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="avoiding-care">
+                            <span>Avoiding necessary medical care</span>
+                        </label>
+                    </div>
+                    
+                    <div class="impact-category">
+                        <h3>🧠 Psychological Impact</h3>
+                        <label class="impact-item">
+                            <input type="checkbox" name="self-doubt">
+                            <span>Doubting my own symptoms</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="anxiety">
+                            <span>Anxiety before appointments</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="depression">
+                            <span>Depression or hopelessness</span>
+                        </label>
+                    </div>
+                    
+                    <div class="impact-category">
+                        <h3>💼 Life Impact</h3>
+                        <label class="impact-item">
+                            <input type="checkbox" name="work">
+                            <span>Missing work/school</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="relationships">
+                            <span>Relationship strain</span>
+                        </label>
+                        <label class="impact-item">
+                            <input type="checkbox" name="financial">
+                            <span>Financial burden from multiple visits</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="download-btn" onclick="generateImpactSummary()">
+                    📄 Generate Impact Summary
+                </button>
+                
+                <div id="impact-summary" class="impact-summary" style="display: none;">
+                    <h3>Your Impact Summary</h3>
+                    <p class="summary-intro">Copy this summary to share with providers, support systems, or for your records:</p>
+                    <div id="summary-text" class="summary-text"></div>
+                    <button onclick="copySummary()">Copy to Clipboard</button>
                 </div>
             </section>
             
@@ -1353,33 +1422,33 @@ input:focus {
                 </div>
                 
                 <!-- Add as new expandable in Examples section -->
-<div class="expandable">
-    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false">
-        <h3>What Does GOOD Medical Care Look Like?</h3>
-        <span class="expand-icon" aria-hidden="true">+</span>
-    </div>
-    <div class="expandable-content">
-        <div class="expandable-inner">
-            <p>It's important to recognize quality care so you know what to expect and seek:</p>
-            
-            <div class="callout-card how-to">
-                <h4>Green Flags - Signs of a Good Provider</h4>
-                <ul>
-                    <li>✓ Lets you finish describing symptoms without interrupting</li>
-                    <li>✓ Says "I don't know" when uncertain (rather than dismissing)</li>
-                    <li>✓ Explains their reasoning and next steps clearly</li>
-                    <li>✓ Validates that your symptoms are real and concerning</li>
-                    <li>✓ Offers referrals when outside their expertise</li>
-                    <li>✓ Documents your concerns in your chart</li>
-                    <li>✓ Respects your expertise about your own body</li>
-                    <li>✓ Responds professionally to questions</li>
-                </ul>
-            </div>
-            
-            <p><strong>Remember:</strong> You deserve providers who meet these standards. If your current provider doesn't, it's okay to seek care elsewhere.</p>
-        </div>
-    </div>
-</div>
+                <div class="expandable">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false">
+                        <h3>What Does GOOD Medical Care Look Like?</h3>
+                        <span class="expand-icon" aria-hidden="true">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <p>It's important to recognize quality care so you know what to expect and seek:</p>
+                            
+                            <div class="callout-card how-to">
+                                <h4>Green Flags - Signs of a Good Provider</h4>
+                                <ul>
+                                    <li>✓ Lets you finish describing symptoms without interrupting</li>
+                                    <li>✓ Says "I don't know" when uncertain (rather than dismissing)</li>
+                                    <li>✓ Explains their reasoning and next steps clearly</li>
+                                    <li>✓ Validates that your symptoms are real and concerning</li>
+                                    <li>✓ Offers referrals when outside their expertise</li>
+                                    <li>✓ Documents your concerns in your chart</li>
+                                    <li>✓ Respects your expertise about your own body</li>
+                                    <li>✓ Responds professionally to questions</li>
+                                </ul>
+                            </div>
+                            
+                            <p><strong>Remember:</strong> You deserve providers who meet these standards. If your current provider doesn't, it's okay to seek care elsewhere.</p>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="expandable">
                     <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" aria-controls="faq2-panel">
@@ -1406,76 +1475,6 @@ input:focus {
                     </div>
                 </div>
             </section>
-
-            <!-- Add after Red Flags Checklist section -->
-<section id="impact-assessment" class="checklist-section">
-    <h2>Impact Assessment</h2>
-    
-    <div class="checklist-intro">
-        <p><strong>Beyond red flags:</strong> How is medical gaslighting affecting your life? This assessment helps you articulate the real-world impact when advocating for better care.</p>
-    </div>
-    
-    <div class="impact-grid">
-        <div class="impact-category">
-            <h3>🏥 Healthcare Impact</h3>
-            <label class="impact-item">
-                <input type="checkbox" name="delayed-diagnosis">
-                <span>Delayed diagnosis or treatment</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="inadequate-pain">
-                <span>Inadequate pain management</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="avoiding-care">
-                <span>Avoiding necessary medical care</span>
-            </label>
-        </div>
-        
-        <div class="impact-category">
-            <h3>🧠 Psychological Impact</h3>
-            <label class="impact-item">
-                <input type="checkbox" name="self-doubt">
-                <span>Doubting my own symptoms</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="anxiety">
-                <span>Anxiety before appointments</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="depression">
-                <span>Depression or hopelessness</span>
-            </label>
-        </div>
-        
-        <div class="impact-category">
-            <h3>💼 Life Impact</h3>
-            <label class="impact-item">
-                <input type="checkbox" name="work">
-                <span>Missing work/school</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="relationships">
-                <span>Relationship strain</span>
-            </label>
-            <label class="impact-item">
-                <input type="checkbox" name="financial">
-                <span>Financial burden from multiple visits</span>
-            </label>
-        </div>
-    </div>
-    
-    <button class="download-btn" onclick="generateImpactSummary()">
-        📄 Generate Impact Summary
-    </button>
-    
-    <div id="impact-summary" class="impact-summary" style="display: none;">
-        <h3>Your Impact Summary</h3>
-        <p class="summary-intro">Copy this summary to share with providers, support systems, or for your records:</p>
-        <div id="summary-text" class="summary-text"></div>
-        <button onclick="copySummary()">Copy to Clipboard</button>
-    </div>
-</section>
             
             <!-- Next Steps -->
             <section id="next-steps">
@@ -1524,7 +1523,7 @@ input:focus {
             <ul>
                 <li><a href="#overview" onclick="toggleMobileTOC()">Overview</a></li>
                 <li><a href="#patterns" onclick="toggleMobileTOC()">Common Patterns</a></li>
-			    <li><a href="#who-at-risk" onclick="toggleMobileTOC()">Who's at Risk</a></li>
+                <li><a href="#who-at-risk" onclick="toggleMobileTOC()">Who's at Risk</a></li>
                 <li><a href="#red-flags" onclick="toggleMobileTOC()">Red Flags</a></li>
                 <li><a href="#impact-assessment" onclick="toggleMobileTOC()">Impact Assessment</a></li>
                 <li><a href="#examples" onclick="toggleMobileTOC()">Examples</a></li>
@@ -1708,67 +1707,67 @@ input:focus {
         }
         
         // Impact Summary Generator
-function generateImpactSummary() {
-    const impacts = {
-        healthcare: [],
-        psychological: [],
-        life: []
-    };
-    
-    // Collect checked impacts
-    document.querySelectorAll('.impact-category').forEach(category => {
-        const categoryName = category.querySelector('h3').textContent;
-        category.querySelectorAll('input:checked').forEach(input => {
-            const impact = input.nextElementSibling.textContent;
+        function generateImpactSummary() {
+            const impacts = {
+                healthcare: [],
+                psychological: [],
+                life: []
+            };
             
-            if (categoryName.includes('Healthcare')) {
-                impacts.healthcare.push(impact);
-            } else if (categoryName.includes('Psychological')) {
-                impacts.psychological.push(impact);
-            } else if (categoryName.includes('Life')) {
-                impacts.life.push(impact);
+            // Collect checked impacts
+            document.querySelectorAll('.impact-category').forEach(category => {
+                const categoryName = category.querySelector('h3').textContent;
+                category.querySelectorAll('input:checked').forEach(input => {
+                    const impact = input.nextElementSibling.textContent;
+                    
+                    if (categoryName.includes('Healthcare')) {
+                        impacts.healthcare.push(impact);
+                    } else if (categoryName.includes('Psychological')) {
+                        impacts.psychological.push(impact);
+                    } else if (categoryName.includes('Life')) {
+                        impacts.life.push(impact);
+                    }
+                });
+            });
+            
+            // Generate summary text
+            let summary = `MEDICAL GASLIGHTING IMPACT SUMMARY\n`;
+            summary += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+            
+            if (impacts.healthcare.length) {
+                summary += `Healthcare Impact:\n`;
+                impacts.healthcare.forEach(i => summary += `• ${i}\n`);
+                summary += `\n`;
             }
-        });
-    });
-    
-    // Generate summary text
-    let summary = `MEDICAL GASLIGHTING IMPACT SUMMARY\n`;
-    summary += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-    
-    if (impacts.healthcare.length) {
-        summary += `Healthcare Impact:\n`;
-        impacts.healthcare.forEach(i => summary += `• ${i}\n`);
-        summary += `\n`;
-    }
-    
-    if (impacts.psychological.length) {
-        summary += `Psychological Impact:\n`;
-        impacts.psychological.forEach(i => summary += `• ${i}\n`);
-        summary += `\n`;
-    }
-    
-    if (impacts.life.length) {
-        summary += `Life/Functional Impact:\n`;
-        impacts.life.forEach(i => summary += `• ${i}\n`);
-        summary += `\n`;
-    }
-    
-    summary += `\nThis summary documents how medical dismissal has affected my health and wellbeing. I am seeking healthcare providers who will take these impacts seriously and work collaboratively toward solutions.`;
-    
-    // Display summary
-    document.getElementById('summary-text').textContent = summary;
-    document.getElementById('impact-summary').style.display = 'block';
-    
-    // Smooth scroll to summary
-    document.getElementById('impact-summary').scrollIntoView({ behavior: 'smooth' });
-}
+            
+            if (impacts.psychological.length) {
+                summary += `Psychological Impact:\n`;
+                impacts.psychological.forEach(i => summary += `• ${i}\n`);
+                summary += `\n`;
+            }
+            
+            if (impacts.life.length) {
+                summary += `Life/Functional Impact:\n`;
+                impacts.life.forEach(i => summary += `• ${i}\n`);
+                summary += `\n`;
+            }
+            
+            summary += `\nThis summary documents how medical dismissal has affected my health and wellbeing. I am seeking healthcare providers who will take these impacts seriously and work collaboratively toward solutions.`;
+            
+            // Display summary
+            document.getElementById('summary-text').textContent = summary;
+            document.getElementById('impact-summary').style.display = 'block';
+            
+            // Smooth scroll to summary
+            document.getElementById('impact-summary').scrollIntoView({ behavior: 'smooth' });
+        }
 
-function copySummary() {
-    const summaryText = document.getElementById('summary-text').textContent;
-    navigator.clipboard.writeText(summaryText).then(() => {
-        showToast('Summary copied to clipboard!', 2000);
-    });
-}
+        function copySummary() {
+            const summaryText = document.getElementById('summary-text').textContent;
+            navigator.clipboard.writeText(summaryText).then(() => {
+                showToast('Summary copied to clipboard!', 2000);
+            });
+        }
         
         // Load saved checklist state
         function loadChecklist() {

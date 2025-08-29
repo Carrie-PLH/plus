@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Comparison Tool - PatientLead Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Same base styles as above */
+        :root {
+            --primary: #3c5c5e;
+            --primary-dark: #2f4748;
+            --coral: #b85746;
+            --coral-bg: rgba(184, 87, 70, 0.1);
+            --olive: #58653a;
+            --olive-bg: rgba(88, 101, 58, 0.1);
+            --light: #ebf0eb;
+            --text: #2a3f40;
+            --border: #d4ddd4;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: #ffffff;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--light) 0%, #e0e8e0 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .comparison-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .provider-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: white;
+        }
+        
+        .provider-card.good {
+            border-color: var(--olive);
+            background: var(--olive-bg);
+        }
+        
+        .provider-card.bad {
+            border-color: var(--coral);
+            background: var(--coral-bg);
+        }
+        
+        .provider-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .provider-card.good h3 {
+            color: var(--olive);
+        }
+        
+        .provider-card.bad h3 {
+            color: var(--coral);
+        }
+        
+        .criteria-list {
+            list-style: none;
+        }
+        
+        .criteria-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .criteria-list li::before {
+            position: absolute;
+            left: 0;
+        }
+        
+        .good .criteria-list li::before {
+            content: '✓';
+            color: var(--olive);
+        }
+        
+        .bad .criteria-list li::before {
+            content: '✗';
+            color: var(--coral);
+        }
+        
+        .tool-preview {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .tool-preview h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, var(--olive-bg), rgba(88, 101, 58, 0.15));
+            border: 2px solid var(--olive);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .price {
+            font-size: 3rem;
+            color: var(--olive);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .cta-button {
+            background: var(--olive);
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1.25rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .cta-button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-preview {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Is It Time to Find a New Provider?</h1>
+        <p>Objectively evaluate your healthcare relationships > ProviderMatch + PeerMatch + TrendTrack bundle</p>
+    </div>
+    
+    <div class="container">
+        <div class="comparison-preview">
+            <div class="provider-card good">
+                <h3>✓ Dr. Good Example</h3>
+                <ul class="criteria-list">
+                    <li>Lets me finish speaking</li>
+                    <li>Explains reasoning clearly</li>
+                    <li>Admits uncertainty</li>
+                    <li>Documents my concerns</li>
+                    <li>Respects my input</li>
+                </ul>
+            </div>
+            
+            <div class="provider-card bad">
+                <h3>✗ Dr. Dismissive</h3>
+                <ul class="criteria-list">
+                    <li>Interrupts constantly</li>
+                    <li>Says "it's just stress"</li>
+                    <li>Eye rolls and sighs</li>
+                    <li>Refuses reasonable tests</li>
+                    <li>Gets defensive</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="tool-preview">
+            <h2>What the Full Tool Includes</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h4>30-Point Evaluation</h4>
+                    <p>Comprehensive checklist covering communication, respect, and clinical care</p>
+                </div>
+                <div class="feature">
+                    <h4>Weighted Scoring</h4>
+                    <p>Not all red flags are equal - our algorithm weights critical behaviors</p>
+                </div>
+                <div class="feature">
+                    <h4>Action Plans</h4>
+                    <p>Specific next steps based on your score: stay, communicate, or leave</p>
+                </div>
+                <div class="feature">
+                    <h4>Comparison Matrix</h4>
+                    <p>Side-by-side comparison of up to 5 providers</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2>Get the Complete Provider Evaluation Toolkit</h2>
+            <p>Make confident decisions about your healthcare team</p>
+            <div class="price">$27</div>
+            
+            <ul class="what-included" style="text-align: left; max-width: 500px; margin: 2rem auto;">
+                <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--olive); font-weight: bold;">✓</span>
+                    Printable provider evaluation worksheets
+                </li>
+                <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--olive); font-weight: bold;">✓</span>
+                    "Should I stay or go?" decision flowchart
+                </li>
+                <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--olive); font-weight: bold;">✓</span>
+                    Scripts for leaving a provider professionally
+                </li>
+                <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--olive); font-weight: bold;">✓</span>
+                    Questions to ask potential new providers
+                </li>
+                <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--olive); font-weight: bold;">✓</span>
+                    Insurance navigation tips
+                </li>
+            </ul>
+            
+            <a href="#" class="cta-button">Get the Toolkit</a>
+            
+            <p style="margin-top: 1.5rem; color: var(--text); font-size: 0.9rem;">
+                Instant download • 30-day guarantee
+            </p>
+        </div>
+    </div>
+</body>
+</html>

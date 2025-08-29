@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Scripts for Medical Gaslighting - PatientLead Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3c5c5e;
+            --primary-dark: #2f4748;
+            --coral: #b85746;
+            --coral-bg: rgba(184, 87, 70, 0.1);
+            --olive: #58653a;
+            --olive-bg: rgba(88, 101, 58, 0.1);
+            --light: #ebf0eb;
+            --text: #2a3f40;
+            --border: #d4ddd4;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: #ffffff;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--light) 0%, #e0e8e0 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .problem-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .problem-section h2 {
+            color: var(--coral);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .problem-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+        
+        .problem-item {
+            background: var(--coral-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--coral);
+        }
+        
+        .sample-section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .sample-section h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sample-tag {
+            display: inline-block;
+            background: var(--olive);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .script-example {
+            background: var(--light);
+            border-left: 4px solid var(--olive);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .script-example h3 {
+            color: var(--coral);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .script-example .response {
+            color: var(--primary);
+            font-style: italic;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 2px dotted var(--border);
+        }
+        
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .value-item {
+            text-align: center;
+        }
+        
+        .value-number {
+            font-size: 2.5rem;
+            color: var(--olive);
+            font-weight: bold;
+        }
+        
+        .value-label {
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, var(--olive-bg), rgba(88, 101, 58, 0.15));
+            border: 2px solid var(--olive);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .cta-section h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            color: var(--olive);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .what-included {
+            text-align: left;
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+        
+        .what-included li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .what-included li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--olive);
+            font-weight: bold;
+        }
+        
+        .cta-button {
+            background: var(--olive);
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1.25rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .cta-button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .guarantee {
+            margin-top: 1.5rem;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Do You Freeze Up During Appointments?</h1>
+        <p>Get the exact words to advocate for yourself with confidence > PromptPro, PromptCoach + ResetPro bundle</p>
+    </div>
+    
+    <div class="container">
+        <div class="problem-section">
+            <h2>Sound Familiar?</h2>
+            <div class="problem-list">
+                <div class="problem-item">
+                    "I always think of the perfect response... hours after the appointment"
+                </div>
+                <div class="problem-item">
+                    "I get so emotional, I can't think straight or speak clearly"
+                </div>
+                <div class="problem-item">
+                    "I don't know how to be assertive without seeming 'difficult'"
+                </div>
+            </div>
+        </div>
+        
+        <div class="sample-section">
+            <h2>Free Sample Scripts</h2>
+            <span class="sample-tag">TRY THESE TODAY</span>
+            
+            <div class="script-example" id="psychological">
+                <h3>When they say: "This sounds like anxiety"</h3>
+                <p class="response">You respond: "I appreciate you considering all possibilities. My mental health is well-managed with my therapist, and these physical symptoms are new and distinct from my anxiety symptoms. What diagnostic tests can we run to rule out physical causes first?"</p>
+            </div>
+            
+            <div class="script-example">
+                <h3>When they say: "Your tests are normal, so you're fine"</h3>
+                <p class="response">You respond: "I understand the tests are normal, which is good news. However, I'm still experiencing these symptoms daily. What conditions might not show up on these specific tests? What should our next diagnostic steps be?"</p>
+            </div>
+            
+            <div class="script-example">
+                <h3>When they say: "Let's wait and see"</h3>
+                <p class="response">You respond: "I'd like to establish a concrete timeline. How long should we wait? What specific changes would warrant further investigation? Can we schedule a follow-up now to reassess?"</p>
+            </div>
+        </div>
+        
+        <div class="value-props">
+            <div class="value-item">
+                <div class="value-number">50+</div>
+                <div class="value-label">Tested Response Scripts</div>
+            </div>
+            <div class="value-item">
+                <div class="value-number">12</div>
+                <div class="value-label">Common Scenarios Covered</div>
+            </div>
+            <div class="value-item">
+                <div class="value-number">100%</div>
+                <div class="value-label">Professional Language</div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2>Get the Complete Response Script Toolkit</h2>
+            <p>Stop losing your voice when it matters most</p>
+            <div class="price">$37</div>
+            
+            <ul class="what-included">
+                <li>50+ word-for-word scripts for dismissive situations</li>
+                <li>Email templates for patient portal messages</li>
+                <li>Phrases to request documentation of denials</li>
+                <li>De-escalation techniques that maintain boundaries</li>
+                <li>Customizable templates for your specific conditions</li>
+                <li>Bonus: "Magic phrases" that make doctors listen</li>
+            </ul>
+            
+            <a href="#" class="cta-button">Get Instant Access</a>
+            
+            <p class="guarantee">30-day money-back guarantee • Instant PDF download</p>
+        </div>
+    </div>
+</body>
+</html>
