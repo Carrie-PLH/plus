@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Privacy Playbook - Protect Your Medical Information</title>
+    <meta name="description" content="Evidence-based tools to protect your medical privacy. Know your rights, set boundaries, handle emergencies.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2c5f60;
+            --primary-dark: #1e4344;
+            --primary-light: #3d7a7c;
+            --accent: #d4634b;
+            --accent-dark: #b8503f;
+            --success: #4a7c59;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light-bg: #f8fafa;
+            --white: #ffffff;
+            --text: #2c3e50;
+            --text-light: #5a6c7d;
+            --border: #e1e8ed;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--white);
+        }
+
+        /* Skip Links for Accessibility */
+        .skip-links {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 10000;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-links:focus {
+            top: 0;
+        }
+
+        /* Header Navigation - Fixed */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .main-nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: var(--danger);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .emergency-banner a {
+            color: white;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .banner-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .banner-close:hover {
+            opacity: 1;
+        }
+
+        /* Container for proper width control */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f8fafa 0%, #e8f4f4 100%);
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Crisis Quick Access */
+        .crisis-access {
+            background: white;
+            border: 2px solid var(--danger);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .crisis-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .crisis-indicator {
+            background: var(--danger);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .crisis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .crisis-action {
+            padding: 1rem;
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .crisis-action:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .crisis-action strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Quick Start Guide */
+        .quick-start {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-start h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .step-card {
+            padding: 1.5rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -0.5rem;
+            left: -0.5rem;
+            background: var(--primary);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .step-time {
+            display: inline-block;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        
+        /* Script Builder Section */
+        .script-section {
+            background: white;
+            padding: 3rem 0;
+            margin: 3rem 0;
+        }
+
+        .script-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .script-builder {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .script-controls {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .control-group select {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 95, 96, 0.1);
+        }
+
+        .tone-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tone-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tone-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .tone-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .generated-script {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            position: relative;
+            display: none;
+        }
+
+        .generated-script.active {
+            display: block;
+        }
+
+        .script-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-button.copied {
+            background: var(--success);
+        }
+
+        /* Legal Resources */
+        .legal-resources {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .legal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .legal-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .resource-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-card a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* State Law Selector */
+        .state-selector {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .state-selector label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-selector select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .state-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .state-info.active {
+            display: block;
+        }
+
+        /* Rights Checklist Styles */
+.rights-checklist {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.rights-checklist h3 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.checklist-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checklist-item:hover {
+    border-color: var(--primary);
+    transform: translateX(4px);
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checklist-item.checked {
+    background: linear-gradient(to right, rgba(74, 124, 89, 0.05), rgba(74, 124, 89, 0.02));
+    border-color: var(--success);
+}
+
+.checklist-content {
+    flex: 1;
+}
+
+.checklist-content strong {
+    display: block;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.checklist-content span {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.rights-progress {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.rights-progress #rights-counter {
+    color: var(--primary);
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--primary), var(--success));
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Accessibility Focus States */
+        button:focus,
+        a:focus,
+        select:focus,
+        input:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                border-bottom: 1px solid var(--border);
+                box-shadow: var(--shadow-md);
+            }
+
+            .main-nav.open {
+                display: block;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .crisis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Print Styles */
+        @media print {
+            .emergency-banner,
+            header,
+            footer,
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+
+            .generated-script {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Accessibility Skip Links -->
+    <a href="#main-content" class="skip-links">Skip to main content</a>
+    <a href="#emergency-resources" class="skip-links">Skip to emergency resources</a>
+    
+    <!-- Emergency Banner (dismissible) -->
+    <div class="emergency-banner" id="emergency-banner" role="alert">
+        <span>In immediate danger? Call 911 | HIPAA Violations: 1-800-368-1019 | <a href="#crisis-resources" aria-label="Access crisis resources">Crisis Resources</a></span>
+        <button class="banner-close" onclick="dismissBanner()" aria-label="Dismiss emergency banner">×</button>
+    </div>
+    
+    <!-- Header Navigation -->
+    <header role="banner">
+        <div class="header-content">
+            <a href="#" class="logo" aria-label="PatientLead Health home">PatientLead Health</a>
+            
+            <button class="mobile-menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu">
+                Menu
+            </button>
+            
+            <nav class="main-nav" id="main-nav" role="navigation" aria-label="Main navigation">
+                <ul>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="#scripts">Scripts</a></li>
+                    <li><a href="#legal-rights">Your Rights</a></li>
+                    <li><a href="#emergency">Emergency</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Your Medical Information Belongs to You</h1>
+                <p class="hero-subtitle">Evidence-based tools to protect your healthcare privacy, set boundaries, and know your rights</p>
+                
+                <!-- Crisis Quick Access -->
+                <div class="crisis-access" id="crisis-resources" role="region" aria-labelledby="crisis-heading">
+                    <div class="crisis-header">
+                        <span class="crisis-indicator">Need Help Now?</span>
+                        <h2 id="crisis-heading">Immediate Privacy Protection</h2>
+                    </div>
+                    <div class="crisis-grid">
+                        <a href="#emergency-scripts" class="crisis-action">
+                            <strong>Emergency Scripts</strong>
+                            <span>What to say right now</span>
+                        </a>
+                        <a href="#hipaa-hotline" class="crisis-action">
+                            <strong>Report Violation</strong>
+                            <span>HIPAA complaint line</span>
+                        </a>
+                        <a href="#emergency-card" class="crisis-action">
+                            <strong>Emergency Card</strong>
+                            <span>Generate privacy card</span>
+                        </a>
+                        <a href="#legal-help" class="crisis-action">
+                            <strong>Legal Help</strong>
+                            <span>Find an advocate</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Start Guide -->
+        <section class="container" id="quick-start">
+            <div class="quick-start">
+                <h2>5-Minute Privacy Protection Plan</h2>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">Start protecting your medical privacy immediately with these essential steps</p>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <h3>Know Your Baseline Rights</h3>
+                        <span class="step-time">1 minute</span>
+                        <p>You can decline any question. You can ask why information is needed. You can request amendments to your records.</p>
+                        <a href="#legal-rights" class="btn btn-secondary" style="margin-top: 1rem;">View Rights Card</a>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <h3>Save Emergency Scripts</h3>
+                        <span class="step-time">2 minutes</span>
+                        <p>Copy our tested phrases for declining inappropriate questions and setting boundaries.</p>
+                        <a href="#scripts" class="btn btn-secondary" style="margin-top: 1rem;">Get Scripts</a>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <h3>Create Privacy Card</h3>
+                        <span class="step-time">2 minutes</span>
+                        <p>Generate a wallet card with your privacy preferences for emergencies.</p>
+                        <a href="#emergency-card" class="btn btn-secondary" style="margin-top: 1rem;">Create Card</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Script Builder Section -->
+        <section class="script-section" id="scripts">
+            <div class="script-container">
+                <h2>Build Your Privacy Protection Scripts</h2>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">
+                    <strong>Why this matters:</strong> Having prepared responses prevents freeze responses and helps you maintain boundaries under pressure.
+                </p>
+                
+                <div class="script-builder">
+                    <div class="script-controls">
+                        <div class="control-group">
+                            <label for="situation">Select Your Situation:</label>
+                            <select id="situation" onchange="updateScript()" aria-label="Choose privacy situation">
+                                <option value="">Choose a scenario...</option>
+                                <option value="unrelated">Questions unrelated to visit reason</option>
+                                <option value="mental">Mental health attribution of physical symptoms</option>
+                                <option value="documentation">Concerns about documentation</option>
+                                <option value="family">Family history questions</option>
+                                <option value="reproductive">Reproductive planning questions</option>
+                                <option value="substance">Substance use history</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>Choose Your Communication Style:</label>
+                            <div class="tone-selector" role="group" aria-label="Select communication tone">
+                                <button class="tone-btn active" onclick="setTone(this, 'professional')" aria-pressed="true">Professional</button>
+                                <button class="tone-btn" onclick="setTone(this, 'firm')" aria-pressed="false">Firm</button>
+                                <button class="tone-btn" onclick="setTone(this, 'gentle')" aria-pressed="false">Gentle</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="generated-script" id="generated-script" role="region" aria-live="polite">
+                        <button class="copy-button" onclick="copyScript()" aria-label="Copy script to clipboard">
+                            <span id="copy-text">Copy Script</span>
+                        </button>
+                        <p class="script-text" id="script-text"></p>
+                    </div>
+                </div>
+                
+                <!-- Pre-written Emergency Scripts -->
+                <div style="margin-top: 3rem;">
+                    <h3>Emergency Scripts - Copy These Now</h3>
+                    <div class="resource-grid" style="margin-top: 1.5rem;">
+                        <div class="resource-card">
+                            <h4>When Asked Inappropriate Questions</h4>
+                            <p style="font-style: italic; margin: 1rem 0;">
+                                "Can you help me understand how that relates to my current symptoms?"
+                            </p>
+                            <button class="btn btn-primary" onclick="copyText('Can you help me understand how that relates to my current symptoms?')">Copy</button>
+                        </div>
+                        
+                        <div class="resource-card">
+                            <h4>When You Need Time</h4>
+                            <p style="font-style: italic; margin: 1rem 0;">
+                                "I need a moment to think about whether I'm comfortable sharing that."
+                            </p>
+                            <button class="btn btn-primary" onclick="copyText('I need a moment to think about whether I\'m comfortable sharing that.')">Copy</button>
+                        </div>
+                        
+                        <div class="resource-card">
+                            <h4>When Setting Boundaries</h4>
+                            <p style="font-style: italic; margin: 1rem 0;">
+                                "I'd prefer not to discuss that unless it's medically necessary."
+                            </p>
+                            <button class="btn btn-primary" onclick="copyText('I\'d prefer not to discuss that unless it\'s medically necessary.')">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Legal Rights Section -->
+        <!-- Replace the existing Legal Rights Section with this enhanced version -->
+
+<!-- Legal Rights Section -->
+<section class="container" id="legal-rights">
+    <div class="legal-resources">
+        <div class="legal-header">
+            <span class="legal-badge">LEGAL RIGHTS</span>
+            <h2>Your Federal Privacy Protections</h2>
+        </div>
+        
+        <!-- HIPAA Rights Checklist -->
+        <div class="rights-checklist">
+            <h3>Your 6 Core HIPAA Rights</h3>
+            <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                Check off the rights you've exercised or want to learn more about. These are federally guaranteed.
+            </p>
+            
+            <div class="checklist-grid">
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to Access Your Medical Records</strong>
+                        <span>You must receive copies within 30 days of request. Providers can charge reasonable fees for copying.</span>
+                    </div>
+                </label>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to Request Amendments</strong>
+                        <span>You can correct errors or incomplete information. Providers must respond within 60 days.</span>
+                    </div>
+                </label>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to Accounting of Disclosures</strong>
+                        <span>You can see who your health information has been shared with for non-routine purposes.</span>
+                    </div>
+                </label>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to Request Restrictions</strong>
+                        <span>You can ask providers to limit how they use or share your health information.</span>
+                    </div>
+                </label>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to Confidential Communications</strong>
+                        <span>You can request contact at specific locations or through specific methods for privacy.</span>
+                    </div>
+                </label>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" onchange="updateRightsProgress(this)">
+                    <div class="checklist-content">
+                        <strong>Right to File Complaints</strong>
+                        <span>You can file complaints about privacy violations without fear of retaliation.</span>
+                    </div>
+                </label>
+            </div>
+            
+            <div class="rights-progress">
+                <p id="rights-counter"><strong>0 of 6</strong> rights understood</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="rights-progress-bar"></div>
+                </div>
+                <button class="btn btn-primary" onclick="downloadRightsGuide()" style="margin-top: 1rem;">
+                    Download Complete Rights Guide
+                </button>
+            </div>
+        </div>
+        
+        <!-- Contact Information Grid -->
+        <div class="resource-grid" style="margin-top: 2rem;">
+            <div class="resource-card">
+                <h4>HIPAA Complaint Hotline</h4>
+                <p><strong>1-800-368-1019</strong></p>
+                <p>TDD: 1-800-537-7697</p>
+                <p style="font-size: 0.875rem; margin-top: 0.5rem;">
+                    U.S. Department of Health & Human Services<br>
+                    Office for Civil Rights
+                </p>
+            </div>
+            
+            <div class="resource-card">
+                <h4>Online Complaint Portal</h4>
+                <p>File HIPAA violations online:</p>
+                <a href="https://www.hhs.gov/hipaa/filing-a-complaint/index.html" target="_blank" rel="noopener">
+                    HHS Complaint Portal
+                </a>
+            </div>
+            
+            <div class="resource-card">
+                <h4>Response Timeline</h4>
+                <p><strong>30 days:</strong> Access to records</p>
+                <p><strong>60 days:</strong> Amendment response</p>
+                <p><strong>180 days:</strong> File complaint</p>
+            </div>
+        </div>
+        
+        <!-- State Law Selector -->
+        <div class="state-selector">
+            <label for="state-select">Your State's Additional Protections:</label>
+            <select id="state-select" onchange="showStateInfo()" aria-label="Select your state for specific privacy laws">
+                <option value="">Select your state...</option>
+                <option value="CA">California</option>
+                <option value="NY">New York</option>
+                <option value="TX">Texas</option>
+                <option value="FL">Florida</option>
+                <!-- Add all states -->
+            </select>
+            
+            <div class="state-info" id="state-info">
+                <!-- State-specific info will appear here -->
+            </div>
+        </div>
+    </div>
+</section>
+        
+        <!-- Emergency Resources -->
+        <section class="container" id="emergency">
+            <h2>Emergency Privacy Protocols</h2>
+            
+            <div class="resource-grid">
+                <div class="resource-card" id="emergency-card">
+                    <h4>Generate Emergency Card</h4>
+                    <p>Create a wallet-sized card with your privacy preferences</p>
+                    <button class="btn btn-primary" onclick="generateEmergencyCard()">Create Card</button>
+                </div>
+                
+                <div class="resource-card">
+                    <h4>Download Privacy Directive</h4>
+                    <p>Legal document for emergency situations</p>
+                    <button class="btn btn-primary" onclick="downloadDirective()">Download PDF</button>
+                </div>
+                
+                <div class="resource-card">
+                    <h4>Save to Phone</h4>
+                    <p>Emergency contact with privacy instructions</p>
+                    <button class="btn btn-primary" onclick="saveToPhone()">Add Contact</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Access</h4>
+                <ul>
+                    <li><a href="#scripts">Emergency Scripts</a></li>
+                    <li><a href="#legal-rights">HIPAA Hotline</a></li>
+                    <li><a href="#emergency-card">Privacy Card</a></li>
+                    <li><a href="#quick-start">5-Minute Guide</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Your Rights</h4>
+                <ul>
+                    <li><a href="#amendment">Request Amendments</a></li>
+                    <li><a href="#access">Access Records</a></li>
+                    <li><a href="#restrictions">Request Restrictions</a></li>
+                    <li><a href="#complaints">File Complaints</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#state-laws">State Laws</a></li>
+                    <li><a href="#templates">Letter Templates</a></li>
+                    <li><a href="#advocates">Find Advocates</a></li>
+                    <li><a href="#support">Support Groups</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="#mission">Our Mission</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#accessibility">Accessibility</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Script Library with all variations
+        const scriptLibrary = {
+            unrelated: {
+                professional: "I appreciate your thoroughness. Could you help me understand how this information relates to my current symptoms? I want to ensure we're focusing on the most relevant details.",
+                firm: "That doesn't seem related to why I'm here today. Unless there's a direct medical connection, I'd prefer to focus on my current symptoms.",
+                gentle: "I'm a bit confused about how that connects to my visit today. Could we start with my immediate concerns first?"
+            },
+            mental: {
+                professional: "While I value comprehensive care, my mental health is well-managed separately. Can we focus on the physical symptoms I'm experiencing today?",
+                firm: "I have appropriate mental health support. I'm here for physical symptoms and need those addressed.",
+                gentle: "I appreciate your concern. I do have mental health support, and today I'd really like to focus on these physical symptoms."
+            },
+            documentation: {
+                professional: "I'd like to understand how this will be documented in my medical record. Can we discuss what will be included?",
+                firm: "I'm concerned about how this information will be recorded. I need to know what's going into my permanent record.",
+                gentle: "Could you help me understand what will be written in my chart? I like to keep track of my medical records."
+            },
+            family: {
+                professional: "I prefer to keep family medical history discussions focused on what's directly relevant to my current condition. What specific information do you need?",
+                firm: "I'm not comfortable discussing detailed family history. Can we focus on my own medical situation?",
+                gentle: "Family history is a sensitive topic for me. Could you tell me what specific information would be helpful for my treatment?"
+            },
+            reproductive: {
+                professional: "My reproductive plans are personal and not finalized. How does this specifically impact my treatment options today?",
+                firm: "I'm not discussing family planning at this time. Let's focus on my current medical needs.",
+                gentle: "That's something I'm still considering privately. Is this information necessary for today's treatment?"
+            },
+            substance: {
+                professional: "I'm happy to discuss anything directly relevant to my current treatment. Could you explain the medical connection?",
+                firm: "Unless substance history is directly related to my current symptoms, I prefer not to discuss it.",
+                gentle: "I want to be helpful, but I'm curious why you're asking about that for this particular issue?"
+            }
+        };
+        
+        let selectedTone = 'professional';
+        
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('open');
+        }
+        
+        // Dismiss Emergency Banner
+        function dismissBanner() {
+            const banner = document.getElementById('emergency-banner');
+            banner.style.display = 'none';
+            // Store preference in sessionStorage (not localStorage for privacy)
+            sessionStorage.setItem('bannerDismissed', 'true');
+        }
+        
+        // Check if banner was dismissed this session
+        if (sessionStorage.getItem('bannerDismissed') === 'true') {
+            document.getElementById('emergency-banner').style.display = 'none';
+        }
+        
+        // Update Script Based on Selection
+        function updateScript() {
+            const situation = document.getElementById('situation').value;
+            const scriptDiv = document.getElementById('generated-script');
+            const scriptText = document.getElementById('script-text');
+            
+            if (situation && scriptLibrary[situation]) {
+                scriptText.textContent = scriptLibrary[situation][selectedTone];
+                scriptDiv.classList.add('active');
+                
+                // Announce to screen readers
+                scriptDiv.setAttribute('aria-label', 'Generated script: ' + scriptText.textContent);
+            } else {
+                scriptDiv.classList.remove('active');
+            }
+        }
+        
+        // Set Communication Tone
+        function setTone(button, tone) {
+            // Update button states
+            document.querySelectorAll('.tone-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+            
+            selectedTone = tone;
+            updateScript();
+        }
+        
+        // Copy Script to Clipboard
+        function copyScript() {
+            const scriptText = document.getElementById('script-text').textContent;
+            copyText(scriptText);
+            
+            // Visual feedback
+            const copyButton = document.querySelector('.copy-button');
+            const copyTextSpan = document.getElementById('copy-text');
+            copyButton.classList.add('copied');
+            copyTextSpan.textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyButton.classList.remove('copied');
+                copyTextSpan.textContent = 'Copy Script';
+            }, 2000);
+        }
+        
+        // Generic Copy Text Function
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Could add toast notification here
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+        }
+        
+        // Show State-Specific Information
+        function showStateInfo() {
+            const state = document.getElementById('state-select').value;
+            const infoDiv = document.getElementById('state-info');
+            
+            const stateInfo = {
+                'CA': {
+                    title: 'California Privacy Rights',
+                    info: 'California Confidentiality of Medical Information Act (CMIA) provides additional protections beyond HIPAA. Minors 12+ have privacy rights for certain services. Strong genetic information protections under CalGINA.'
+                },
+                'NY': {
+                    title: 'New York Privacy Rights',
+                    info: 'New York Public Health Law Article 27-F protects HIV/AIDS information. Mental health records have special protections under Mental Hygiene Law. Minors have consent rights for reproductive health.'
+                },
+                'TX': {
+                    title: 'Texas Privacy Rights',
+                    info: 'Texas Medical Records Privacy Act (TMRPA) supplements HIPAA. Special protections for mental health under Health & Safety Code Chapter 611. Genetic information protected under Chapter 546.'
+                },
+                'FL': {
+                    title: 'Florida Privacy Rights',
+                    info: 'Florida Constitution provides explicit right to privacy. Mental health records protected under Chapter 394. HIV test results require written consent for disclosure under 381.004.'
+                }
+            };
+            
+            if (state && stateInfo[state]) {
+                infoDiv.innerHTML = `
+                    <h4>${stateInfo[state].title}</h4>
+                    <p>${stateInfo[state].info}</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Learn More About ${state} Laws</a>
+                `;
+                infoDiv.classList.add('active');
+            } else {
+                infoDiv.classList.remove('active');
+            }
+        }
+        
+        // Track rights understanding
+let rightsChecked = 0;
+
+function updateRightsProgress(checkbox) {
+    const item = checkbox.parentElement;
+    
+    if (checkbox.checked) {
+        item.classList.add('checked');
+        rightsChecked++;
+    } else {
+        item.classList.remove('checked');
+        rightsChecked--;
+    }
+    
+    // Update counter
+    document.getElementById('rights-counter').innerHTML = `<strong>${rightsChecked} of 6</strong> rights understood`;
+    
+    // Update progress bar
+    const progressBar = document.getElementById('rights-progress-bar');
+    const percentage = (rightsChecked / 6) * 100;
+    progressBar.style.width = percentage + '%';
+    
+    // Save progress to sessionStorage
+    saveRightsProgress();
+    
+    // If all checked, show celebration
+    if (rightsChecked === 6) {
+        showRightsComplete();
+    }
+}
+
+function saveRightsProgress() {
+    const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+    const progress = [];
+    checkboxes.forEach((cb, index) => {
+        progress[index] = cb.checked;
+    });
+    sessionStorage.setItem('rightsProgress', JSON.stringify(progress));
+}
+
+function loadRightsProgress() {
+    const saved = sessionStorage.getItem('rightsProgress');
+    if (saved) {
+        const progress = JSON.parse(saved);
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        checkboxes.forEach((cb, index) => {
+            if (progress[index]) {
+                cb.checked = true;
+                updateRightsProgress(cb);
+            }
+        });
+    }
+}
+
+function showRightsComplete() {
+    // Could add a celebration message or animation
+    const progressDiv = document.querySelector('.rights-progress');
+    const message = document.createElement('div');
+    message.style.cssText = 'background: var(--success); color: white; padding: 1rem; border-radius: 6px; margin-top: 1rem;';
+    message.textContent = '🎉 Congratulations! You understand all your core HIPAA rights. Download the guide for future reference.';
+    progressDiv.appendChild(message);
+}
+
+function downloadRightsGuide() {
+    // Generate comprehensive rights guide
+    const guide = `
+YOUR HIPAA RIGHTS REFERENCE GUIDE
+Generated: ${new Date().toLocaleDateString()}
+
+YOUR 6 CORE RIGHTS:
+
+1. RIGHT TO ACCESS YOUR MEDICAL RECORDS
+   - Timeline: 30 days to provide records
+   - Can charge reasonable copying fees
+   - Must provide in requested format if possible
+
+2. RIGHT TO REQUEST AMENDMENTS
+   - Timeline: 60 days to respond
+   - If denied, you can file a statement of disagreement
+   - Use 45 CFR § 164.526 as reference
+
+3. RIGHT TO ACCOUNTING OF DISCLOSURES
+   - See who accessed your records
+   - Covers 6 years of disclosures
+   - Excludes routine treatment/payment uses
+
+4. RIGHT TO REQUEST RESTRICTIONS
+   - Can limit how information is used/shared
+   - Provider not required to agree
+   - If agreed, they must honor it
+
+5. RIGHT TO CONFIDENTIAL COMMUNICATIONS
+   - Request contact at alternate locations
+   - No need to explain why
+   - Reasonable requests must be accommodated
+
+6. RIGHT TO FILE COMPLAINTS
+   - File with OCR within 180 days
+   - No retaliation allowed
+   - Call: 1-800-368-1019
+
+IMPORTANT CONTACTS:
+- HIPAA Hotline: 1-800-368-1019
+- TDD: 1-800-537-7697
+- Online: www.hhs.gov/hipaa/filing-a-complaint
+
+Keep this guide with your medical records.
+    `;
+    
+    const blob = new Blob([guide], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'hipaa-rights-guide.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Load progress on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadRightsProgress();
+});
+
+        // Generate Emergency Card
+        function generateEmergencyCard() {
+            const cardContent = `
+EMERGENCY MEDICAL PRIVACY CARD
+Name: [Your Name]
+DOB: [Your DOB]
+
+PRIVACY DIRECTIVE:
+- Share medical info with emergency contacts ONLY
+- No social media posts about my condition
+- Mental health history is PRIVATE
+- Limit info to immediate medical needs
+
+Emergency Contact: [Name] [Phone]
+Privacy Advocate: [Name] [Phone]
+
+HIPAA Violations: 1-800-368-1019
+            `;
+            
+            // In production, this would generate a downloadable card
+            const blob = new Blob([cardContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'emergency-privacy-card.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Download Privacy Directive
+        function downloadDirective() {
+            // In production, this would generate a proper PDF
+            alert('Privacy directive PDF would download here. This would include your legal rights, emergency contacts, and privacy preferences.');
+        }
+        
+        // Save Emergency Contact to Phone
+        function saveToPhone() {
+            // Generate vCard format
+            const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:MEDICAL PRIVACY - ICE
+TEL;TYPE=CELL:1-800-368-1019
+NOTE:HIPAA Hotline. My privacy preferences: Limited information sharing, no social media, protect mental health history.
+END:VCARD`;
+            
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'medical-privacy-contact.vcf';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Smooth Scroll for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update active nav state
+                    document.querySelectorAll('.main-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Auto-detect state (with fallback)
+        function detectState() {
+            if ('geolocation' in navigator) {
+                // This would use geolocation API in production
+                console.log('Geolocation available but not implemented in demo');
+            }
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            detectState();
+        });
+    </script>
+</body>
+</html>
