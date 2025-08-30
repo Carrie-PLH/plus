@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpatient Insider: Hospital Advocacy Guide - PatientLead Health</title>
+    <meta name="description" content="Comprehensive guide for families navigating hospital stays. Learn to advocate effectively with practical tools, scripts, and strategies for your loved one's care.">
+    
+    <!-- Roboto Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+:root {
+            --primary: #3c5c5e;
+            --primary-dark: #2f4748;
+            --coral: #b85746;
+            --coral-dark: #a24a3c;
+            --coral-bg: rgba(184, 87, 70, 0.1);
+            --rust: #c2552a;
+            --rust-dark: #9e4421;
+            --rust-bg: rgba(194, 85, 42, 0.1);
+            --olive: #58653a;
+            --olive-dark: #4a5330;
+            --olive-bg: rgba(88, 101, 58, 0.1);
+            --teal-light: #4d7777;
+            --teal-lighter: #3e5f5f;
+            --light: #ebf0eb;
+            --white: #ffffff;
+            --text: #2a3f40;
+            --text-light: #4b5563;
+            --border: #d4ddd4;}
+
+/* Apply headline override to headings explicitly */
+h1, h2, h3, h4, h5, h6, .headline {
+  color: var(--headline);
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--white);
+        }
+
+        /* Skip Navigation */
+        .skip-nav {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: var(--white);
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 1000;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-nav:focus {
+            top: 0;
+        }
+
+        /* Layout */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--light) 0%, #e0e8e0 100%);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--olive));
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* Crisis Banner */
+        .crisis-banner {
+            background: var(--rust-bg);
+            border: 2px solid var(--rust);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .crisis-banner h2 {
+            color: var(--rust);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .crisis-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .crisis-link {
+            background: var(--rust);
+            color: var(--white);
+            padding: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .crisis-link:hover {
+            background: var(--rust-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Sticky Sidebar */
+        .sidebar-nav {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-nav h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a {
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--light);
+            color: var(--primary-dark);
+            transform: translateX(4px);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(to right, rgba(60, 92, 94, 0.08), rgba(60, 92, 94, 0.04));
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 70%;
+            background: var(--primary);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1rem 0;
+        }
+
+        /* Main Content */
+        main {
+            min-width: 0;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            font-weight: 600;
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            font-weight: 500;
+        }
+
+        h4 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout.info {
+            background: var(--light);
+            border-color: var(--teal-light);
+        }
+
+        .callout.warning {
+            background: var(--rust-bg);
+            border-color: var(--rust);
+        }
+
+        .callout.success {
+            background: var(--olive-bg);
+            border-color: var(--olive);
+        }
+
+        .callout.tip {
+            background: var(--coral-bg);
+            border-color: var(--coral);
+        }
+
+        .callout h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        /* Script Boxes */
+        .script-box {
+            background: var(--white);
+            border: 2px solid var(--olive);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .script-label {
+            display: inline-block;
+            background: var(--olive);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .script-text {
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text);
+            padding-right: 100px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--olive);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--olive-dark);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn.copied {
+            background: var(--teal-light);
+        }
+
+        /* Checklists */
+        .checklist {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .checklist h4 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .checklist-item.checked {
+            background: var(--olive-bg);
+            border-left: 3px solid var(--olive);
+        }
+
+        /* Tracking Templates */
+        .template-box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .template-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .template-field {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+
+        .template-label {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .template-input {
+            border-bottom: 1px dotted var(--border);
+            min-height: 1.5rem;
+        }
+
+        /* Expandable Sections */
+        .expandable {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .expandable:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(60, 92, 94, 0.1);
+        }
+
+        .expandable-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+            transition: background 0.2s;
+        }
+
+        .expandable-header:hover {
+            background: #e0e8e0;
+        }
+
+        .expandable-header h3,
+        .expandable-header h4 {
+            margin: 0;
+            font-size: 1.125rem;
+        }
+
+        .expand-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: var(--text);
+            font-size: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .expandable.open .expand-icon {
+            transform: rotate(45deg);
+            background: var(--primary);
+            color: white;
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .expandable.open .expandable-content {
+            max-height: 3000px;
+        }
+
+        .expandable-inner {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .button.secondary {
+            background: var(--coral);
+        }
+
+        .button.secondary:hover {
+            background: var(--coral-dark);
+        }
+
+        .button.outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .button.outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Quick Action Cards */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .action-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card h4 {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .action-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Pills */
+        .nav-pills {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-pill {
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-pill:hover,
+        .nav-pill.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .progress-step:last-child::before {
+            display: none;
+        }
+
+        .progress-step.completed::before {
+            background: var(--olive);
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--border);
+            margin: 0 auto 0.5rem;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--olive);
+            color: var(--white);
+            border-color: var(--olive);
+        }
+
+        .progress-step.active .step-circle {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 12px rgba(60, 92, 94, 0.3);
+            cursor: pointer;
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 2rem;
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 250px;
+            z-index: 998;
+        }
+
+        .mobile-menu.open {
+            display: block;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 0.75rem;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .mobile-menu a:hover {
+            background: var(--light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--light);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .sidebar-nav {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+            
+            .crisis-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .script-text {
+                padding-right: 0;
+            }
+            
+            .copy-btn {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .template-field {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar-nav,
+            .mobile-menu-toggle,
+            .mobile-menu,
+            .crisis-banner,
+            .copy-btn,
+            footer {
+                display: none !important;
+            }
+            
+            .page-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .expandable-content {
+                max-height: none !important;
+                display: block !important;
+            }
+            
+            .expandable {
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        a:focus,
+        button:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 3px solid var(--teal-light);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    
+    <header>
+        <div class="header-container">
+            <h1>Inpatient Insider: A Family's Guide to Hospital Advocacy</h1>
+            <p class="subtitle">From Crisis to Confidence: Essential strategies for navigating inpatient care</p>
+        </div>
+    </header>
+
+    <div class="page-layout">
+        <!-- Sticky Sidebar Navigation -->
+        <nav class="sidebar-nav" role="navigation" aria-label="Guide sections">
+            <h3>Quick Start</h3>
+            <ul>
+                <li><a href="#crisis" class="active">In Crisis Now?</a></li>
+                <li><a href="#overview">Guide Overview</a></li>
+            </ul>
+            
+            <div class="divider"></div>
+            
+            <h3>Chapters</h3>
+            <ul>
+                <li><a href="#chapter-1">Ch 1: First 24 Hours</a></li>
+                <li><a href="#chapter-2">Ch 2: Care Team</a></li>
+                <li><a href="#chapter-3">Ch 3: Daily Life</a></li>
+                <li><a href="#chapter-4">Ch 4: Being the Voice</a></li>
+                <li><a href="#chapter-5">Ch 5: Going Home</a></li>
+                <li><a href="#chapter-6">Ch 6: Problems</a></li>
+                <li><a href="#chapter-7">Ch 7: Self-Care</a></li>
+            </ul>
+            
+            <div class="divider"></div>
+            
+            <h3>Quick Tools</h3>
+            <ul>
+                <li><a href="#phone-numbers">Phone Numbers</a></li>
+                <li><a href="#questions">Questions List</a></li>
+                <li><a href="#medication">Med Tracker</a></li>
+                <li><a href="#daily-notes">Daily Notes</a></li>
+                <li><a href="#discharge">Discharge List</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Crisis Section -->
+            <section id="crisis">
+                <div class="crisis-banner">
+                    <h2>Reading This in a Crisis?</h2>
+                    <p>If your family member was just admitted to the hospital and you need help RIGHT NOW:</p>
+                    <div class="crisis-links">
+                        <a href="#essential-checklist" class="crisis-link">Essential First 24-Hour Checklist</a>
+                        <a href="#emergency-numbers" class="crisis-link">Emergency Phone Numbers Template</a>
+                        <a href="#need-to-speak" class="crisis-link">"I Need to Speak Up" Scripts</a>
+                        <a href="#quick-questions" class="crisis-link">5 Questions to Ask Right Now</a>
+                    </div>
+                </div>
+                
+                <div class="callout success">
+                    <h3>Take a breath. You've got this.</h3>
+                    <p>This guide will help you navigate what comes next. You don't need to read everything at once. Start with what you need most right now.</p>
+                </div>
+            </section>
+
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>Welcome: How to Use This Guide</h2>
+                
+                <p>This guide helps families navigate one of healthcare's most stressful experiences: when your loved one is hospitalized. Unlike clinical guides written for medical professionals, <strong>Inpatient Insider speaks directly to families</strong> who find themselves suddenly thrust into complex hospital systems without training or preparation.</p>
+                
+                <div class="callout info">
+                    <h3>You don't need medical expertise to be an effective advocate</h3>
+                    <p>What you need are practical strategies, clear communication scripts, and the confidence to speak up when something doesn't feel right. This guide provides all three.</p>
+                </div>
+                
+                <h3>Why Hospital Advocacy Is Different</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>Hospitals operate on medical priorities, not family comfort</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <p>While medical staff focus on clinical indicators and treatment protocols, families worry about comfort, communication, dignity, and understanding what's really happening. This guide bridges that gap by teaching you how to work within hospital systems while advocating for your family's needs.</p>
+                            
+                            <ul>
+                                <li>Information moves fast and decisions happen quickly</li>
+                                <li>Treatment decisions that might take weeks in outpatient settings happen in hours</li>
+                                <li>The system assumes you know how it works</li>
+                                <li>Medical routines that are second nature to staff are foreign to families</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>How to Navigate This Guide</h3>
+                
+                <div class="action-cards">
+                    <div class="action-card">
+                        <div class="action-icon">🚨</div>
+                        <h4>In Crisis</h4>
+                        <p>Jump directly to the sections that address your immediate needs</p>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">📋</div>
+                        <h4>Planning Ahead</h4>
+                        <p>Work through chapters systematically to prepare</p>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🔧</div>
+                        <h4>Quick Tools</h4>
+                        <p>Access templates and scripts for specific situations</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 1: First 24 Hours -->
+            <section id="chapter-1">
+                <h2>Chapter 1: First 24 Hours - What You Need to Know Right Now</h2>
+                
+                <p class="subtitle">If you're reading this chapter, someone you care about has just been admitted to the hospital. You're probably feeling overwhelmed, scared, or confused about what happens next. That's completely normal.</p>
+                
+                <div class="progress-tracker">
+                    <h4>Your First 24 Hours Progress</h4>
+                    <div class="progress-steps">
+                        <div class="progress-step active">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Find Contacts</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Ask Questions</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Gather Info</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">4</div>
+                            <div class="step-label">Set Up Systems</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Getting Oriented: Who to Talk to First</h3>
+                
+                <div class="callout warning">
+                    <h3>Your First Priority: Find Your Primary Contact Person</h3>
+                    <p>In the chaos of admission, your first goal is identifying who you should talk to about your loved one's care. Don't worry about understanding the entire hospital hierarchy yet—just find your main point of contact.</p>
+                </div>
+                
+                <h4>Look for These Key People First</h4>
+                
+                <div class="expandable open">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>The Bedside Nurse - Your Most Important Daily Contact</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <ul>
+                                <li>Usually introduces themselves when you arrive</li>
+                                <li>Knows your loved one's immediate needs and daily schedule</li>
+                                <li>Can answer questions about comfort, medications, and daily care</li>
+                                <li>Available during their shift (typically 12 hours)</li>
+                            </ul>
+                            
+                            <div class="script-box">
+                                <span class="script-label">Introduction Script</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">Hi, I'm [Name], and I'm [patient's name]'s [relationship]. I'd like to understand who I should talk to about their care. Can you help me identify the main people I'll be working with?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>The Charge Nurse - The Supervisor on the Unit</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <ul>
+                                <li>Manages the entire nursing unit</li>
+                                <li>Can help when your bedside nurse isn't available</li>
+                                <li>Has authority to address immediate concerns</li>
+                                <li>Usually located at the nurses' station</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>The Case Manager - Your Discharge Planning Contact</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <ul>
+                                <li>May introduce themselves within 24-48 hours</li>
+                                <li>Helps coordinate discharge planning and home care</li>
+                                <li>Assists with insurance authorization issues</li>
+                                <li>Can connect you with hospital resources</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 id="essential-checklist">Essential Questions to Ask - First 24 Hours Checklist</h3>
+                
+                <div class="checklist">
+                    <h4>Immediate Safety and Comfort Questions</h4>
+                    <p>Ask the bedside nurse:</p>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="q1" onchange="updateChecklist(this)">
+                        <label for="q1">Is [patient's name] stable right now?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="q2" onchange="updateChecklist(this)">
+                        <label for="q2">What should I watch for that would concern you?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="q3" onchange="updateChecklist(this)">
+                        <label for="q3">Are they in pain, and how is that being managed?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="q4" onchange="updateChecklist(this)">
+                        <label for="q4">Are there any immediate restrictions I should know about?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="q5" onchange="updateChecklist(this)">
+                        <label for="q5">When were they last able to eat or drink?</label>
+                    </div>
+                </div>
+                
+                <div class="checklist">
+                    <h4>Communication and Updates</h4>
+                    <p>Ask the nurse or charge nurse:</p>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="c1" onchange="updateChecklist(this)">
+                        <label for="c1">What time do doctors usually make rounds?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="c2" onchange="updateChecklist(this)">
+                        <label for="c2">How can I make sure to be here when the doctor visits?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="c3" onchange="updateChecklist(this)">
+                        <label for="c3">If I can't be here, how will I get updates?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="c4" onchange="updateChecklist(this)">
+                        <label for="c4">What's the best way to reach someone with questions?</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="c5" onchange="updateChecklist(this)">
+                        <label for="c5">Is there a family communication system or app?</label>
+                    </div>
+                </div>
+                
+                <h3>What Information to Gather</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Information Collection Template</span>
+                        <button class="button outline" onclick="printTemplate(this)">Print</button>
+                    </div>
+                    
+                    <h4>Insurance and Financial Information</h4>
+                    <div class="template-field">
+                        <span class="template-label">Primary Insurance:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Member ID:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Customer Service #:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Pre-auth Required?:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Medical Information</h4>
+                    <div class="template-field">
+                        <span class="template-label">Current Medications:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Known Allergies:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Primary Doctor:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Pharmacy Info:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                </div>
+                
+                <div class="callout success">
+                    <h3>Remember: You're Not Alone</h3>
+                    <p>Hospital stays are overwhelming, but you don't have to navigate this alone. Every hospital has people whose job is to help families like yours:</p>
+                    <ul>
+                        <li><strong>Bedside nurses</strong> want to keep your loved one comfortable and informed</li>
+                        <li><strong>Case managers</strong> help coordinate complex care and discharge planning</li>
+                        <li><strong>Patient advocates</strong> exist specifically to help when problems arise</li>
+                        <li><strong>Chaplains and social workers</strong> provide emotional and practical support</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 2: Understanding Your Care Team -->
+            <section id="chapter-2">
+                <h2>Chapter 2: Understanding Your Loved One's Care Team</h2>
+                
+                <p class="subtitle">Hospitals can feel like foreign countries with their own language, customs, and social hierarchies. This chapter will help you understand who does what, when you'll see them, and how to work with each member effectively.</p>
+                
+                <h3>Who's Who: Doctors, Nurses, Specialists</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>The Medical Team Hierarchy</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Attending Physician - The Doctor in Charge</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Overall responsibility for care and treatment decisions</li>
+                                <li><strong>What they look like:</strong> Usually wear long white coats, name tag saying "MD"</li>
+                                <li><strong>When you'll see them:</strong> Daily rounds (usually mornings), family meetings</li>
+                                <li><strong>What to ask them:</strong> Big picture questions about diagnosis, treatment plan, prognosis</li>
+                            </ul>
+                            
+                            <h4>Resident Doctors (if teaching hospital)</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Doctors in training working under the attending</li>
+                                <li><strong>What they look like:</strong> Shorter white coats, may look younger</li>
+                                <li><strong>When you'll see them:</strong> More frequently than attendings</li>
+                                <li><strong>What to ask them:</strong> Daily care questions (they check with attending for major decisions)</li>
+                            </ul>
+                            
+                            <h4>Physician Assistants (PAs) and Nurse Practitioners (NPs)</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Licensed to diagnose, treat, and prescribe medications</li>
+                                <li><strong>What they look like:</strong> White coats, name tags with "PA" or "NP"</li>
+                                <li><strong>When you'll see them:</strong> May substitute for doctors during rounds</li>
+                                <li><strong>What to ask them:</strong> Most medical questions; they can usually answer or get answers quickly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>The Nursing Team</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Bedside/Primary Nurse - Your Daily Lifeline</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Direct patient care, medications, monitoring, family communication</li>
+                                <li><strong>What they look like:</strong> Scrubs (colors vary), name badge, stethoscope</li>
+                                <li><strong>When you'll see them:</strong> Throughout their 12-hour shift</li>
+                                <li><strong>What to ask them:</strong> Pain management, comfort needs, daily schedule, medications</li>
+                            </ul>
+                            
+                            <h4>Charge Nurse - The Unit Supervisor</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Oversees all nurses on the unit, handles complex situations</li>
+                                <li><strong>When you'll see them:</strong> When there are problems or your nurse isn't available</li>
+                                <li><strong>What to ask them:</strong> Staffing concerns, policy questions, escalation of problems</li>
+                            </ul>
+                            
+                            <h4>Nursing Assistants/Techs</h4>
+                            <ul>
+                                <li><strong>What they do:</strong> Help with daily care like bathing, moving, vital signs</li>
+                                <li><strong>What they look like:</strong> Scrubs (often different colors from nurses)</li>
+                                <li><strong>When you'll see them:</strong> Throughout the day for routine care</li>
+                                <li><strong>What to ask them:</strong> Comfort questions, help with basic needs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>When to Expect Rounds and How to Be Part of Them</h3>
+                
+                <div class="callout info">
+                    <h3>What Are Rounds?</h3>
+                    <p>Medical rounds are when the care team meets to discuss each patient's condition, review test results, and make treatment decisions. Think of it as the daily team meeting about your loved one's care.</p>
+                </div>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Typical Round Schedule</span>
+                    </div>
+                    
+                    <h4>Morning Rounds (7:00-10:00 AM)</h4>
+                    <ul>
+                        <li>Most important rounds of the day</li>
+                        <li>Major decisions are usually made</li>
+                        <li>Best time to catch the attending physician</li>
+                        <li>Plan to be present if possible</li>
+                    </ul>
+                    
+                    <h4>Afternoon Rounds (2:00-4:00 PM)</h4>
+                    <ul>
+                        <li>Usually shorter than morning rounds</li>
+                        <li>Focus on updates and adjustments</li>
+                        <li>Good time for follow-up questions</li>
+                    </ul>
+                    
+                    <h4>Evening Rounds (6:00-8:00 PM)</h4>
+                    <ul>
+                        <li>Brief check-ins, mostly nursing-focused</li>
+                        <li>Preparation for overnight care</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Joining Rounds Script</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">Good morning, I'm [Name], [patient's name]'s [relationship]. I'd like to understand what's planned for today and ask a couple of questions if that's okay.</p>
+                </div>
+                
+                <h3>How to Reach the Right Person for Different Needs</h3>
+                
+                <div class="action-cards">
+                    <div class="action-card">
+                        <h4>For Medical Concerns</h4>
+                        <p>Bedside nurse → Charge nurse → Resident/Attending</p>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h4>For Pain/Comfort</h4>
+                        <p>Bedside nurse → Charge nurse → Doctor</p>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h4>For Discharge Planning</h4>
+                        <p>Case manager → Social worker → Attending</p>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h4>For Complaints</h4>
+                        <p>Charge nurse → Supervisor → Patient advocate</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 3: Daily Hospital Life -->
+            <section id="chapter-3">
+                <h2>Chapter 3: Daily Hospital Life - What to Expect</h2>
+                
+                <p class="subtitle">Hospital days have their own rhythm, quite different from normal life. Understanding the daily patterns, routines, and systems will help you support your loved one more effectively and reduce your own stress.</p>
+                
+                <h3>Typical Daily Schedule and Timing</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">The Hospital Day Timeline</span>
+                    </div>
+                    
+                    <h4>5:00-6:00 AM: Day Begins</h4>
+                    <ul>
+                        <li>Nursing shift change (night nurses brief day nurses)</li>
+                        <li>Vital signs taken</li>
+                        <li>Blood draws for lab work</li>
+                        <li>Early morning medications</li>
+                    </ul>
+                    
+                    <h4>6:00-8:00 AM: Morning Care</h4>
+                    <ul>
+                        <li>Personal care assistance</li>
+                        <li>Breakfast service</li>
+                        <li>Morning medications</li>
+                        <li>Patient assessments</li>
+                    </ul>
+                    
+                    <h4>7:00-10:00 AM: Medical Rounds</h4>
+                    <ul>
+                        <li>Attending physician rounds (most important)</li>
+                        <li>Treatment plan updates</li>
+                        <li>Family questions answered</li>
+                    </ul>
+                    
+                    <h4>8:00 AM-12:00 PM: Tests and Procedures</h4>
+                    <ul>
+                        <li>Scheduled diagnostic tests</li>
+                        <li>Physical therapy sessions</li>
+                        <li>Specialist consultations</li>
+                    </ul>
+                </div>
+                
+                <h3>How to Use the Call Button Effectively</h3>
+                
+                <div class="callout tip">
+                    <h3>Understanding the Call Button System</h3>
+                    <p>The call button alerts nursing staff that you need assistance. Response times vary based on urgency and staffing.</p>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>When to Use the Call Button</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Immediate/Urgent Situations:</h4>
+                            <ul>
+                                <li>Difficulty breathing or chest pain</li>
+                                <li>Severe pain that's not controlled</li>
+                                <li>Nausea or vomiting</li>
+                                <li>Confusion or significant changes</li>
+                                <li>Equipment alarms or malfunctions</li>
+                                <li>Falls or injuries</li>
+                            </ul>
+                            
+                            <h4>Routine Care Needs:</h4>
+                            <ul>
+                                <li>Help getting to bathroom</li>
+                                <li>Pain medication that's due</li>
+                                <li>Questions about medications</li>
+                                <li>Need for comfort items</li>
+                                <li>Assistance with meals</li>
+                            </ul>
+                            
+                            <div class="script-box">
+                                <span class="script-label">Call Button Script - Urgent</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">This is room [number]. [Patient's name] is having [specific problem]. Can someone come right away?</p>
+                            </div>
+                            
+                            <div class="script-box">
+                                <span class="script-label">Call Button Script - Routine</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">This is room [number]. When someone has a moment, [patient's name] needs help with [specific request].</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Medication Management and Safety</h3>
+                
+                <div class="checklist">
+                    <h4>Family Role in Medication Safety</h4>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="med1" onchange="updateChecklist(this)">
+                        <label for="med1">Provide complete home medication list</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="med2" onchange="updateChecklist(this)">
+                        <label for="med2">Report all allergies and reactions</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="med3" onchange="updateChecklist(this)">
+                        <label for="med3">Ask about each new medication</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="med4" onchange="updateChecklist(this)">
+                        <label for="med4">Watch for side effects</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="med5" onchange="updateChecklist(this)">
+                        <label for="med5">Speak up if something seems wrong</label>
+                    </div>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Medication Questions Script</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">What medication are you giving? What is it for? What side effects should we watch for? How does this interact with their other medications?</p>
+                </div>
+            </section>
+
+            <!-- Chapter 4: Being Your Family Member's Voice -->
+            <section id="chapter-4">
+                <h2>Chapter 4: Being Your Family Member's Voice</h2>
+                
+                <p class="subtitle">Sometimes your loved one can't speak up for themselves—they may be too sick, too overwhelmed, or simply don't know what questions to ask. This chapter teaches you how to be an effective advocate.</p>
+                
+                <h3>When and How to Speak Up About Concerns</h3>
+                
+                <div class="callout warning">
+                    <h3>Trust Your Instincts</h3>
+                    <p>You know your loved one better than anyone on the medical team. If something seems wrong, it probably is. Don't wait for permission to speak up.</p>
+                </div>
+                
+                <h3>Simple Advocacy Phrases That Work</h3>
+                
+                <div class="script-box">
+                    <span class="script-label">Getting Attention</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">Excuse me, I need to speak with someone about [patient's name]'s care. I have an important concern to discuss.</p>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Expressing Concerns</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">This isn't normal for [patient's name]. Can someone assess this? I'm worried about [specific symptom].</p>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Requesting Changes</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">This approach isn't working. What else can we try? Based on what I'm seeing, I think we need to adjust the plan.</p>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Escalating Issues</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">I need to speak with your supervisor about this concern. Can you connect me with the patient advocate?</p>
+                </div>
+                
+                <h3>Taking Notes That Matter</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Documentation Template</span>
+                        <button class="button outline" onclick="printTemplate(this)">Print</button>
+                    </div>
+                    
+                    <div class="template-field">
+                        <span class="template-label">Date/Time:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Person Spoken With:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Topic Discussed:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Key Points:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Action Items:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Follow-up Needed:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                </div>
+                
+                <h3>Getting Second Opinions</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>When to Consider a Second Opinion</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Medical Situations:</h4>
+                            <ul>
+                                <li>Complex or unclear diagnosis</li>
+                                <li>Major treatment decisions (surgery, chemotherapy)</li>
+                                <li>Poor response to current treatment</li>
+                                <li>Conflicting recommendations from different doctors</li>
+                                <li>Rare or unusual conditions</li>
+                            </ul>
+                            
+                            <h4>How to Request:</h4>
+                            <div class="script-box">
+                                <span class="script-label">Second Opinion Request</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">We'd like to get a second opinion about [specific issue]. Can you help us arrange that? We want to make sure we're considering all options.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 5: Planning to Go Home -->
+            <section id="chapter-5">
+                <h2>Chapter 5: Planning to Go Home</h2>
+                
+                <p class="subtitle">The transition from hospital to home is often the most stressful part of a hospital stay. You're excited to leave but worried about managing care at home. This chapter helps you prepare systematically.</p>
+                
+                <h3>Discharge Planning Basics</h3>
+                
+                <div class="callout info">
+                    <h3>Discharge Planning Starts on Day One</h3>
+                    <p>Don't wait until the day of discharge to start planning. The earlier you engage with this process, the smoother your transition home will be.</p>
+                </div>
+                
+                <div class="progress-tracker">
+                    <h4>Discharge Planning Timeline</h4>
+                    <div class="progress-steps">
+                        <div class="progress-step completed">
+                            <div class="step-circle">✓</div>
+                            <div class="step-label">Days 1-2: Assessment</div>
+                        </div>
+                        <div class="progress-step active">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Days 3-5: Planning</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Final 48 Hours: Preparation</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">4</div>
+                            <div class="step-label">Discharge Day</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 id="discharge">Discharge Checklist</h3>
+                
+                <div class="checklist">
+                    <h4>Medical Information Checklist</h4>
+                    <p>Before leaving the hospital, ensure you have:</p>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="d1" onchange="updateChecklist(this)">
+                        <label for="d1">Written discharge summary</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="d2" onchange="updateChecklist(this)">
+                        <label for="d2">Complete medication list with instructions</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="d3" onchange="updateChecklist(this)">
+                        <label for="d3">Copies of important test results</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="d4" onchange="updateChecklist(this)">
+                        <label for="d4">Contact information for all doctors</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="d5" onchange="updateChecklist(this)">
+                        <label for="d5">Follow-up appointments scheduled</label>
+                    </div>
+                </div>
+                
+                <div class="checklist">
+                    <h4>Home Care Services Checklist</h4>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="h1" onchange="updateChecklist(this)">
+                        <label for="h1">Home care services scheduled and confirmed</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="h2" onchange="updateChecklist(this)">
+                        <label for="h2">Medical equipment delivered and set up</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="h3" onchange="updateChecklist(this)">
+                        <label for="h3">Training completed on equipment use</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="h4" onchange="updateChecklist(this)">
+                        <label for="h4">Prescriptions filled</label>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <input type="checkbox" id="h5" onchange="updateChecklist(this)">
+                        <label for="h5">Emergency contact numbers ready</label>
+                    </div>
+                </div>
+                
+                <h3>Warning Signs to Watch for at Home</h3>
+                
+                <div class="callout warning">
+                    <h3>Call for Immediate Medical Attention If You Notice:</h3>
+                    <ul>
+                        <li>Difficulty breathing or shortness of breath</li>
+                        <li>Chest pain or pressure</li>
+                        <li>Signs of infection: fever, chills, increased pain, redness</li>
+                        <li>Mental status changes: confusion, disorientation</li>
+                        <li>Severe pain not controlled by prescribed medications</li>
+                        <li>Inability to keep food or fluids down for more than 24 hours</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Calling Doctor After Discharge</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">This is [Name] calling about [Patient's name], date of birth [DOB]. They were discharged from [Hospital] on [date] after [reason]. I'm calling because [specific concern]. Their current symptoms are [describe]. Should I bring them in to be seen?</p>
+                </div>
+            </section>
+
+            <!-- Chapter 6: Dealing with Problems -->
+            <section id="chapter-6">
+                <h2>Chapter 6: Dealing with Problems</h2>
+                
+                <p class="subtitle">Not every hospital stay goes smoothly. When problems arise—whether medical, communication-related, or administrative—you need to know how to get help quickly and effectively.</p>
+                
+                <h3>When Things Go Wrong</h3>
+                
+                <div class="nav-pills">
+                    <a href="#medical-problems" class="nav-pill">Medical Care Problems</a>
+                    <a href="#communication-problems" class="nav-pill">Communication Problems</a>
+                    <a href="#quality-problems" class="nav-pill">Care Quality Problems</a>
+                    <a href="#admin-problems" class="nav-pill">Administrative Problems</a>
+                </div>
+                
+                <h3>How to File a Complaint</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>Internal Hospital Complaint Process</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Step 1: Start with Direct Communication</h4>
+                            <p>Before filing formal complaints, try addressing issues directly with:</p>
+                            <ul>
+                                <li>The bedside nurse or charge nurse</li>
+                                <li>The attending physician or department manager</li>
+                                <li>The case manager or social worker</li>
+                            </ul>
+                            
+                            <h4>Step 2: Request Patient Relations/Ombudsman</h4>
+                            <div class="script-box">
+                                <span class="script-label">Patient Advocate Request</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">I need to speak with patient relations or the patient advocate. We're having trouble resolving a care concern.</p>
+                            </div>
+                            
+                            <h4>Step 3: External Resources if Needed</h4>
+                            <ul>
+                                <li>State Health Department</li>
+                                <li>Joint Commission (www.jointcommission.org)</li>
+                                <li>Medicare/Medicaid (1-800-MEDICARE)</li>
+                                <li>Insurance Company</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Emergency Procedures and Rapid Response</h3>
+                
+                <div class="callout warning">
+                    <h3>Hospital Emergency Response Systems</h3>
+                    <p><strong>Code Blue:</strong> Cardiac/respiratory arrest - brings emergency team immediately</p>
+                    <p><strong>Rapid Response Team:</strong> For patients deteriorating but not in arrest</p>
+                </div>
+                
+                <div class="script-box">
+                    <span class="script-label">Activating Emergency Response</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">I'm very concerned about [patient's name]'s condition. I think we need the rapid response team. How do I request that?</p>
+                </div>
+                
+                <h3>Insurance and Billing Issues</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>Common Insurance Problems</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Pre-Authorization Denials</h4>
+                            <ul>
+                                <li>Work with your case manager</li>
+                                <li>Contact insurance directly</li>
+                                <li>Request urgent appeal if needed</li>
+                                <li>Document everything</li>
+                            </ul>
+                            
+                            <h4>Length of Stay Disputes</h4>
+                            <ul>
+                                <li>Insurance wants discharge before medical team agrees</li>
+                                <li>May result in pressure for premature discharge</li>
+                                <li>You have the right to appeal</li>
+                            </ul>
+                            
+                            <div class="script-box">
+                                <span class="script-label">Insurance Appeal Request</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">I am requesting an urgent appeal of the denial for [specific service] for [patient's name], member ID [number]. This service is medically necessary because [reason]. Delay could result in [potential harm].</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 7: Taking Care of Yourself -->
+            <section id="chapter-7">
+                <h2>Chapter 7: Taking Care of Yourself</h2>
+                
+                <p class="subtitle">Hospital stays are emotionally and physically exhausting for families. While your focus is naturally on your loved one, you also need to take care of yourself. This isn't selfish—it's strategic.</p>
+                
+                <div class="callout success">
+                    <h3>You Can't Pour from an Empty Cup</h3>
+                    <p>You can't be an effective advocate if you're running on empty. Taking care of yourself isn't luxury—it's necessary for taking care of your loved one.</p>
+                </div>
+                
+                <h3>Managing Stress During Hospitalization</h3>
+                
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)">
+                        <h4>Why Hospital Stays Are Uniquely Stressful</h4>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <ul>
+                                <li><strong>Loss of control:</strong> Feeling powerless in unfamiliar environment</li>
+                                <li><strong>Information overload:</strong> Complex medical information when emotional</li>
+                                <li><strong>Uncertainty:</strong> Not knowing what will happen next</li>
+                                <li><strong>Role reversal:</strong> Suddenly becoming the decision-maker</li>
+                                <li><strong>Physical exhaustion:</strong> Disrupted sleep, irregular meals</li>
+                                <li><strong>Financial worry:</strong> Concerns about costs and time from work</li>
+                            </ul>
+                            
+                            <h4>Immediate Stress Relief Techniques:</h4>
+                            <ul>
+                                <li>Deep breathing: 4 counts in, 4 hold, 6 out</li>
+                                <li>Progressive muscle relaxation</li>
+                                <li>Grounding: Name 5 things you see, 4 you hear, 3 you touch</li>
+                                <li>Brief walking in hospital hallways</li>
+                                <li>Mindful moments on one simple task</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Getting Support from Family and Friends</h3>
+                
+                <div class="script-box">
+                    <span class="script-label">Asking for Help</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">We're at the hospital with [patient's name]. We could really use help with [specific need]. Could you [specific task]?</p>
+                </div>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Support Network Planner</span>
+                    </div>
+                    
+                    <h4>Different Types of Support You Need:</h4>
+                    <ul>
+                        <li><strong>Emotional support:</strong> People who listen and comfort</li>
+                        <li><strong>Practical support:</strong> Help with daily tasks</li>
+                        <li><strong>Information support:</strong> Help processing medical info</li>
+                        <li><strong>Advocacy support:</strong> Family to share responsibilities</li>
+                        <li><strong>Respite support:</strong> People who can give you breaks</li>
+                    </ul>
+                </div>
+                
+                <h3>Resources for Families</h3>
+                
+                <div class="action-cards">
+                    <div class="action-card">
+                        <h4>Hospital Resources</h4>
+                        <ul style="text-align: left;">
+                            <li>Social Workers</li>
+                            <li>Chaplains/Spiritual Care</li>
+                            <li>Patient Advocates</li>
+                            <li>Family Resource Centers</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h4>Community Resources</h4>
+                        <ul style="text-align: left;">
+                            <li>Support Groups</li>
+                            <li>Meal Delivery Services</li>
+                            <li>Childcare Resources</li>
+                            <li>Financial Assistance</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h4>Online Resources</h4>
+                        <ul style="text-align: left;">
+                            <li>CaringBridge.org</li>
+                            <li>Patient Advocacy Groups</li>
+                            <li>Crisis Support Lines</li>
+                            <li>Medical Information Sites</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference Section -->
+            <section id="quick-reference">
+                <h2>Quick Reference Section</h2>
+                
+                <p class="subtitle">Essential templates, checklists, and contact information you can use throughout your hospital stay. Print these pages or keep them easily accessible on your phone.</p>
+                
+                <h3 id="phone-numbers">Important Phone Numbers Template</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Hospital Contact Information</span>
+                        <button class="button outline" onclick="printTemplate(this)">Print</button>
+                    </div>
+                    
+                    <div class="template-field">
+                        <span class="template-label">Hospital Name:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Main Number:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Patient Room:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Nursing Station:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Care Team Contacts</h4>
+                    <div class="template-field">
+                        <span class="template-label">Attending Doctor:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Case Manager:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Patient Advocate:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Insurance Information</h4>
+                    <div class="template-field">
+                        <span class="template-label">Insurance Company:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Member Services:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">24-Hour Nurse Line:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                </div>
+                
+                <h3 id="daily-notes">Daily Notes Template</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Daily Hospital Log</span>
+                        <button class="button outline" onclick="printTemplate(this)">Print</button>
+                    </div>
+                    
+                    <div class="template-field">
+                        <span class="template-label">Date:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Day of Stay:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Morning Assessment</h4>
+                    <div class="template-field">
+                        <span class="template-label">How They Slept:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Pain Level (0-10):</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Medical Team Rounds</h4>
+                    <div class="template-field">
+                        <span class="template-label">Doctors Present:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Key Points:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Questions Asked:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Tests and Procedures</h4>
+                    <div class="template-field">
+                        <span class="template-label">Tests Today:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Results:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    
+                    <h4>Questions for Tomorrow</h4>
+                    <div class="template-field">
+                        <span class="template-label">Questions:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                </div>
+                
+                <h3 id="medication">Medication Tracker</h3>
+                
+                <div class="template-box">
+                    <div class="template-header">
+                        <span class="template-title">Hospital Medication Tracking</span>
+                        <button class="button outline" onclick="printTemplate(this)">Print</button>
+                    </div>
+                    
+                    <h4>Current Medications</h4>
+                    <div class="template-field">
+                        <span class="template-label">Medication Name:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Dose:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Time Given:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Purpose:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                    <div class="template-field">
+                        <span class="template-label">Side Effects:</span>
+                        <span class="template-input" contenteditable="true"></span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Mobile Menu -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+            ☰
+        </button>
+        
+        <nav class="mobile-menu" id="mobile-menu">
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Quick Navigation</h3>
+            <ul>
+                <li><a href="#crisis" onclick="closeMobileMenu()">Crisis Help</a></li>
+                <li><a href="#chapter-1" onclick="closeMobileMenu()">First 24 Hours</a></li>
+                <li><a href="#chapter-2" onclick="closeMobileMenu()">Care Team</a></li>
+                <li><a href="#chapter-3" onclick="closeMobileMenu()">Daily Life</a></li>
+                <li><a href="#chapter-4" onclick="closeMobileMenu()">Advocacy</a></li>
+                <li><a href="#chapter-5" onclick="closeMobileMenu()">Going Home</a></li>
+                <li><a href="#chapter-6" onclick="closeMobileMenu()">Problems</a></li>
+                <li><a href="#chapter-7" onclick="closeMobileMenu()">Self-Care</a></li>
+                <li><a href="#quick-reference" onclick="closeMobileMenu()">Quick Tools</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span>Copied to clipboard!</span>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <p><strong>Inpatient Insider: A Family's Guide to Hospital Advocacy</strong></p>
+            <p>© 2025 PatientLead Health LLC - Licensed for individual family use only</p>
+            <p>This guide is for educational purposes only and does not constitute medical or legal advice.</p>
+            <p>Always seek professional medical help for emergencies. Call 911 for life-threatening situations.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Save checklist state to localStorage
+        function updateChecklist(checkbox) {
+            const parent = checkbox.parentElement;
+            if (checkbox.checked) {
+                parent.classList.add('checked');
+            } else {
+                parent.classList.remove('checked');
+            }
+            
+            // Save state
+            const checklistId = checkbox.id;
+            localStorage.setItem(checklistId, checkbox.checked);
+            
+            // Update progress if applicable
+            updateProgress();
+        }
+        
+        // Load saved checklist state
+        function loadChecklistState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const saved = localStorage.getItem(checkbox.id);
+                if (saved === 'true') {
+                    checkbox.checked = true;
+                    checkbox.parentElement.classList.add('checked');
+                }
+            });
+        }
+        
+        // Toggle expandable sections
+        function toggleExpandable(header) {
+            const expandable = header.parentElement;
+            expandable.classList.toggle('open');
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard(button) {
+            const scriptBox = button.parentElement;
+            const text = scriptBox.querySelector('.script-text').textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                // Show toast
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                    toast.classList.remove('show');
+                }, 2000);
+            });
+        }
+        
+        // Print template
+        function printTemplate(button) {
+            const template = button.closest('.template-box');
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write('<html><head><title>Print Template</title>');
+            printWindow.document.write('<style>body { font-family: Arial; } .template-field { margin: 10px 0; }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(template.innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // Update progress tracker
+        function updateProgress() {
+            const chapter1Checkboxes = document.querySelectorAll('#chapter-1 input[type="checkbox"]');
+            const checkedCount = document.querySelectorAll('#chapter-1 input[type="checkbox"]:checked').length;
+            const totalCount = chapter1Checkboxes.length;
+            
+            if (totalCount > 0) {
+                const percentage = (checkedCount / totalCount) * 100;
+                const steps = document.querySelectorAll('.progress-step');
+                
+                if (percentage >= 25) steps[0]?.classList.add('completed');
+                if (percentage >= 50) steps[1]?.classList.add('completed');
+                if (percentage >= 75) steps[2]?.classList.add('completed');
+                if (percentage === 100) steps[3]?.classList.add('completed');
+            }
+        }
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('open');
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.remove('open');
+        }
+        
+        // Active navigation highlighting
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.sidebar-nav a, .mobile-menu a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChecklistState();
+            updateProgress();
+        });
+        
+        // Update active navigation on scroll
+        window.addEventListener('scroll', updateActiveNav);
+    </script>
+</body>
+</html>
