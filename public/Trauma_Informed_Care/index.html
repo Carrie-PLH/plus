@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Your Trauma-Informed Care Team - PatientLead Health</title>
+    <meta name="description" content="A comprehensive guide to finding trauma-informed healthcare providers, advocating for respectful care, and building a supportive medical team.">
+    
+    <!-- Roboto Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3c5c5e;
+            --primary-dark: #2f4748;
+            --coral: #b85746;
+            --coral-dark: #a24a3c;
+            --coral-bg: rgba(184, 87, 70, 0.1);
+            --rust: #c2552a;
+            --rust-bg: rgba(194, 85, 42, 0.1);
+            --olive: #58653a;
+            --olive-bg: rgba(88, 101, 58, 0.1);
+            --teal-light: #4d7777;
+            --light: #ebf0eb;
+            --white: #ffffff;
+            --text: #2a3f40;
+            --text-light: #4b5563;
+            --border: #d4ddd4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--white);
+        }
+
+        /* Skip Navigation for Accessibility */
+        .skip-nav {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: var(--white);
+            padding: 8px;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .skip-nav:focus {
+            top: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--light) 0%, #e0e8e0 100%);
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .lead {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 800px;
+            font-weight: 300;
+        }
+
+        .header-meta {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .content-note {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--teal-light);
+            margin-top: 1rem;
+        }
+
+        .content-note strong {
+            color: var(--primary);
+        }
+
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            border-bottom: 2px solid var(--border);
+            z-index: 100;
+            transition: box-shadow 0.3s;
+        }
+
+        .sticky-nav.scrolled {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 1.125rem;
+        }
+
+        /* Desktop Navigation */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-bottom: 2px solid var(--border);
+            z-index: 99;
+            max-height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .mobile-nav.open {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 1rem;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 1rem;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .mobile-nav a:hover {
+            background: var(--light);
+        }
+
+        /* Main Content Layout */
+        main {
+            margin-top: 2rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            font-weight: 600;
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            font-weight: 500;
+        }
+
+        h4 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Intro Box */
+        .intro-box {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .intro-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--teal-light));
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Content Warning Box */
+        .content-warning {
+            background: var(--rust-bg);
+            border: 2px solid var(--rust);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .content-warning h4 {
+            color: var(--rust);
+            margin-top: 0;
+        }
+
+        .content-warning-toggle {
+            background: var(--rust);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .content-warning-toggle:hover {
+            background: var(--rust-dark);
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout.validation {
+            background: var(--coral-bg);
+            border-color: var(--coral);
+        }
+
+        .callout.action {
+            background: var(--olive-bg);
+            border-color: var(--olive);
+        }
+
+        .callout.info {
+            background: var(--light);
+            border-color: var(--teal-light);
+        }
+
+        /* Expandable Sections */
+        .expandable {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .expandable:hover {
+            border-color: var(--primary);
+        }
+
+        .expandable-header {
+            padding: 1rem 1.5rem;
+            background: var(--light);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .expandable-header:hover {
+            background: #e0e8e0;
+        }
+
+        .expandable-header h3,
+        .expandable-header h4 {
+            margin: 0;
+            font-size: 1.125rem;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .expandable.open .expand-icon {
+            transform: rotate(45deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .expandable.open .expandable-content {
+            max-height: 2000px;
+        }
+
+        .expandable-inner {
+            padding: 1.5rem;
+        }
+
+        /* Script Boxes */
+        .script-box {
+            background: var(--white);
+            border: 2px solid var(--olive);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .script-box .label {
+            font-size: 0.875rem;
+            color: var(--olive);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .script-text {
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--olive);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--olive-dark);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn.copied {
+            background: var(--teal-light);
+        }
+
+        /* Interactive Assessment Tool */
+        .assessment-tool {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .assessment-section {
+            margin-bottom: 2rem;
+        }
+
+        .assessment-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .assessment-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .assessment-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .assessment-item input[type="checkbox"] {
+            margin-right: 1rem;
+            margin-top: 0.25rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .assessment-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .assessment-results {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            border: 2px solid var(--primary);
+            display: none;
+        }
+
+        .assessment-results.show {
+            display: block;
+        }
+
+        .assessment-score {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .save-results-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .save-results-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Provider Evaluation Matrix */
+        .provider-matrix {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .matrix-table th {
+            background: var(--light);
+            color: var(--primary);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .matrix-table tr:hover {
+            background: var(--light);
+        }
+
+        .rating-stars {
+            color: var(--coral);
+        }
+
+        .add-provider-btn {
+            background: var(--teal-light);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .add-provider-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Tool Cards */
+        .tool-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .tool-card h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .button.secondary {
+            background: var(--coral);
+        }
+
+        .button.secondary:hover {
+            background: var(--coral-dark);
+        }
+
+        .button.outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .button.outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--teal-light));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .matrix-table {
+                font-size: 0.875rem;
+            }
+            
+            .matrix-table th,
+            .matrix-table td {
+                padding: 0.5rem;
+            }
+            
+            .copy-btn {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sticky-nav,
+            .mobile-nav,
+            .copy-btn,
+            .button,
+            .content-warning-toggle {
+                display: none !important;
+            }
+            
+            .expandable-content {
+                max-height: none !important;
+                display: block !important;
+            }
+            
+            .expandable {
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Accessibility Focus Styles */
+        a:focus,
+        button:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 3px solid var(--teal-light);
+            outline-offset: 2px;
+        }
+
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    
+    <!-- Sticky Navigation -->
+    <nav class="sticky-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="#top" class="nav-brand">Trauma-Informed Care Guide</a>
+            
+            <ul class="nav-links">
+                <li><a href="#understanding">Understanding</a></li>
+                <li><a href="#preparing">Preparing</a></li>
+                <li><a href="#building">Building</a></li>
+                <li><a href="#challenges">Challenges</a></li>
+                <li><a href="#ongoing">Journey</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+            
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
+        <ul>
+            <li><a href="#understanding" onclick="closeMobileMenu()">Understanding Your Experience</a></li>
+            <li><a href="#preparing" onclick="closeMobileMenu()">Preparing Yourself</a></li>
+            <li><a href="#building" onclick="closeMobileMenu()">Building Your Team</a></li>
+            <li><a href="#challenges" onclick="closeMobileMenu()">Handling Challenges</a></li>
+            <li><a href="#ongoing" onclick="closeMobileMenu()">Your Ongoing Journey</a></li>
+            <li><a href="#resources" onclick="closeMobileMenu()">Resources & Tools</a></li>
+        </ul>
+    </nav>
+    
+    <header id="top">
+        <div class="container">
+            <h1>Building Your Trauma-Informed Care Team</h1>
+            <p class="lead">This space is for reimagining healthcare interactions, starting with how we listen, validate, and empower patients to advocate for the respectful care everyone is entitled to receive.</p>
+            
+            <div class="header-meta">
+                <div class="content-note">
+                    <strong>About This Guide:</strong> Created with input from patients who have navigated medical trauma, this guide offers practical strategies for finding compassionate providers and building a supportive healthcare team. We recognize that identity, culture, and history shape how trauma is experienced and how care should be delivered.
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div class="container">
+            <section id="introduction">
+                <div class="intro-box">
+                    <h2>Everyone Is Entitled to Respectful, Compassionate Healthcare</h2>
+                    <p>If you've ever felt your concerns minimized, dismissed, or misunderstood in healthcare settings, this guide is for you. Many people have experienced healthcare interactions that left them feeling unheard or even harmed.</p>
+                    <p><strong>What you experienced matters. Your concerns are valid. Compassionate care should be standard, not exceptional.</strong></p>
+                    
+                    <div class="content-warning">
+                        <h4>Content Note</h4>
+                        <p>This guide discusses experiences of medical dismissal and trauma. While we've been thoughtful about language, some content may resonate with difficult experiences. You have control over how much detail you engage with; all expandable sections are optional.</p>
+                        <button class="content-warning-toggle" onclick="acknowledgeWarning(this)">I understand</button>
+                    </div>
+                </div>
+                
+                <div class="callout info">
+                    <h3>What This Guide Offers</h3>
+                    <ul>
+                        <li><strong>Recognition:</strong> Understanding medical trauma and its impacts</li>
+                        <li><strong>Preparation:</strong> Tools for self-advocacy and clear communication</li>
+                        <li><strong>Action:</strong> Strategies for finding and evaluating providers</li>
+                        <li><strong>Support:</strong> Resources for ongoing healing and growth</li>
+                    </ul>
+                    <p>Explore strategies at your own pace, skip sections as needed, or share your insights to help shape compassionate healthcare practices for all.</p>
+                </div>
+            </section>
+
+            <section id="understanding">
+                <h2>Part 1: Understanding Your Experience</h2>
+                
+                <div class="callout validation">
+                    <h3>Your Responses Are Valid</h3>
+                    <p>When healthcare interactions leave you feeling dismissed or unsafe, your body and mind respond protectively. These responses—whether anxiety, avoidance, or heightened vigilance—are natural reactions to difficult experiences, not personal failings.</p>
+                </div>
+
+                <div class="expandable" id="trauma-signs">
+                    <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                        <h3>Recognizing Patterns of Dismissal</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <p>Medical dismissal can take many forms. You might recognize some of these patterns:</p>
+                            
+                            <h4>Common Experiences:</h4>
+                            <ul>
+                                <li><strong>Minimization:</strong> Having symptoms attributed to stress or anxiety without proper investigation</li>
+                                <li><strong>Interruption:</strong> Not being allowed to fully explain your concerns</li>
+                                <li><strong>Assumptions:</strong> Providers making judgments based on appearance rather than listening</li>
+                                <li><strong>Rushed interactions:</strong> Feeling pressured to condense complex concerns into brief visits</li>
+                                <li><strong>Lack of consent:</strong> Procedures or examinations without clear explanation or permission</li>
+                            </ul>
+                            
+                            <h4>How These Experiences Affect You:</h4>
+                            <ul>
+                                <li><strong>Physically:</strong> Tension, sleep disruption, appetite changes around medical visits</li>
+                                <li><strong>Emotionally:</strong> Dread, anger, sadness, or numbness related to healthcare</li>
+                                <li><strong>Behaviorally:</strong> Delaying care, over-preparing for appointments, bringing support people</li>
+                            </ul>
+                            
+                            <p><strong>Remember:</strong> These are protective responses, not overreactions. Your body is trying to keep you safe.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable" id="trauma-informed">
+                    <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                        <h3>What Trauma-Informed Care Looks Like</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Collaborative Partnership</h4>
+                            <ul>
+                                <li>Providers who see you as the expert on your own body</li>
+                                <li>Shared decision-making about treatment options</li>
+                                <li>Respect for your knowledge and lived experience</li>
+                                <li>Recognition of cultural, spiritual, and personal values in care planning</li>
+                            </ul>
+                            
+                            <h4>Transparent Communication</h4>
+                            <ul>
+                                <li>Clear explanations in accessible language</li>
+                                <li>Permission-seeking before examinations or procedures</li>
+                                <li>Honest acknowledgment of uncertainty when it exists</li>
+                                <li>Willingness to answer questions without defensiveness</li>
+                            </ul>
+                            
+                            <h4>Respect for Autonomy</h4>
+                            <ul>
+                                <li>Honoring your right to decline or delay decisions</li>
+                                <li>Respecting requests for specific accommodations</li>
+                                <li>Supporting your choices even when they differ from recommendations</li>
+                                <li>Recognizing that you can change your mind</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Assessment Tool -->
+                <div class="assessment-tool">
+                    <h3>Self-Assessment: Your Healthcare Experiences</h3>
+                    <p>This optional tool helps you identify patterns in your healthcare experiences. Your responses are saved locally and never shared.</p>
+                    
+                    <div class="assessment-section">
+                        <h4>Communication Experiences</h4>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="comm1" name="assessment" value="interrupted">
+                            <label for="comm1">I've been interrupted when trying to explain symptoms</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="comm2" name="assessment" value="dismissed">
+                            <label for="comm2">My concerns have been minimized or dismissed</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="comm3" name="assessment" value="rushed">
+                            <label for="comm3">I've felt rushed through appointments</label>
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-section">
+                        <h4>Treatment Experiences</h4>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="treat1" name="assessment" value="no-consent">
+                            <label for="treat1">Procedures happened without clear explanation</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="treat2" name="assessment" value="no-options">
+                            <label for="treat2">I wasn't offered alternative treatment options</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="treat3" name="assessment" value="pressure">
+                            <label for="treat3">I felt pressured to make immediate decisions</label>
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-section">
+                        <h4>Emotional Impact</h4>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="impact1" name="assessment" value="anxiety">
+                            <label for="impact1">I experience anxiety before medical appointments</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="impact2" name="assessment" value="avoidance">
+                            <label for="impact2">I've delayed or avoided necessary care</label>
+                        </div>
+                        <div class="assessment-item">
+                            <input type="checkbox" id="impact3" name="assessment" value="distrust">
+                            <label for="impact3">I struggle to trust healthcare providers</label>
+                        </div>
+                    </div>
+                    
+                    <button class="button" onclick="calculateAssessment()">View My Results</button>
+                    
+                    <div class="assessment-results" id="assessment-results">
+                        <div class="assessment-score" id="assessment-score"></div>
+                        <div id="assessment-feedback"></div>
+                        <button class="save-results-btn" onclick="saveAssessment()">Save My Results</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="preparing">
+                <h2>Part 2: Preparing Yourself</h2>
+                
+                <div class="tool-card">
+                    <h3>Create Your Care Preferences Statement</h3>
+                    <p>A care preferences statement helps providers understand how to work effectively with you. Think of it as a collaboration guide clarifying what supports your ability to engage fully in your care.</p>
+                    
+                    <div class="expandable">
+                        <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                            <h4>Building Your Statement</h4>
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <div class="expandable-content">
+                            <div class="expandable-inner">
+                                <h4>Elements to Consider Including:</h4>
+                                
+                                <p><strong>Environmental Preferences:</strong></p>
+                                <ul>
+                                    <li>Seating arrangements that feel comfortable</li>
+                                    <li>Having a support person present</li>
+                                    <li>Door positioning (open or closed)</li>
+                                    <li>Taking breaks when needed</li>
+                                </ul>
+                                
+                                <p><strong>Communication Preferences:</strong></p>
+                                <ul>
+                                    <li>Written summaries of discussions</li>
+                                    <li>Time to process before responding</li>
+                                    <li>Questions welcomed and encouraged</li>
+                                    <li>Simple language over medical jargon</li>
+                                </ul>
+                                
+                                <p><strong>Examination Preferences:</strong></p>
+                                <ul>
+                                    <li>Explanation before any physical contact</li>
+                                    <li>Permission-seeking for each step</li>
+                                    <li>Option to stop or pause at any time</li>
+                                    <li>Specific positioning accommodations</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="button" onclick="openStatementBuilder()">Build My Statement</button>
+                    <button class="button outline" onclick="downloadTemplate()">Download Template</button>
+                </div>
+
+                <div class="script-box">
+                    <span class="label">Introduction Script</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">"I've found that I participate most effectively in my healthcare when certain approaches are used. I've prepared a brief summary of what helps me feel comfortable and engaged. Could we review this together?"</p>
+                </div>
+
+                <div class="script-box">
+                    <span class="label">Boundary Setting</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    <p class="script-text">"I appreciate you taking time to understand my needs. When I feel rushed or unclear about what's happening, it's harder for me to share important information about my symptoms. Can we approach this at a pace that works for both of us?"</p>
+                </div>
+            </section>
+
+            <section id="building">
+                <h2>Part 3: Building Your Team</h2>
+                
+                <!-- Provider Evaluation Matrix -->
+                <div class="provider-matrix">
+                    <h3>Provider Comparison Tool</h3>
+                    <p>Track and compare potential providers based on factors important to you.</p>
+                    
+                    <table class="matrix-table" id="provider-table">
+                        <thead>
+                            <tr>
+                                <th>Provider Name</th>
+                                <th>Communication</th>
+                                <th>Respect</th>
+                                <th>Availability</th>
+                                <th>Cultural Competence</th>
+                                <th>Overall</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="provider-tbody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">
+                                    No providers added yet. Click "Add Provider" to start comparing.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button class="add-provider-btn" onclick="addProvider()">+ Add Provider</button>
+                    <button class="button secondary" onclick="saveProviderData()">Save My Comparison</button>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                        <h3>Finding Trauma-Informed Providers</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Search Strategies:</h4>
+                            <ul>
+                                <li><strong>Professional directories:</strong> Filter by specialties like "trauma-informed care" or "culturally responsive care"</li>
+                                <li><strong>Community networks:</strong> Connect with support groups or advocacy organizations</li>
+                                <li><strong>Peer recommendations:</strong> Ask trusted friends or online communities</li>
+                                <li><strong>Healthcare systems:</strong> Look for institutions with stated commitments to patient-centered care</li>
+                            </ul>
+                            
+                            <h4>Initial Screening Questions:</h4>
+                            <div class="script-box">
+                                <span class="label">Phone Screening</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">"I'm looking for a provider who takes a collaborative approach to healthcare. Can you tell me about Dr. [Name]'s philosophy on working with patients who have specific communication needs?"</p>
+                            </div>
+                            
+                            <h4>Green Flags to Look For:</h4>
+                            <ul>
+                                <li>Office staff who are patient with questions</li>
+                                <li>Flexibility in appointment scheduling and length</li>
+                                <li>Willingness to accommodate support persons</li>
+                                <li>Clear communication about practice policies</li>
+                                <li>Positive responses to trauma-informed care inquiries</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="challenges">
+                <h2>Part 4: Navigating Challenges</h2>
+                
+                <div class="callout info">
+                    <h3>When Interactions Feel Difficult</h3>
+                    <p>Even with preparation, some healthcare interactions may feel challenging. Having strategies ready can help you maintain your autonomy while protecting your wellbeing.</p>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                        <h3>In-the-Moment Strategies</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Grounding Techniques:</h4>
+                            <ul>
+                                <li>Focus on your breathing (4 counts in, 6 counts out)</li>
+                                <li>Press your feet firmly into the floor</li>
+                                <li>Hold a small comfort object</li>
+                                <li>Name 5 things you can see in the room</li>
+                            </ul>
+                            
+                            <h4>Communication Resets:</h4>
+                            <div class="script-box">
+                                <span class="label">Pause Request</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">"I need a moment to collect my thoughts. Can we pause for just a minute?"</p>
+                            </div>
+                            
+                            <div class="script-box">
+                                <span class="label">Clarification Request</span>
+                                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                                <p class="script-text">"I want to make sure I understand correctly. Could you explain that again in simpler terms?"</p>
+                            </div>
+                            
+                            <h4>Knowing When to Step Back:</h4>
+                            <p>It's okay to:</p>
+                            <ul>
+                                <li>Request to continue the discussion at another appointment</li>
+                                <li>Ask for time to consider treatment options</li>
+                                <li>Bring in a support person for the next visit</li>
+                                <li>Seek a second opinion if you feel unheard</li>
+                                <li>Change providers if the relationship isn't working</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                        <h3>After Difficult Appointments</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="expandable-content">
+                        <div class="expandable-inner">
+                            <h4>Immediate Self-Care:</h4>
+                            <ul>
+                                <li>Move to a space where you feel safe</li>
+                                <li>Connect with a supportive person</li>
+                                <li>Engage in grounding activities</li>
+                                <li>Remind yourself that the difficult experience is over</li>
+                            </ul>
+                            
+                            <h4>Processing the Experience:</h4>
+                            <ul>
+                                <li>Write down what happened while it's fresh</li>
+                                <li>Note what felt difficult and why</li>
+                                <li>Identify what you might do differently</li>
+                                <li>Consider whether to address concerns with the provider</li>
+                                <li>Decide if this provider meets your needs</li>
+                            </ul>
+                            
+                            <h4>Moving Forward:</h4>
+                            <p>Every challenging experience teaches you more about your needs and boundaries. Use these insights to refine your approach and strengthen your advocacy skills.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ongoing">
+                <h2>Part 5: Your Ongoing Journey</h2>
+                
+                <div class="progress-container">
+                    <h3>Recognizing Your Growth</h3>
+                    <p>Healing and building confidence in healthcare settings is a gradual process. Celebrate each step forward, no matter how small.</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Starting</span>
+                        <span id="progress-text">Your Journey</span>
+                        <span>Growing</span>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>Signs of Progress</h3>
+                    <p>You might notice:</p>
+                    <ul>
+                        <li>Feeling slightly less anxious before appointments</li>
+                        <li>Speaking up once when you previously would have stayed silent</li>
+                        <li>Asking one question you wouldn't have asked before</li>
+                        <li>Recovering more quickly from difficult interactions</li>
+                        <li>Feeling more confident in your right to respectful care</li>
+                    </ul>
+                    
+                    <p><strong>Remember:</strong> Progress isn't linear. Setbacks don't erase growth, they're part of the journey.</p>
+                </div>
+
+                <div class="callout action">
+                    <h3>Ongoing Support Strategies</h3>
+                    <div class="expandable">
+                        <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                            <h4>Building Your Support Network</h4>
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <div class="expandable-content">
+                            <div class="expandable-inner">
+                                <p>Consider including:</p>
+                                <ul>
+                                    <li><strong>Trusted friends or family:</strong> People who validate your experiences</li>
+                                    <li><strong>Mental health support:</strong> Therapists familiar with medical trauma</li>
+                                    <li><strong>Peer connections:</strong> Others navigating similar challenges</li>
+                                    <li><strong>Online communities:</strong> Spaces for sharing and learning</li>
+                                    <li><strong>Patient advocates:</strong> Professional support when needed</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="expandable">
+                        <div class="expandable-header" onclick="toggleExpandable(this)" role="button" tabindex="0" aria-expanded="false">
+                            <h4>Self-Care Between Appointments</h4>
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <div class="expandable-content">
+                            <div class="expandable-inner">
+                                <p>Regular practices that support your wellbeing:</p>
+                                <ul>
+                                    <li><strong>Mindfulness:</strong> Brief daily practices to stay grounded</li>
+                                    <li><strong>Movement:</strong> Gentle activities that feel good</li>
+                                    <li><strong>Creative expression:</strong> Art, writing, or music for processing</li>
+                                    <li><strong>Connection:</strong> Regular contact with supportive people</li>
+                                    <li><strong>Rest:</strong> Prioritizing sleep and restoration</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resources">
+                <h2>Resources & Tools</h2>
+                
+                <div class="tool-card">
+                    <h3>Quick Reference Scripts</h3>
+                    <p>Keep these phrases handy for common situations:</p>
+                    
+                    <div class="script-box">
+                        <span class="label">Setting Pace</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                        <p class="script-text">"I process information best when we can go slowly. Could we take this one step at a time?"</p>
+                    </div>
+                    
+                    <div class="script-box">
+                        <span class="label">Requesting Options</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                        <p class="script-text">"What are all my options here? I'd like to understand the alternatives before making a decision."</p>
+                    </div>
+                    
+                    <div class="script-box">
+                        <span class="label">Advocating for Needs</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                        <p class="script-text">"This is important to my ability to participate in my care. How can we work together to accommodate this need?"</p>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>Crisis Resources</h3>
+                    <p>When you need immediate support:</p>
+                    <ul>
+                        <li><strong>988:</strong> Suicide & Crisis Lifeline (24/7)</li>
+                        <li><strong>Crisis Text Line:</strong> Text HOME to 741741</li>
+                        <li><strong>RAINN National Sexual Assault Hotline:</strong> 1-800-656-4673</li>
+                        <li><strong>National Domestic Violence Hotline:</strong> 1-800-799-7233</li>
+                    </ul>
+                </div>
+
+                <div class="tool-card">
+                    <h3>Additional Support</h3>
+                    <p>For ongoing resources and community:</p>
+                    <ul>
+                        <li>Local patient advocacy organizations</li>
+                        <li>Condition-specific support groups</li>
+                        <li>Cultural or identity-based health organizations</li>
+                        <li>Online forums for medical trauma survivors</li>
+                    </ul>
+                    
+                    <button class="button secondary" onclick="downloadResourceList()">Download Complete Resource List</button>
+                </div>
+            </section>
+
+            <section id="closing">
+                <div class="callout validation">
+                    <h2>Your Journey Continues</h2>
+                    <p>Building a trauma-informed care team is an ongoing process, unique to each person's experiences and needs. There's no timeline for healing, no "right" way to advocate for yourself, and no requirement to be perfect in your approach.</p>
+                    
+                    <p><strong>What matters is this:</strong> You have the right to healthcare that respects your autonomy, honors your experiences, and supports your wellbeing. Every step you take toward finding and creating that care is valuable.</p>
+                    
+                    <p>Whether you're just beginning to recognize patterns of dismissal, actively building your care team, or supporting others on their journeys, your experiences and insights matter. Together, we're working toward a healthcare system that truly serves everyone with dignity and respect.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Sticky Navigation Scroll Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.sticky-nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            // Update active navigation
+            updateActiveNav();
+        });
+
+        // Update Active Navigation
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobile-nav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            mobileNav.classList.toggle('open');
+            toggle.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileNav = document.getElementById('mobile-nav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            mobileNav.classList.remove('open');
+            toggle.classList.remove('active');
+        }
+
+        // Expandable Sections
+        function toggleExpandable(header) {
+            const expandable = header.parentElement;
+            const isOpen = expandable.classList.contains('open');
+            
+            expandable.classList.toggle('open');
+            header.setAttribute('aria-expanded', !isOpen);
+            
+            // Save state to localStorage
+            const id = expandable.id;
+            if (id) {
+                localStorage.setItem(`expandable-${id}`, !isOpen);
+            }
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(button) {
+            const scriptBox = button.parentElement;
+            const text = scriptBox.querySelector('.script-text').textContent.trim();
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Content Warning Acknowledgment
+        function acknowledgeWarning(button) {
+            const warning = button.parentElement;
+            warning.style.display = 'none';
+            localStorage.setItem('trauma-guide-warning-acknowledged', 'true');
+        }
+
+        // Check if warning was previously acknowledged
+        if (localStorage.getItem('trauma-guide-warning-acknowledged') === 'true') {
+            const warning = document.querySelector('.content-warning');
+            if (warning) {
+                warning.style.display = 'none';
+            }
+        }
+
+        // Assessment Tool
+        function calculateAssessment() {
+            const checkboxes = document.querySelectorAll('input[name="assessment"]:checked');
+            const total = checkboxes.length;
+            const results = document.getElementById('assessment-results');
+            const score = document.getElementById('assessment-score');
+            const feedback = document.getElementById('assessment-feedback');
+            
+            results.classList.add('show');
+            
+            if (total === 0) {
+                score.textContent = 'No items selected';
+                feedback.innerHTML = '<p>Consider reflecting on your healthcare experiences when you feel ready.</p>';
+            } else if (total <= 3) {
+                score.textContent = `${total} experience(s) identified`;
+                feedback.innerHTML = '<p>You\'ve identified some challenging healthcare experiences. Even a few difficult interactions can impact how you approach medical care. The strategies in this guide can help you build confidence and find more supportive providers.</p>';
+            } else if (total <= 6) {
+                score.textContent = `${total} experiences identified`;
+                feedback.innerHTML = '<p>You\'ve experienced multiple challenging healthcare interactions. These patterns suggest it\'s important to prioritize finding trauma-informed providers who respect your autonomy and validate your experiences. You deserve care that feels safe and collaborative.</p>';
+            } else {
+                score.textContent = `${total} experiences identified`;
+                feedback.innerHTML = '<p>You\'ve identified significant patterns of difficult healthcare experiences. This level of medical trauma deserves serious attention and support. Consider working with a trauma-informed therapist alongside finding new healthcare providers. Remember: these experiences are not your fault, and healing is possible.</p>';
+            }
+            
+            // Save results
+            const selectedItems = Array.from(checkboxes).map(cb => cb.value);
+            localStorage.setItem('assessment-results', JSON.stringify({
+                count: total,
+                items: selectedItems,
+                date: new Date().toISOString()
+            }));
+        }
+
+        function saveAssessment() {
+            const results = localStorage.getItem('assessment-results');
+            if (results) {
+                const data = JSON.parse(results);
+                const text = `Healthcare Experience Assessment\nDate: ${new Date(data.date).toLocaleDateString()}\nExperiences Identified: ${data.count}\n\nAreas:\n${data.items.map(item => `- ${item}`).join('\n')}`;
+                
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'healthcare-assessment.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }
+        }
+
+        // Provider Matrix
+        let providers = JSON.parse(localStorage.getItem('provider-matrix') || '[]');
+
+        function renderProviders() {
+            const tbody = document.getElementById('provider-tbody');
+            
+            if (providers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No providers added yet. Click "Add Provider" to start comparing.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = providers.map((provider, index) => `
+                <tr>
+                    <td>${provider.name}</td>
+                    <td>${createStars(provider.communication)}</td>
+                    <td>${createStars(provider.respect)}</td>
+                    <td>${createStars(provider.availability)}</td>
+                    <td>${createStars(provider.cultural)}</td>
+                    <td>${createStars(provider.overall)}</td>
+                    <td>${provider.notes}</td>
+                </tr>
+            `).join('');
+        }
+
+        function createStars(rating) {
+            const filled = '★'.repeat(rating);
+            const empty = '☆'.repeat(5 - rating);
+            return `<span class="rating-stars">${filled}${empty}</span>`;
+        }
+
+        function addProvider() {
+            const name = prompt('Provider name:');
+            if (!name) return;
+            
+            const provider = {
+                name: name,
+                communication: parseInt(prompt('Communication rating (1-5):') || '0'),
+                respect: parseInt(prompt('Respect rating (1-5):') || '0'),
+                availability: parseInt(prompt('Availability rating (1-5):') || '0'),
+                cultural: parseInt(prompt('Cultural competence rating (1-5):') || '0'),
+                overall: parseInt(prompt('Overall rating (1-5):') || '0'),
+                notes: prompt('Notes (optional):') || ''
+            };
+            
+            providers.push(provider);
+            localStorage.setItem('provider-matrix', JSON.stringify(providers));
+            renderProviders();
+        }
+
+        function saveProviderData() {
+            const text = 'Provider Comparison\n\n' + providers.map(p => 
+                `${p.name}\n` +
+                `Communication: ${'★'.repeat(p.communication)}\n` +
+                `Respect: ${'★'.repeat(p.respect)}\n` +
+                `Availability: ${'★'.repeat(p.availability)}\n` +
+                `Cultural Competence: ${'★'.repeat(p.cultural)}\n` +
+                `Overall: ${'★'.repeat(p.overall)}\n` +
+                `Notes: ${p.notes}\n\n`
+            ).join('');
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'provider-comparison.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Progress Bar Animation
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const progress = (checkboxes.length / 9) * 100; // Assuming 9 total assessment items
+            const fill = document.getElementById('progress-fill');
+            const text = document.getElementById('progress-text');
+            
+            if (fill) {
+                fill.style.width = Math.min(progress, 100) + '%';
+            }
+            
+            if (progress > 66) {
+                text.textContent = 'Growing Stronger';
+            } else if (progress > 33) {
+                text.textContent = 'Making Progress';
+            } else {
+                text.textContent = 'Getting Started';
+            }
+        }
+
+        // Download Functions
+        function downloadTemplate() {
+            const template = `CARE PREFERENCES STATEMENT
+
+Name: _____________________
+Date: _____________________
+
+ENVIRONMENTAL PREFERENCES
+□ I prefer having a support person present
+□ I need the door [open/closed] during exams
+□ I prefer sitting up when possible
+□ I need breaks when feeling overwhelmed
+□ Other: _____________________
+
+COMMUNICATION PREFERENCES
+□ I need procedures explained before they happen
+□ I prefer written summaries of discussions
+□ I need time to process before responding
+□ I prefer simple language over medical terms
+□ Other: _____________________
+
+EXAMINATION PREFERENCES
+□ Please ask permission before touching me
+□ Please explain each step of the examination
+□ I need to be able to stop or pause at any time
+□ I have specific positioning needs: _____________________
+□ Other: _____________________
+
+ADDITIONAL NOTES
+_____________________
+_____________________
+_____________________
+
+This document helps me participate more effectively in my healthcare. Thank you for reviewing it with me.`;
+
+            const blob = new Blob([template], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'care-preferences-template.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function downloadResourceList() {
+            const resources = `TRAUMA-INFORMED HEALTHCARE RESOURCES
+
+CRISIS SUPPORT
+- 988 Suicide & Crisis Lifeline – 988lifeline.org
+- Crisis Text Line – Text HOME to 741741 – crisistextline.org
+- RAINN National Sexual Assault Hotline – 1-800-656-4673 – rainn.org
+- National Domestic Violence Hotline – 1-800-799-7233 – thehotline.org
+- StrongHearts Native Helpline – 1-844-762-8483 – strongheartshelpline.org
+- Veterans Crisis Line – Dial 988 then Press 1 – veteranscrisisline.net
+- The Trevor Project (LGBTQ+ Youth) – 1-866-488-7386 – thetrevorproject.org
+- Trans Lifeline – 1-877-565-8860 – translifeline.org
+- Childhelp National Child Abuse Hotline – 1-800-422-4453 – childhelphotline.org
+- National Maternal Mental Health Hotline – 1-833-852-6262 – mchb.hrsa.gov
+- National Human Trafficking Hotline – 1-888-373-7888 – humantraffickinghotline.org
+- The Deaf Hotline – thedeafhotline.org
+- Disaster Distress Helpline – 1-800-985-5990 – samhsa.gov
+
+FINDING PROVIDERS
+- Psychology Today – psychologytoday.com
+- SAMHSA FindTreatment.gov – findtreatment.gov
+- HRSA Find a Health Center – findahealthcenter.hrsa.gov
+- Open Path Collective – openpathcollective.org
+- Inclusive Therapists – inclusivetherapists.com
+- TherapyDen – therapyden.com
+- Therapy for Black Girls – therapyforblackgirls.com
+- Latinx Therapy – latinxtherapy.com
+- Asian Mental Health Collective – asianmhc.org
+- NQTTCN (Queer/Trans People of Color) – nqttcn.com
+
+PATIENT ADVOCACY AND RIGHTS
+- Patient Advocate Foundation – patientadvocate.org
+- National Patient Advocate Foundation – npaf.org
+- HIPAA Right of Access – hhs.gov/hipaa
+- Request Medical Record Correction – ecfr.gov (45 CFR 164.526)
+- File a HIPAA or Civil Rights Complaint – ocrportal.hhs.gov
+- Joint Commission Speak Up – jointcommission.org
+- AHRQ Patient & Family Engagement – ahrq.gov
+- National Center for Medical-Legal Partnership – medical-legalpartnership.org
+
+ONLINE COMMUNITIES AND PEER SUPPORT
+- The Mighty – themighty.com
+- Inspire – inspire.com
+- Smart Patients – smartpatients.com
+- NAMI HelpLine – nami.org/help
+
+EDUCATIONAL RESOURCES
+- SAMHSA Trauma-Informed Approach – samhsa.gov
+- SAMHSA TIP 57: Trauma-Informed Care – samhsa.gov
+- Trauma-Informed Care Implementation Center – traumainformedcare.chcs.org
+- Trauma-Informed Oregon Resource Library – traumainformedoregon.org
+- NCTSN Pediatric Medical Traumatic Stress Toolkit – nctsn.org
+- National Center for PTSD – ptsd.va.gov
+- CDC ACEs Information – cdc.gov/aces
+- National Council for Mental Wellbeing – thenationalcouncil.org
+
+TOOLS AND APPS
+- myPlan Safety App – myplanapp.org
+- PTSD Coach App – ptsd.va.gov/appvid
+- Find a Helpline – findahelpline.com
+
+ADDITIONAL SUPPORT LINES
+- love is respect (Teens/Young Adults) – loveisrespect.org
+- NIMH Find Help – nimh.nih.gov
+- SAMHSA Treatment Locators – samhsa.gov/find-help
+
+Remember: You deserve respectful, compassionate healthcare.`;
+
+            const blob = new Blob([resources], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'healthcare-resources.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved expandable states
+            document.querySelectorAll('.expandable[id]').forEach(expandable => {
+                const id = expandable.id;
+                const isOpen = localStorage.getItem(`expandable-${id}`) === 'true';
+                if (isOpen) {
+                    expandable.classList.add('open');
+                    expandable.querySelector('.expandable-header').setAttribute('aria-expanded', 'true');
+                }
+            });
+            
+            // Load saved assessment
+            const savedAssessment = localStorage.getItem('assessment-results');
+            if (savedAssessment) {
+                const data = JSON.parse(savedAssessment);
+                data.items.forEach(item => {
+                    const checkbox = document.querySelector(`input[value="${item}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+            
+            // Render saved providers
+            renderProviders();
+            
+            // Update progress
+            updateProgress();
+            
+            // Add event listeners for assessment checkboxes
+            document.querySelectorAll('input[name="assessment"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+        });
+
+        // Keyboard navigation for expandables
+        document.querySelectorAll('.expandable-header').forEach(header => {
+            header.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleExpandable(this);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
